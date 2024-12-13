@@ -4,6 +4,7 @@ from .services import create_user
 
 
 class UserSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -11,6 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name',
                   'email', 'password', 'created_at']
         read_only_fields = ['id', 'created_at']
+
+    def get_id(self, obj):
+        # Convert MongoDB ObjectId to string for JSON responses
+        return str(obj.id)
 
     def create(self, validated_data):
 

@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'drf_yasg',
+    'events',
 ]
 
 MIDDLEWARE = [
@@ -75,11 +79,17 @@ WSGI_APPLICATION = 'salsa_events_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'salsa',  # Your database name
+        'CLIENT': {
+            'host': 'mongodb+srv://abrah926:Micasa1758@cluster0.nadit.mongodb.net/?retryWrites=true&w=majority',
+            'username': 'abrah926',
+            'password': 'Micasa1758',
+            # Ensure this matches your authentication source
+            'authSource': 'admin',
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

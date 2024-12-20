@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import dj_database_url
 from pathlib import Path
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from decouple import config
+import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-(gc2tm!h3db)1fnpxz=^(5h3)b3+0m5@67r2bmsu0welra88tt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+import os
+
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME', '127.0.0.1')
+ALLOWED_HOSTS = [RENDER_EXTERNAL_HOSTNAME, '127.0.0.1', 'localhost']
+
+
 
 
 # Application definition
@@ -74,14 +79,10 @@ WSGI_APPLICATION = 'salsa.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'salsadb',
-        'USER': 'abrah926',
-        'PASSWORD': 'Micasa1758',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL'),
+        conn_max_age=600  # Keeps connections alive for performance
+    )
 }
 
 

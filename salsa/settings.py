@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-(gc2tm!h3db)1fnpxz=^(5h3)b3+0m5@67r2bmsu0welra88tt
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+import dj_database_url
 import os
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME', '127.0.0.1')

@@ -1,0 +1,19 @@
+ id | event_date |    day    |   time   |                        name                        |              location               |   source   |  price  |                                details                                
+----+------------+-----------+----------+----------------------------------------------------+-------------------------------------+------------+---------+-----------------------------------------------------------------------
+  1 | 2024-12-25 | Wednesday | 18:00:00 | Salsa Night                                        | Plaza de Armas                      |            | Free    | 
+  2 |            |           |          | Holiday Celebration                                |                                     |            |         | End-of-year festivities
+  3 | 2024-12-19 | Thursday  | 17:30:00 | San Juan: Beginner Puerto Rican Salsa by the Beach | 1049 Ashford Avenue, San Juan 00907 | Eventbrite | $27.72  | 
+  4 | 2024-12-31 | Tuesday   | 19:00:00 | New Years Eve Party - All That Glitters Gala       | Fort Buchanan, Guaynabo             | Eventbrite | $107.48 | 
+  5 | 2024-01-16 | Thursday  | 19:30:00 | Grupo Karis                                        | Plaza de Armas                      | WhatsApp   | Free    | 
+  6 | 2024-11-16 |           |          | Festival de Bomba, Plena y Salsa - Day 1           | Amelia Water Front, Guaynabo        |            |         | Cuerdas de Bellas Artes, Los Pleneros de Severo, Hector Lavoe Tribute
+  7 | 2024-01-17 | Friday    | 19:30:00 | Víctor García y La Sonora Sanjuanera               | Plaza de Armas                      | WhatsApp   | Free    | 
+  8 | 2024-01-18 | Saturday  | 20:00:00 | Los Sabrosos del Merengue                          | Plaza de Armas                      | WhatsApp   | Free    | 
+  9 | 2024-01-19 | Sunday    | 19:00:00 | Festival de Bomba, Plena y Salsa - Day 2           | Amelia Water Front, Guaynabo        |            |         | 
+ 10 | 2024-01-20 | Monday    | 19:30:00 | Edwin Clemente y su Bomba Jazz                     | Plaza de Armas                      | WhatsApp   | Free    | 
+ 11 | 2024-01-21 | Tuesday   | 18:00:00 | Andrés Waldemar                                    | Plaza de Armas                      | WhatsApp   | Free    | 
+ 12 | 2024-01-22 | Wednesday | 19:00:00 | El Conjunto                                        | La Casa de los Bailadores           | WhatsApp   | Free    | 
+ 13 | 2024-01-17 | Friday    | 21:30:00 | Los Sabrosos del Merengue                          | Plaza de Armas                      | WhatsApp   | Free    | 
+ 14 | 2024-11-17 |           |          | Festival de Bomba, Plena y Salsa - Day 2           | Amelia Water Front, Guaynabo        |            |         | Taller Palenque, Anibal de Gracia, Luisito Carrion
+ 15 | 2024-01-18 | Saturday  | 15:30:00 | Edwin Clemente y su Bomba Jazz                     | Plaza de Armas                      | WhatsApp   | Free    | 
+(15 rows)
+

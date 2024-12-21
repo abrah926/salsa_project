@@ -1,0 +1,9 @@
+ id | event_date |    day    |   time   |                        name                        |              location               |   source   |  price  |         details         
+----+------------+-----------+----------+----------------------------------------------------+-------------------------------------+------------+---------+-------------------------
+  1 | 2024-12-25 | Wednesday | 18:00:00 | Salsa Night                                        | Plaza de Armas                      |            | Free    | 
+  2 |            |           |          | Holiday Celebration                                |                                     |            |         | End-of-year festivities
+  3 | 2024-12-19 | Thursday  | 17:30:00 | San Juan: Beginner Puerto Rican Salsa by the Beach | 1049 Ashford Avenue, San Juan 00907 | Eventbrite | $27.72  | 
+  4 | 2024-12-31 | Tuesday   | 19:00:00 | New Years Eve Party - All That Glitters Gala       | Fort Buchanan, Guaynabo             | Eventbrite | $107.48 | 
+  5 | 2024-01-16 | Thursday  | 19:30:00 | Grupo Karis                                        | Plaza de Armas                      | WhatsApp   | Free    | 
+(5 rows)
+

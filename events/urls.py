@@ -1,6 +1,10 @@
-from django.urls import path
-from .views import SalsaListCreateView
+from django.urls import path, include
+from .views import SalsaViewSet
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'salsas', SalsaViewSet, basename='salsa')
 
 urlpatterns = [
-    path('salsas/', SalsaListCreateView.as_view(), name='salsa-list-create'),
+    path('', include(router.urls)),
 ]

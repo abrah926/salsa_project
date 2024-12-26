@@ -1,10 +1,11 @@
-from django.shortcuts import render
-
-from rest_framework import generics
+from rest_framework import viewsets
 from .models import Salsa
 from .serializers import SalsaSerializer
 
-class SalsaListCreateView(generics.ListCreateAPIView):
+class SalsaViewSet(viewsets.ModelViewSet):
+    """
+    A viewset that provides the standard actions
+    (list, create, retrieve, update, partial_update, destroy).
+    """
     queryset = Salsa.objects.all()
     serializer_class = SalsaSerializer
-

@@ -14,4 +14,4 @@ class Salsa(models.Model):
         return self.name or "Unnamed Event"
     
     class Meta:
-        db_table = "salsas"
+        db_table = "salsas"  # Custom table name in the database

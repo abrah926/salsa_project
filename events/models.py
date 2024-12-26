@@ -12,3 +12,6 @@ class Salsa(models.Model):
 
     def __str__(self):
         return self.name or "Unnamed Event"
+    
+    class Meta:
+        db_table = "salsas"

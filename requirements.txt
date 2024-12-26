@@ -6,4 +6,3 @@ packaging==24.2
 psycopg2-binary==2.9.10
 sqlparse==0.5.3
 typing-extensions==4.12.2
-python-decouple==3.8

@@ -26,6 +26,6 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('', include(router.urls)),
-    path("api/calendar/", EventCalendarView.as_view(), name="event-calendar"),
+    path("calendar/", EventCalendarView.as_view(), name="event-calendar"),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
 ]

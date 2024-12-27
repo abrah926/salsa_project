@@ -7,3 +7,4 @@ psycopg2-binary==2.9.10
 sqlparse==0.5.3
 typing-extensions==4.12.2
 drf-yasg==1.21.8
+requests>=2.0.0

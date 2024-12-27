@@ -11,6 +11,12 @@ class SalsaSerializer(serializers.ModelSerializer):
     source = serializers.CharField(required=False, allow_null=True)
     price = serializers.CharField(required=False, allow_null=True)
     details = serializers.CharField(required=False, allow_null=True)
+    recurrence = serializers.ChoiceField(
+        required=False, 
+        allow_null=True, 
+        choices=[("DAILY", "Daily"), ("WEEKLY", "Weekly"), ("MONTHLY", "Monthly")]
+    )
+
 
     class Meta:
         model = Salsa
@@ -36,3 +42,16 @@ def validate_event_date(self, value):
                 "Date format is invalid. Please use 'YYYY-MM-DD'."
             )
         return value
+
+class CalendarEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Salsa
+        fields = ['name', 'event_date', 'location', 'details', 'price']  # Include fields needed by frontend
+
+    def to_representation(self, instance):
+        """Customizes the serialized output."""
+        data = super().to_representation(instance)
+        # FullCalendar expects these field names
+        data['title'] = data.pop('name')
+        data['start'] = data.pop('event_date')
+        return data

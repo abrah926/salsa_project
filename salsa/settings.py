@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'events',
     'rest_framework',
     'drf_yasg',
+    'django_filters'
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,18 @@
+nav {
+    background-color: #333;
+    color: #8f1717;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+nav a {
+    color: rgb(28, 182, 26);
+    text-decoration: none;
+}

@@ -1,18 +1,19 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Hero() {
   return (
-    <header className="bg-light py-5" id="hero">
-      <div className="container text-center">
-        <h1 className="display-4 text-primary">Welcome to Salsa Events!</h1>
-        <p className="lead text-secondary">
+    <div className="hero text-center py-5 bg-light">
+      <div className="container">
+        <h1 className="display-4">Welcome to Salsa Events!</h1>
+        <p className="lead">
           Discover the rhythm and passion of salsa events near you.
         </p>
-        <a href="#events" className="btn btn-primary btn-lg">
+        <Link to="/events" className="btn btn-primary btn-lg">
           Browse Events
-        </a>
+        </Link>
       </div>
-    </header>
+    </div>
   );
 }
 

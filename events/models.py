@@ -16,6 +16,14 @@ class Salsa(models.Model):
         max_length=50, null=True, blank=True, 
         choices=[("DAILY", "Daily"), ("WEEKLY", "Weekly"), ("MONTHLY", "Monthly")],
     )  # For recurring events
+    recurrence_interval = models.IntegerField(
+        null=True, blank=True, default=1, 
+        help_text="Interval for recurrence (e.g., every 2 weeks)"
+    )  # Interval for recurring events
+    end_recurring_date = models.DateField(
+        null=True, blank=True, 
+        help_text="Last date of recurrence"
+    )  # End date for recurring events
 
     def __str__(self):
         return self.name or "Unnamed Event"
@@ -34,4 +42,3 @@ class MapLocation(models.Model):
 
     def __str__(self):
         return f"{self.event.name} Location"
-

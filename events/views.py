@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
+
 class SalsaViewSet(viewsets.ModelViewSet):
     """
     A viewset that provides the standard actions
@@ -32,3 +33,6 @@ class EventCalendarView(APIView):
             for event in events
         ]
         return Response(event_list)
+
+
+    

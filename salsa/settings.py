@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'corsheaders',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -151,3 +152,15 @@ REST_FRAMEWORK = {
     },
 }
 
+Q_CLUSTER = {
+    'name': 'Django-Q',
+    'workers': 4,
+    'recycle': 500,
+    'timeout': 60,  # Task execution timeout (seconds)
+    'retry': 120,   # Retry interval (seconds) - must be greater than timeout
+    'django_redis': 'default',
+    'compress': True,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'label': 'Django Q',
+}

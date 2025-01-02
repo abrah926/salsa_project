@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchEventDetails } from "../services/api";
+import { fetchEventDetails } from "../api/salsaApi";
+
 
 const EventDetails = () => {
   const { id } = useParams();

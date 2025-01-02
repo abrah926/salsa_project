@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
+import Calendar from "./pages/Calendar";
 
 function App() {
   return (
@@ -22,15 +23,7 @@ function App() {
             </div>
           }
         />
-        <Route
-          path="/about"
-          element={
-            <div className="container mt-5">
-              <h1>About Us</h1>
-              <p>Learn more about Salsa Events and our mission to bring joy through dance!</p>
-            </div>
-          }
-        />
+        <Route path="/calendar" element={<Calendar />} /> {/* Calendar Route */}
       </Routes>
     </Router>
   );

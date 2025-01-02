@@ -1,13 +1,13 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = "http://127.0.0.1:8000/api";
 
-export const getSalsaEvents = async () => {
+export const fetchEvents = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/salsas/`);
+    const response = await axios.get(`${API_BASE_URL}/salsas/`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching salsa events:", error);
+    console.error("Error fetching events:", error);
     throw error;
   }
 };

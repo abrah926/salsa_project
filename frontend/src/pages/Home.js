@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { fetchEvents } from '../services/api';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    const getEvents = async () => {
-      const data = await fetchEvents();
-      setEvents(data);
-    };
-
-    getEvents();
-  }, []);
-
   return (
-    <div className="container">
-      <h1 className="my-4">Salsa Events</h1>
-      <ul className="list-group">
-        {events.map((event) => (
-          <li key={event.id} className="list-group-item">
-            <h5>{event.name}</h5>
-            <p>{event.location}</p>
-            <p>{event.event_date}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="container text-center mt-5">
+      <h1>Welcome to Salsa Events!</h1>
+      <p className="lead text-muted">
+        Discover the rhythm and passion of salsa events near you.
+      </p>
+      <Link to="/events" className="btn btn-primary btn-lg">
+        Browse Events
+      </Link>
     </div>
   );
 };

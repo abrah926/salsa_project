@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'django_extensions',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://salsa-events.netlify.app',
 ]
 
 ROOT_URLCONF = 'salsa.urls'

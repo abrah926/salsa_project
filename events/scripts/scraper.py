@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import re
 import logging
+from dateutil import parser
 
 logging.basicConfig(level=logging.INFO)
 
@@ -41,6 +42,9 @@ def extract_recurrence_details(text):
             return "MONTHLY", match.group(1) + " " + match.group(2)  # Return recurrence type and frequency
     return None, None
 
+from dateutil import parser
+from datetime import datetime
+
 def scrape_static_events():
     urls = [
         "https://www.danceus.org/events/salsa/puerto-rico-salsa-calendar/",
@@ -54,42 +58,48 @@ def scrape_static_events():
             soup = BeautifulSoup(response.content, 'html.parser')
 
             if "danceus" in url:
-                events = soup.find_all('div', class_='event-item')  # Example: adjust based on actual HTML
+                events = soup.find_all('div', class_='item-info-container')
             elif "puertorico.com" in url:
-                events = soup.find_all('div', class_='event-block')  # Example: adjust based on actual HTML
+                events = soup.find_all('div', class_='event-block')
 
             for event in events:
-                name = event.find('h2').get_text(strip=True)
-                date_text = event.find('span', class_='date').get_text(strip=True)
-                location = event.find('span', class_='location').get_text(strip=True)
-                details = event.find('p', class_='description').get_text(strip=True)
+                name = event.find('a', class_='item-title').get_text(strip=True)
+                description = event.find('p', class_='description').get_text(strip=True) if event.find('p', class_='description') else ""
 
-                # Convert the date
-                try:
-                    event_date = datetime.strptime(date_text, '%Y-%m-%d')
-                except ValueError:
-                    logging.error(f"Invalid date format for event: {name}, Date: {date_text}")
+                if "salsa" not in name.lower() and "salsa" not in description.lower():
+                    logging.info(f"Skipped non-salsa event: {name}")
                     continue
 
-                # Detect recurrence
-                recurrence_type = detect_recurrence(details)
+                date_text = event.find('div', class_='event-period').get_text(strip=True)
+                location = event.find('div', class_='location').get_text(strip=True) if event.find('div', 'location') else "Location not specified"
 
-                # Save to the database if not already existing
+                # Parse the date using dateutil
+                try:
+                    parsed_date = parser.parse(date_text.split("@")[0])  # Extract the first part before '@'
+                    event_date = parsed_date.strftime('%Y-%m-%d')  # Convert to YYYY-MM-DD format
+                except (ValueError, parser.ParserError) as e:
+                    logging.error(f"Invalid date format for event: {name}, Date: {date_text}, Error: {e}")
+                    continue
+
+                recurrence_type = detect_recurrence(description)
+
                 if not Salsa.objects.filter(name=name, event_date=event_date).exists():
                     Salsa.objects.create(
                         name=name,
                         event_date=event_date,
                         location=location,
-                        details=details,
+                        details=description,
                         source=url,
                         recurrence=recurrence_type.upper() if recurrence_type else None,
                         recurrence_interval=1 if recurrence_type else None
                     )
                     logging.info(f"Added static event: {name}, Recurrence: {recurrence_type}")
-                gathered_events.append((name, event_date, location, details, recurrence_type))
+                gathered_events.append((name, event_date, location, description, recurrence_type))
         except Exception as e:
             logging.error(f"Error scraping {url}: {e}")
     return gathered_events
+
+
 
 def scrape_dynamic_events():
     urls = [
@@ -107,15 +117,19 @@ def scrape_dynamic_events():
             driver.get(url)
 
             if "allevents" in url:
-                events = driver.find_elements(By.CLASS_NAME, 'card')  # Example: adjust based on actual HTML
+                events = driver.find_elements(By.CLASS_NAME, 'card')  # Adjust based on actual HTML
             elif "discoverpuertorico" in url:
-                events = driver.find_elements(By.CLASS_NAME, 'event-item')  # Example: adjust based on actual HTML
+                events = driver.find_elements(By.CLASS_NAME, 'event-item')  # Adjust based on actual HTML
 
             for event in events:
                 name = event.find_element(By.TAG_NAME, 'h2').text.strip()
                 date_text = event.find_element(By.CLASS_NAME, 'date').text.strip()
                 location = event.find_element(By.CLASS_NAME, 'location').text.strip()
                 details = event.find_element(By.CLASS_NAME, 'description').text.strip()
+
+                # Check if "salsa" is in the name or details
+                if "salsa" not in name.lower() and "salsa" not in details.lower():
+                    continue  # Skip if the event is not salsa-related
 
                 # Convert the date
                 try:
@@ -144,6 +158,21 @@ def scrape_dynamic_events():
             logging.error(f"Error scraping {url}: {e}")
     driver.quit()
     return gathered_events
+
+def run():
+    logging.info("Starting scraper...")
+    static_events = scrape_static_events()
+    dynamic_events = scrape_dynamic_events()
+
+    if static_events or dynamic_events:
+        print("\nGathered Events:")
+        for event in static_events + dynamic_events:
+            print(f"Name: {event[0]}, Date: {event[1]}, Location: {event[2]}, Details: {event[3]}, Recurrence: {event[4]}")
+    else:
+        print("No events were gathered.")
+
+    logging.info("Scraper completed.")
+
 
 def run():
     logging.info("Starting scraper...")

@@ -1,0 +1,7 @@
+# runs the recurring events and auto populates the database
+
+python manage.py runscript run_populate_future_events
+
+# turns the location of events into coordinates for maps
+
+python manage.py runscript populate_geolocation

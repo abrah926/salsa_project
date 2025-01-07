@@ -71,16 +71,29 @@ footer a:hover {
 /* For small screens (mobile) */
 @media (max-width: 768px) {
   .hero {
-    height: auto; /* Adjust hero height */
     padding: 20px;
+    height: auto; /* Adjust hero height */
   }
 
   .btn {
-    font-size: 1rem;
     padding: 10px 15px;
+    font-size: 1rem;
   }
 
   h1 {
     font-size: 2rem;
   }
+}
+
+.navbar-collapse {
+  transition: max-height 0.3s ease-in-out;
+}
+
+.navbar-collapse.collapsing {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.navbar-collapse.show {
+  max-height: 100vh; /* Ensure it expands fully */
 }

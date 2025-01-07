@@ -1,7 +1,8 @@
 // services/api.js
 import axios from "axios";
 
-export const API_BASE_URL = "http://127.0.0.1:8000/api";
+export const API_BASE_URL = "https://salsa-backend.onrender.com/api";
+
 // Fetch all events
 export const fetchEvents = async () => {
     try {

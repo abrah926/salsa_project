@@ -29,6 +29,11 @@ html {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Add shadow for a floating effect */
   background-color: #8b0000 !important; /* Darker red */
 }
+.nav-link.active {
+  font-weight: bold;
+  border-bottom: 2px solid #e63946; /* Bright red underline */
+}
+
 
 .navbar .nav-link {
   transition: color 0.3s ease; /* Smooth hover effect for links */
@@ -85,3 +90,15 @@ footer a:hover {
   }
 }
 
+.navbar-collapse {
+  transition: max-height 0.3s ease-in-out;
+}
+
+.navbar-collapse.collapsing {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.navbar-collapse.show {
+  max-height: 100vh; /* Ensure it expands fully */
+}

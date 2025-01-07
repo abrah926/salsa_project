@@ -76,6 +76,18 @@ TEMPLATES = [
     },
 ]
 
+Q_CLUSTER = {
+    'name': 'Django-Q',
+    'workers': 4,
+    'recycle': 500,
+    'timeout': 60,  # Execution timeout (seconds)
+    'retry': 120,   # Retry interval (must be larger than timeout)
+    'compress': True,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'label': 'Django Q',
+}
+
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

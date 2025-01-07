@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: salsa_project
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: gunicorn salsa.wsgi:application
+    systemDependencies:
+      - build-essential
+      - libffi-dev
+      - libssl-dev

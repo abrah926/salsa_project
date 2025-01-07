@@ -68,3 +68,19 @@ footer a:hover {
   text-decoration: underline;
 }
 
+/* For small screens (mobile) */
+@media (max-width: 768px) {
+  .hero {
+    height: auto; /* Adjust hero height */
+    padding: 20px;
+  }
+
+  .btn {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}

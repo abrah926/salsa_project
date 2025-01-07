@@ -85,15 +85,3 @@ footer a:hover {
   }
 }
 
-.navbar-collapse {
-  transition: max-height 0.3s ease-in-out;
-}
-
-.navbar-collapse.collapsing {
-  max-height: 0;
-  overflow: hidden;
-}
-
-.navbar-collapse.show {
-  max-height: 100vh; /* Ensure it expands fully */
-}

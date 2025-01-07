@@ -3,9 +3,14 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav
+      className="navbar navbar-expand-lg"
+      style={{
+        backgroundColor: "#8b0000", // Darker red background color
+      }}
+    >
       <div className="container">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand text-white" to="/">
           Salsa Events
         </Link>
         <button
@@ -22,17 +27,17 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link className="nav-link" to="/events">
+              <Link className="nav-link text-white" to="/events">
                 Events
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/calendar">
+              <Link className="nav-link text-white" to="/calendar">
                 Calendar
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contact">
+              <Link className="nav-link text-white" to="/contact">
                 Contact
               </Link>
             </li>

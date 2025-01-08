@@ -17,10 +17,11 @@ export const fetchEvents = async () => {
 // Existing fetchEventDetails function
 export const fetchEventDetails = async (id) => {
   try {
-    const response = await axios.get(`/api/salsas/${id}/`);
+    const response = await axios.get(`${API_BASE_URL}/salsas/${id}/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching event details:", error);
-    throw error;
+    throw new Error("Unable to fetch event details. Please try again later.");
   }
 };
+

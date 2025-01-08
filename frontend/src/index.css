@@ -102,3 +102,17 @@ footer a:hover {
 .navbar-collapse.show {
   max-height: 100vh; /* Ensure it expands fully */
 }
+
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+body {
+  background-color: #000;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+}

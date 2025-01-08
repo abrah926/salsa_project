@@ -4,40 +4,49 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile  # Path to the backend Dockerfile
     container_name: django_backend
     command: gunicorn salsa.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - .:/app
-      - static_volume:/app/staticfiles
+      - .:/app  # Mount current directory to /app in the container
+      - static_volume:/app/staticfiles  # Volume for static files
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Expose port for Django app
     env_file:
-      - .env
+      - .env  # Environment variables (optional)
     depends_on:
-      - db
+      - db  # Ensure db starts before backend
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ./frontend  # Path to the frontend Dockerfile directory
+      dockerfile: Dockerfile  # Path to the frontend Dockerfile
     container_name: react_frontend
-    ports:
-      - "3000:80"
     depends_on:
-      - backend
+      - backend  # Ensure backend starts before frontend
+    ports:
+      - "3000:80"  # Expose port for React app
 
   db:
-    image: postgres:14
+    image: postgres:14  # PostgreSQL version
     container_name: postgres_db
     environment:
       POSTGRES_USER: your_user
       POSTGRES_PASSWORD: your_password
       POSTGRES_DB: salsadb
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data  # Volume for DB persistence
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Expose port for PostgreSQL
+
+  nginx:
+    image: nginx:stable-alpine  # Nginx image
+    container_name: nginx_container
+    volumes:
+      - ./frontend/build:/usr/share/nginx/html  # Serve React app build files
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf  # Custom Nginx config if needed
+    ports:
+      - "80:80"  # Expose port 80 for serving React frontend
 
 volumes:
   postgres_data:

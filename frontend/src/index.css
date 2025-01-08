@@ -30,8 +30,8 @@ html {
   background-color: #8b0000 !important; /* Darker red */
 }
 .nav-link.active {
-  font-weight: bold;
   border-bottom: 2px solid #e63946; /* Bright red underline */
+  font-weight: bold;
 }
 
 

@@ -12,8 +12,8 @@ const Navbar = () => {
     <nav
       className="navbar navbar-expand-lg"
       style={{
-        backgroundColor: "#8b0000", // Darker red background color
-        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)", // Floating effect
+        backgroundColor: "#8b0000",
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)", // Add shadow for floating effect
       }}
     >
       <div className="container">
@@ -28,45 +28,28 @@ const Navbar = () => {
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
-          style={{ border: "none", outline: "none" }} // Prevents focus outline
         >
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link
-                className={`nav-link text-white ${getActiveClass("/")}`}
-                to="/"
-                style={{ padding: "10px 15px" }} // Improves tap target size
-              >
+              <Link className={`nav-link text-white ${getActiveClass("/")}`} to="/">
                 Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                className={`nav-link text-white ${getActiveClass("/events")}`}
-                to="/events"
-                style={{ padding: "10px 15px" }}
-              >
+              <Link className={`nav-link text-white ${getActiveClass("/events")}`} to="/events">
                 Events
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                className={`nav-link text-white ${getActiveClass("/calendar")}`}
-                to="/calendar"
-                style={{ padding: "10px 15px" }}
-              >
+              <Link className={`nav-link text-white ${getActiveClass("/calendar")}`} to="/calendar">
                 Calendar
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                className={`nav-link text-white ${getActiveClass("/contact")}`}
-                to="/contact"
-                style={{ padding: "10px 15px" }}
-              >
+              <Link className={`nav-link text-white ${getActiveClass("/contact")}`} to="/contact">
                 Contact
               </Link>
             </li>

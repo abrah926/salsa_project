@@ -13,7 +13,7 @@ const Navbar = () => {
       className="navbar navbar-expand-lg"
       style={{
         backgroundColor: "#8b0000", // Darker red background color
-        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)", // Add shadow for a floating effect
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)", // Floating effect
       }}
     >
       <div className="container">
@@ -28,6 +28,7 @@ const Navbar = () => {
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
+          style={{ border: "none", outline: "none" }} // Prevents focus outline
         >
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -37,6 +38,7 @@ const Navbar = () => {
               <Link
                 className={`nav-link text-white ${getActiveClass("/")}`}
                 to="/"
+                style={{ padding: "10px 15px" }} // Improves tap target size
               >
                 Home
               </Link>
@@ -45,6 +47,7 @@ const Navbar = () => {
               <Link
                 className={`nav-link text-white ${getActiveClass("/events")}`}
                 to="/events"
+                style={{ padding: "10px 15px" }}
               >
                 Events
               </Link>
@@ -53,6 +56,7 @@ const Navbar = () => {
               <Link
                 className={`nav-link text-white ${getActiveClass("/calendar")}`}
                 to="/calendar"
+                style={{ padding: "10px 15px" }}
               >
                 Calendar
               </Link>
@@ -61,6 +65,7 @@ const Navbar = () => {
               <Link
                 className={`nav-link text-white ${getActiveClass("/contact")}`}
                 to="/contact"
+                style={{ padding: "10px 15px" }}
               >
                 Contact
               </Link>

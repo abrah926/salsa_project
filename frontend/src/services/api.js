@@ -30,13 +30,20 @@ export const fetchEvents = async () => {
         return eventsCache;
       }
 
-      const response = await api.get('/salsas/');
+      console.log('Fetching from:', `${API_BASE_URL}/api/salsas/`); // Debug log
+      const response = await api.get('/api/salsas/');
+      console.log('Response:', response.data); // Debug log
+      
       // Update cache
       eventsCache = response.data;
       lastFetch = Date.now();
       return response.data;
     } catch (error) {
-      console.error("Error fetching events:", error);
+      console.error("Error details:", {
+        url: error.config?.url,
+        status: error.response?.status,
+        data: error.response?.data
+      });
       throw new Error("Unable to fetch events. Please try again later.");
     }
 };
@@ -51,7 +58,7 @@ export const fetchEventDetails = async (id) => {
       }
     }
 
-    const response = await api.get(`/salsas/${id}/`);
+    const response = await api.get(`/api/salsas/${id}/`);
     // Update cache
     eventDetailsCache.set(id, {
       data: response.data,

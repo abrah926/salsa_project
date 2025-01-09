@@ -8,17 +8,22 @@ const Navbar = () => {
     return location.pathname === path ? "active" : "";
   };
 
+  // Base style for all nav links
   const navLinkStyle = {
-    color: 'white',
+    backgroundColor: 'white',
+    color: '#8b0000',
     padding: '8px 16px',
     borderRadius: '20px',
+    fontWeight: '500',
     transition: 'all 0.3s ease',
     textDecoration: 'none',
     transform: 'translateY(0)',
+    margin: '0 8px', // Add spacing between items
   };
 
+  // Hover style for all nav links
   const navLinkHoverStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: '#f0f0f0',
     transform: 'translateY(-2px)',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
   };
@@ -29,6 +34,7 @@ const Navbar = () => {
       style={{
         backgroundColor: "#8b0000",
         boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+        padding: "15px 0", // Add more vertical padding
       }}
     >
       <div className="container">
@@ -40,18 +46,22 @@ const Navbar = () => {
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
+          style={{
+            backgroundColor: 'white',
+            border: 'none',
+          }}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav mx-auto">
+          <ul className="navbar-nav mx-auto" style={{ gap: '15px' }}> {/* Added gap between items */}
             <li className="nav-item">
               <Link 
                 className={`nav-link ${getActiveClass("/")}`}
                 to="/"
                 style={navLinkStyle}
                 onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkHoverStyle);
+                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
                 }}
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
@@ -66,7 +76,7 @@ const Navbar = () => {
                 to="/events"
                 style={navLinkStyle}
                 onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkHoverStyle);
+                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
                 }}
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
@@ -81,7 +91,7 @@ const Navbar = () => {
                 to="/calendar"
                 style={navLinkStyle}
                 onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkHoverStyle);
+                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
                 }}
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
@@ -96,7 +106,7 @@ const Navbar = () => {
                 to="/contact"
                 style={navLinkStyle}
                 onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkHoverStyle);
+                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
                 }}
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
@@ -105,32 +115,16 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
-            <li className="nav-item ms-lg-3">
+            <li className="nav-item">
               <Link 
                 className={`nav-link ${getActiveClass("/events/create")}`}
                 to="/events/create"
-                style={{
-                  ...navLinkStyle,
-                  backgroundColor: 'white',
-                  color: '#8b0000',
-                  fontWeight: '500',
-                }}
+                style={navLinkStyle}
                 onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, {
-                    ...navLinkStyle,
-                    ...navLinkHoverStyle,
-                    backgroundColor: '#f0f0f0',
-                    color: '#8b0000',
-                    fontWeight: '500',
-                  });
+                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
                 }}
                 onMouseOut={(e) => {
-                  Object.assign(e.currentTarget.style, {
-                    ...navLinkStyle,
-                    backgroundColor: 'white',
-                    color: '#8b0000',
-                    fontWeight: '500',
-                  });
+                  Object.assign(e.currentTarget.style, navLinkStyle);
                 }}
               >
                 + Create Event

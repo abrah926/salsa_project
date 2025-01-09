@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createEvent } from '../services/api';
 import './CreateEvent.css';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [eventData, setEventData] = useState({
     name: '',
     location: '',
@@ -11,6 +14,7 @@ const CreateEvent = () => {
     time: '',
     details: '',
     price: '',
+    recurrence: '', // Optional: Add if you want recurring events
   });
 
   const handleChange = (e) => {
@@ -23,12 +27,32 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
     try {
-      // Add your API call here to create the event
-      console.log('Creating event:', eventData);
-      navigate('/events'); // Redirect to events page after creation
+      // Format the data to match your Django model
+      const formattedData = {
+        ...eventData,
+        // Ensure date is in YYYY-MM-DD format
+        event_date: eventData.event_date,
+        // Ensure time is in HH:MM format
+        time: eventData.time,
+        // Add any default values or transformations needed
+        source: 'Web Form',
+      };
+
+      await createEvent(formattedData);
+      // Show success message (you can add a toast notification here)
+      alert('Event created successfully!');
+      // Redirect to events page
+      navigate('/events');
     } catch (error) {
-      console.error('Error creating event:', error);
+      setError(error.message);
+      // You can add a better error display here
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,11 +63,11 @@ const CreateEvent = () => {
         <h1>Create Event</h1>
       </div>
 
-      <div className="event-banner">
-        <div className="upload-placeholder">
-          <span>+ Upload Event Banner</span>
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
         </div>
-      </div>
+      )}
 
       <form onSubmit={handleSubmit} className="event-form">
         <div className="form-group">
@@ -72,7 +96,7 @@ const CreateEvent = () => {
 
         <div className="form-row">
           <div className="form-group half">
-            <label>Start Date</label>
+            <label>Date</label>
             <input
               type="date"
               name="event_date"
@@ -82,7 +106,7 @@ const CreateEvent = () => {
             />
           </div>
           <div className="form-group half">
-            <label>Start Time</label>
+            <label>Time</label>
             <input
               type="time"
               name="time"
@@ -116,8 +140,12 @@ const CreateEvent = () => {
           />
         </div>
 
-        <button type="submit" className="submit-button">
-          Create Event
+        <button 
+          type="submit" 
+          className="submit-button"
+          disabled={loading}
+        >
+          {loading ? 'Creating Event...' : 'Create Event'}
         </button>
       </form>
     </div>

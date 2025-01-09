@@ -78,3 +78,14 @@ export const clearCaches = () => {
   eventDetailsCache.clear();
 };
 
+export const createEvent = async (eventData) => {
+  try {
+    const response = await api.post('/api/salsas/', eventData);
+    console.log('Event created:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating event:", error);
+    throw new Error(error.response?.data?.message || "Unable to create event. Please try again later.");
+  }
+};
+

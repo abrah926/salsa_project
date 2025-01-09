@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import CreateEvent from "./pages/CreateEvent";
 
 // Lazy load components
 const Home = lazy(() => import("./pages/Home"));
@@ -18,6 +19,7 @@ function App() {
           <Route path="/events" element={<Events />} />
           <Route path="/events/:id" element={<EventDetails />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/events/create" element={<CreateEvent />} />
           <Route
             path="/contact"
             element={

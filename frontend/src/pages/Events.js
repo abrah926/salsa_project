@@ -1,25 +1,7 @@
 // src/pages/Events.js
 import React, { useEffect, useState } from 'react';
 import { fetchEvents } from '../services/api';
-
-// Move styles outside component to prevent recreation on each render
-const containerStyle = {
-  backgroundColor: 'black',
-  color: 'white',
-  padding: '20px',
-  borderRadius: '10px'
-};
-
-const titleStyle = {
-  fontWeight: 'bold',
-  color: '#ff6347'
-};
-
-const cardStyle = {
-  backgroundColor: '#1c1c1c',
-  color: 'white',
-  border: '1px solid #ff6347'
-};
+import './Events.css';
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -30,12 +12,13 @@ const Events = () => {
     const getEvents = async () => {
       setLoading(true);
       try {
+        console.log('Fetching events...'); // Debug log
         const data = await fetchEvents();
+        console.log('Events received:', data); // Debug log
         setEvents(data);
-        setError(null);
       } catch (error) {
         console.error("Error fetching events:", error);
-        setError("Unable to load events. Please try again later.");
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -45,50 +28,84 @@ const Events = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="container mt-5" style={containerStyle}>
-        <div className="text-center">
-          <div className="spinner-border text-danger" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p className="mt-2">Loading events...</p>
-        </div>
-      </div>
-    );
+    return <div className="events-container"><div className="loading">Loading events...</div></div>;
   }
 
   if (error) {
-    return (
-      <div className="container mt-5" style={containerStyle}>
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      </div>
-    );
+    return <div className="events-container"><div className="error">Error: {error}</div></div>;
   }
 
   return (
-    <div className="container mt-5" style={containerStyle}>
-      <h1 className="my-4 text-center" style={titleStyle}>Salsa Events</h1>
-      {events.length > 0 ? (
-        <div className="row">
-          {events.map((event) => (
-            <div className="col-md-6 col-lg-4 mb-4" key={event.id}>
-              <div className="card" style={cardStyle}>
-                <div className="card-body">
-                  <h5 className="card-title" style={titleStyle}>{event.name}</h5>
-                  <p className="card-text">{event.location || 'Location not specified'}</p>
-                  <p className="card-text"><strong>Date:</strong> {event.event_date}</p>
-                  <p className="card-text"><strong>Time:</strong> {event.time || 'Time not specified'}</p>
-                  <p className="card-text"><strong>Recurrence:</strong> {event.recurrence || 'None'}</p>
+    <div className="events-container">
+      <div className="events-header">
+        <h1 className="text-center">Salsa Events</h1>
+      </div>
+      
+      <div className="events-grid">
+        {events.length > 0 ? (
+          events.map((event) => (
+            <div className="event-card" key={event.id}>
+              <div className="event-image">
+                {/* Placeholder for event image */}
+                <div className="event-placeholder"></div>
+              </div>
+              
+              <div className="event-content">
+                <div className="event-time-location">
+                  <span>{event.time || 'Time TBA'} • {event.location || 'Location TBA'}</span>
                 </div>
+                
+                <h2 className="event-title">{event.name}</h2>
+                
+                <div className="event-organizer">
+                  <div className="organizer-avatar"></div>
+                  <span>{event.source || 'Salsa Community Events'}</span>
+                </div>
+                
+                <div className="event-details">
+                  {event.price && (
+                    <div className="detail-item">
+                      <div className="detail-icon price-icon">💰</div>
+                      <div className="detail-text">
+                        <span>Event Fee</span>
+                        <strong>{event.price}</strong>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="detail-item">
+                    <div className="detail-icon calendar-icon">📅</div>
+                    <div className="detail-text">
+                      <span>{new Date(event.event_date).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}</span>
+                      <strong>{event.time || 'Time TBA'}</strong>
+                    </div>
+                  </div>
+                  
+                  <div className="detail-item">
+                    <div className="detail-icon location-icon">📍</div>
+                    <div className="detail-text">
+                      <strong>{event.location || 'Location TBA'}</strong>
+                    </div>
+                  </div>
+                </div>
+                
+                {event.details && (
+                  <div className="event-description">
+                    <h3>Event Details</h3>
+                    <p>{event.details}</p>
+                  </div>
+                )}
               </div>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-center">No events available at the moment. Please check back later.</p>
-      )}
+          ))
+        ) : (
+          <p className="no-events">No events available at the moment. Please check back later.</p>
+        )}
+      </div>
     </div>
   );
 };

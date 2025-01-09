@@ -1,0 +1,145 @@
+.events-container {
+  background-color: #1a1b1f;
+  min-height: 100vh;
+  padding: 20px;
+  color: white;
+}
+
+.events-header {
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
+
+.events-header h1 {
+  color: #ff4d4d;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.events-grid {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  padding: 0 20px;
+}
+
+.event-card {
+  background-color: #2a2b30;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+}
+
+.event-image {
+  width: 100%;
+  height: 200px;
+  background-color: #3a3b40;
+}
+
+.event-content {
+  padding: 20px;
+}
+
+.event-time-location {
+  color: #8e8e93;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.event-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.event-organizer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.organizer-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #3a3b40;
+  margin-right: 10px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.detail-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: #3a3b40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.detail-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-text span {
+  color: #8e8e93;
+  font-size: 0.9rem;
+}
+
+.detail-text strong {
+  color: white;
+  font-size: 1rem;
+  margin-top: 3px;
+}
+
+.event-description {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #3a3b40;
+}
+
+.event-description h3 {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.event-description p {
+  color: #8e8e93;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.loading, .error, .no-events {
+  text-align: center;
+  padding: 40px;
+  color: #8e8e93;
+}
+
+.error {
+  color: #ff4d4d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .events-grid {
+    grid-template-columns: 1fr;
+    padding: 0 10px;
+  }
+  
+  .events-header h1 {
+    font-size: 2rem;
+  }
+}

@@ -87,3 +87,40 @@ chromedriver-linux64/
 # Misc
 *.gz
 *.map
+
+.docker_temp*
+*.docker_temp*
+frontend/.docker_temp*
+# Add these lines to your existing .gitignore:
+# Git/GitHub
+.git/
+*.pack
+*.idx
+*.ref
+*.old
+*.bundle
+refs/
+packed-refs
+.git/refs/
+.git/objects/
+.git/hooks/
+.git/info/
+.git/logs/
+
+# Large files & archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+*.iso
+
+# Docker
+.docker_temp*
+.docker/
+docker-compose.override.yml.docker_temp*
+# Docker
+.docker_temp*
+.docker/
+docker-compose upcompose.yaml
+docker-compose upcompose.yml

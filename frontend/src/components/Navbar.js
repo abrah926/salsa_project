@@ -53,6 +53,29 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
+            <li className="nav-item ms-lg-3">
+              <Link 
+                className={`nav-link ${getActiveClass("/events/create")}`}
+                to="/events/create"
+                style={{
+                  backgroundColor: 'white',
+                  color: '#8b0000',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  textDecoration: 'none',
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f0f0f0';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = 'white';
+                }}
+              >
+                + Create Event
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

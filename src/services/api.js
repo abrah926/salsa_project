@@ -1,8 +1,3 @@
-// services/api.js
-import axios from "axios";
-
-export const API_BASE_URL = "https://salsa-backend.onrender.com/api";
-
 // Add caching layer
 let eventsCache = null;
 let lastFetch = null;
@@ -24,16 +19,4 @@ export const fetchEvents = async () => {
       console.error("Error fetching events:", error);
       throw new Error("Unable to fetch events. Please try again later.");
     }
-};
-
-// Existing fetchEventDetails function
-export const fetchEventDetails = async (id) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/salsas/${id}/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching event details:", error);
-    throw new Error("Unable to fetch event details. Please try again later.");
-  }
-};
-
+}; 

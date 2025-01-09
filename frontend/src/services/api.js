@@ -1,7 +1,10 @@
 // services/api.js
 import axios from "axios";
 
-export const API_BASE_URL = "https://salsa-backend.onrender.com/api";
+// Use environment variable to switch between local and production URLs
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? "https://salsa-backend.onrender.com"
+  : "http://127.0.0.1:8000";
 
 // Create axios instance with default config
 const api = axios.create({

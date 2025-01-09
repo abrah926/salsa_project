@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
+  const navbarToggler = useRef(null);
 
   const getActiveClass = (path) => {
     return location.pathname === path ? "active" : "";
+  };
+
+  // Function to close the mobile menu
+  const closeNavbar = () => {
+    if (window.innerWidth < 992) { // Bootstrap's lg breakpoint
+      navbarToggler.current.click();
+    }
   };
 
   // Base style for all nav links
@@ -18,14 +26,15 @@ const Navbar = () => {
     transition: 'all 0.3s ease',
     textDecoration: 'none',
     transform: 'translateY(0)',
-    margin: '0 8px', // Add spacing between items
+    margin: '0 8px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   };
 
   // Hover style for all nav links
   const navLinkHoverStyle = {
     backgroundColor: '#f0f0f0',
     transform: 'translateY(-2px)',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    boxShadow: '0 8px 15px rgba(0, 0, 0, 0.3)',
   };
 
   return (
@@ -39,6 +48,7 @@ const Navbar = () => {
     >
       <div className="container">
         <button
+          ref={navbarToggler}
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
@@ -66,6 +76,7 @@ const Navbar = () => {
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
                 }}
+                onClick={closeNavbar}
               >
                 Home
               </Link>
@@ -81,6 +92,7 @@ const Navbar = () => {
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
                 }}
+                onClick={closeNavbar}
               >
                 Events
               </Link>
@@ -96,6 +108,7 @@ const Navbar = () => {
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
                 }}
+                onClick={closeNavbar}
               >
                 Calendar
               </Link>
@@ -111,6 +124,7 @@ const Navbar = () => {
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
                 }}
+                onClick={closeNavbar}
               >
                 Contact
               </Link>
@@ -126,6 +140,7 @@ const Navbar = () => {
                 onMouseOut={(e) => {
                   Object.assign(e.currentTarget.style, navLinkStyle);
                 }}
+                onClick={closeNavbar}
               >
                 + Create Event
               </Link>

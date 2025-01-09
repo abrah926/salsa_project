@@ -3,12 +3,16 @@
     min-height: 100vh;
     padding: 20px;
     color: white;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   .create-event-header {
     display: flex;
     align-items: center;
     margin-bottom: 24px;
+    color: white;
   }
   
   .back-button {
@@ -22,6 +26,8 @@
   }
   
   .create-event-header h1 {
+    color: white;
+    margin: 0;
     font-size: 24px;
     font-weight: 600;
   }
@@ -56,10 +62,52 @@
   .event-form {
     max-width: 600px;
     margin: 0 auto;
+    padding: 20px;
   }
   
   .form-group {
     margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: white;
+    font-size: 16px;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: #2a2b30;
+    border: 1px solid #3a3b40;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+  }
+  
+  input[type="date"],
+  input[type="time"] {
+    min-height: 44px;
+    background-color: #2a2b30;
+    color: white;
+  }
+  
+  ::placeholder {
+    color: #8e8e93;
+    opacity: 1;
+  }
+  
+  :-ms-input-placeholder {
+    color: #8e8e93;
+  }
+  
+  ::-ms-input-placeholder {
+    color: #8e8e93;
   }
   
   .form-row {
@@ -77,16 +125,6 @@
     margin-bottom: 8px;
     color: #8e8e93;
     font-size: 14px;
-  }
-  
-  input, textarea {
-    width: 100%;
-    padding: 12px;
-    background-color: #2a2b30;
-    border: 1px solid #3a3b40;
-    border-radius: 10px;
-    color: white;
-    font-size: 16px;
   }
   
   input:focus, textarea:focus {
@@ -110,6 +148,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 20px;
   }
   
   .submit-button:hover {
@@ -120,5 +159,33 @@
     .form-row {
       flex-direction: column;
       gap: 10px;
+    }
+    
+    .create-event-container {
+      padding: 16px;
+    }
+    
+    input, textarea {
+      font-size: 16px;
+    }
+    
+    input, textarea, label, h1, p {
+      color: white !important;
+    }
+    
+    .create-event-container,
+    input,
+    textarea {
+      background-color: #1a1b1f !important;
+    }
+    
+    input, textarea {
+      border: 1px solid #3a3b40 !important;
+    }
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    input, textarea {
+      color-scheme: dark;
     }
   }

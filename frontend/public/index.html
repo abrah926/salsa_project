@@ -33,6 +33,18 @@
       onload="this.rel='stylesheet'"
     />
 
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/static/css/main.28856040.css" as="style" />
+    <link rel="stylesheet" href="/static/css/main.28856040.css" />
+    
+    <!-- Load fonts asynchronously -->
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" 
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+
     <title>Salsa Events</title>
 
     <noscript>
@@ -47,18 +59,9 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
 
-    <!-- Defer Popper.js -->
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"
-
-    ></script>
-
-    <!-- Defer Bootstrap JS -->
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
-
-    ></script>
+    <!-- Update script paths -->
+    <script defer src="/static/js/main.1112985d.js"></script>
+    <script defer src="/static/js/popper.min.js"></script>
+    <script defer src="/static/js/bootstrap.min.js"></script>
   </body>
 </html>

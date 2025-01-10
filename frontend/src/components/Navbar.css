@@ -28,9 +28,9 @@
     border-radius: 20px; /* Rounded corners */
     font-weight: 500;
     text-decoration: none;
-    transition: all 0.3s ease;
     position: relative; /* For pseudo-elements */
     overflow: hidden; /* Prevent shine effect overflow */
+    transition: color 0.3s ease, background-color 0.3s ease;
   }
   
   /* Add the shine effect */
@@ -52,6 +52,12 @@
     transform: scaleX(1); /* Reveal the shine effect */
   }
   
+  /* Remove the red background on hover */
+  .nav-link:hover {
+    background-color: black; /* Keep background black */
+    color: red; /* Keep text red */
+  }
+  
   /* Active nav link styling */
   .nav-link.active {
     background-color: black; /* Keep the active link black */
@@ -62,12 +68,6 @@
   /* Ensure active link always shows the shine effect */
   .nav-link.active::after {
     transform: scaleX(1); /* Always visible */
-  }
-  
-  /* Hover effect */
-  .nav-link:hover {
-    background-color: red; /* Red background on hover */
-    color: black; /* Black text */
   }
   
   /* Collapsed view for mobile */

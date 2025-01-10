@@ -35,6 +35,7 @@ const Calendar = () => {
       dates.push(date.format("YYYY-MM-DD"));
     }
     return dates;
+    
   };
 
   const dates = generateDatesForMonth();

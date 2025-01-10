@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Calendar as BigCalendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./Calendar.css";
+import "./Calendar.css"; // Enhanced styles
 import { useNavigate } from "react-router-dom";
 import { fetchEvents } from "../services/api";
 
@@ -11,7 +11,7 @@ const localizer = momentLocalizer(moment);
 const Calendar = () => {
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [calendarVisible, setCalendarVisible] = useState(true); // Toggle calendar visibility
+  const [calendarVisible, setCalendarVisible] = useState(true); // Toggle visibility
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Calendar = () => {
     : [];
 
   const toggleCalendar = () => {
-    setCalendarVisible(!calendarVisible); // Toggle calendar visibility
+    setCalendarVisible(!calendarVisible);
   };
 
   return (
@@ -54,7 +54,7 @@ const Calendar = () => {
       {calendarVisible && (
         <BigCalendar
           localizer={localizer}
-          events={[]} // Remove events from calendar cells
+          events={[]} // Remove events from the calendar cells
           selectable={true} // Enable date selection
           onSelectSlot={handleSelectDate} // Handle date selection
           style={{ height: 500, marginBottom: 20 }}

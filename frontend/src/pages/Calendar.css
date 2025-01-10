@@ -1,15 +1,20 @@
-/* Calendar Container */
+/* General Container */
 .calendar-container {
     padding: 20px;
     background-color: #f5f5f5;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
   
-  /* Calendar Header */
+  /* Header Styling */
   .calendar-header {
     text-align: center;
     font-size: 28px;
-    color: #333333;
+    font-weight: bold;
     margin-bottom: 20px;
+    color: #333333;
   }
   
   /* Toggle Button */
@@ -31,21 +36,20 @@
     background-color: #a30000;
   }
   
-  /* Event List */
+  /* Event List Container */
   .event-list {
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
   }
   
   .event-list h2 {
-    margin-bottom: 20px;
+    text-align: center;
     font-size: 22px;
     color: #333333;
-    text-align: center;
+    margin-bottom: 20px;
   }
   
   .no-events {
@@ -54,18 +58,18 @@
     font-size: 16px;
   }
   
-  /* Event Item */
+  /* Event Item Styling */
   .event-item {
-    background-color: #f0f8ff; /* Light blue */
+    background-color: #f0f8ff;
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 15px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   
   .event-item:nth-child(odd) {
-    background-color: #e6ffe6; /* Light green */
+    background-color: #e6ffe6;
   }
   
   .event-item:hover {
@@ -88,7 +92,7 @@
   /* Responsive Design */
   @media (max-width: 768px) {
     .calendar-container {
-      padding: 10px;
+      padding: 15px;
     }
   
     .calendar-header {
@@ -115,5 +119,56 @@
     .event-item p {
       font-size: 12px;
     }
+  }
+  
+  /* Calendar Specific Styling */
+  .rbc-calendar {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rbc-toolbar {
+    background-color: #8b0000;
+    color: #ffffff;
+    border-radius: 8px 8px 0 0;
+    padding: 10px;
+  }
+  
+  .rbc-toolbar button {
+    color: #ffffff;
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 5px;
+  }
+  
+  .rbc-toolbar button:hover {
+    text-decoration: underline;
+  }
+  
+  .rbc-day-bg {
+    background-color: #f9f9f9;
+  }
+  
+  .rbc-day-bg:hover {
+    background-color: #ffe6e6;
+  }
+  
+  .rbc-date-cell {
+    font-weight: bold;
+    color: #8b0000;
+  }
+  
+  .rbc-event {
+    background-color: #8b0000;
+    color: #ffffff;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  .rbc-event:hover {
+    background-color: #a30000;
   }
   

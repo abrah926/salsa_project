@@ -2,11 +2,10 @@
   display: flex;
   justify-content: center; /* Center the content horizontally */
   align-items: center; /* Center the content vertically */
-  background: url('/images/dance-bg.webp') no-repeat center center fixed;
-  background-size: cover; /* Ensure the background image covers the entire container */
   width: 100vw; /* Make it span the full viewport width */
   height: 100vh; /* Make it span the full viewport height */
 }
+
 .content-wrapper {
   border-radius: 8px;
   background-color: rgba(0, 0, 0, 0.5); /* Optional: Add a translucent background to improve text readability */
@@ -33,11 +32,8 @@
 .browse-button:hover {
   background-color: #d43c20; /* Darker hover effect */
 }
-@media (max-width: 768px) {
-  .home-container {
-    background-position: center;
-  }
 
+@media (max-width: 768px) {
   .content-wrapper {
     padding: 10px;
   }

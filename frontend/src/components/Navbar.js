@@ -32,7 +32,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
+          <ul className="navbar-nav ml-auto"> {/* Align items to the right */}
             <li className="nav-item">
               <Link
                 className={`nav-link ${getActiveClass("/")}`}

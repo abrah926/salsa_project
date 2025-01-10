@@ -11,32 +11,66 @@
     border: none;
   }
   
-  /* Nav links base style */
+  /* Navbar items alignment for desktop */
+  .navbar-nav {
+    margin-left: auto; /* Align items to the right */
+  }
+  
+  /* Nav items spacing for desktop */
+  .navbar-nav .nav-item {
+    margin-right: 15px; /* Space between items */
+  }
+  
+  /* Base nav link styles */
   .nav-link {
-    background-color: black; /* Black background for each link */
-    color: red; /* Red text */
+    background-color: black;
+    color: red;
     padding: 8px 16px;
     border-radius: 20px;
     font-weight: 500;
     text-decoration: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    margin: 0 10px; /* Adds space between each element */
-    display: inline-block; /* Ensures elements don't stack */
   }
   
   /* Hover effect for nav links */
   .nav-link:hover {
-    background-color: red; /* Red background on hover */
-    color: black; /* Black text on hover */
-    transform: translateY(-2px); /* Slight lift */
+    background-color: red;
+    color: black;
+    transform: translateY(-2px);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
   }
   
-  /* Active link styling */
+  /* Active nav link styling */
   .nav-link.active {
     background-color: #f0f0f0;
     color: black;
     font-weight: bold;
+  }
+  
+  /* Collapsed view for mobile */
+  .navbar-collapse {
+    text-align: right; /* Align collapsed items to the right */
+  }
+  
+  .navbar-nav .nav-item {
+    margin-bottom: 10px; /* Add spacing for collapsed view */
+  }
+  
+  .nav-link {
+    width: 100%; /* Full width in collapsed view */
+    text-align: center; /* Center text in collapsed view */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 10px; /* Reduce padding for smaller screens */
+    }
+  
+    .nav-link {
+      padding: 10px 20px; /* Larger clickable area */
+      font-size: 16px; /* Slightly larger text for better readability */
+    }
   }
   

@@ -39,6 +39,14 @@ const Calendar = () => {
 
   const dates = generateDatesForMonth();
 
+  const handleDateClick = (date) => {
+    const eventCard = document.getElementById(`event-${date}`);
+    if (eventCard) {
+      eventCard.scrollIntoView({ behavior: "smooth" });
+      setShowCalendar(false);
+    }
+  };
+
   return (
     <div className="calendar-container">
       <div className="month-selector">
@@ -71,10 +79,7 @@ const Calendar = () => {
                               ? "current-month"
                               : "other-month"
                           }
-                          onClick={() => {
-                            setSelectedMonth(currentDay);
-                            setShowCalendar(false);
-                          }}
+                          onClick={() => handleDateClick(currentDay.format("YYYY-MM-DD"))}
                         >
                           {currentDay.date()}
                         </td>
@@ -92,6 +97,7 @@ const Calendar = () => {
           const dayEvents = events.filter((event) => event.date === date);
           return (
             <div
+              id={`event-${date}`}
               className="event-item"
               key={date}
               style={{ backgroundColor: generateColor(date), border: "1px solid black" }}
@@ -125,14 +131,14 @@ const Calendar = () => {
 
 // Generate vibrant and appealing colors for event cards
 const generateColor = (key) => {
-  const colors = ["#4A148C", "#880E4F", "#0D47A1", "#1976D2", "#AD1457", "#6A1B9A", "#283593", "#512DA8", "#1565C0"];
+  const colors = ["#A239CA", "#FF3F81", "#3A86FF", "#8338EC", "#FF006E", "#FB5607", "#FFBE0B", "#FF9F1C"];
   const hash = key.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return colors[hash % colors.length];
 };
 
 // Generate event-specific colors for more randomness
 const generateEventColor = (index) => {
-  const colors = ["#4A148C", "#880E4F", "#0D47A1", "#1976D2", "#AD1457", "#6A1B9A", "#283593", "#512DA8", "#1565C0"];
+  const colors = ["#A239CA", "#FF3F81", "#3A86FF", "#8338EC", "#FF006E", "#FB5607", "#FFBE0B", "#FF9F1C"];
   return colors[index % colors.length];
 };
 

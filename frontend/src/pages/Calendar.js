@@ -5,6 +5,8 @@ import moment from "moment";
 
 const Calendar = () => {
   const [events, setEvents] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(moment());
+  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
     const getEvents = async () => {
@@ -23,10 +25,10 @@ const Calendar = () => {
     getEvents();
   }, []);
 
-  // Generate all dates for the current month
+  // Generate all dates for the selected month
   const generateDatesForMonth = () => {
-    const startOfMonth = moment().startOf("month");
-    const endOfMonth = moment().endOf("month");
+    const startOfMonth = selectedMonth.clone().startOf("month");
+    const endOfMonth = selectedMonth.clone().endOf("month");
     const dates = [];
 
     for (let date = startOfMonth; date.isBefore(endOfMonth); date.add(1, "day")) {
@@ -39,22 +41,42 @@ const Calendar = () => {
 
   return (
     <div className="calendar-container">
-      <h1 className="calendar-header">Event Calendar</h1>
+      <div className="month-selector">
+        <h2 onClick={() => setShowCalendar(!showCalendar)}>
+          {selectedMonth.format("MMMM YYYY")} <span className="dropdown-arrow">&#9662;</span>
+        </h2>
+        {showCalendar && (
+          <div className="calendar-popup">
+            {dates.map((date) => (
+              <div
+                key={date}
+                className="calendar-day"
+                onClick={() => {
+                  setSelectedMonth(moment(date));
+                  setShowCalendar(false);
+                }}
+              >
+                {moment(date).format("D")}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <div className="event-list">
         {dates.map((date) => {
           const dayEvents = events.filter((event) => event.date === date);
           return (
-            <div className="event-item" key={date}>
+            <div
+              className="event-item"
+              key={date}
+              style={{ backgroundColor: generateColor(date) }}
+            >
               <h3>{moment(date).format("MMMM Do, YYYY")}</h3>
               {dayEvents.length === 0 ? (
                 <p className="no-events">No events for this date.</p>
               ) : (
                 dayEvents.map((event, index) => (
-                  <div
-                    className="event-card"
-                    key={index}
-                    style={{ backgroundColor: generateColor(index) }}
-                  >
+                  <div className="event-card" key={index} style={{ backgroundColor: generateEventColor(index) }}>
                     <p>{event.title}</p>
                   </div>
                 ))
@@ -67,9 +89,16 @@ const Calendar = () => {
   );
 };
 
-// Generate vibrant colors for event cards
-const generateColor = (index) => {
-  const colors = ["#f28b82", "#fbbc04", "#34a853", "#4285f4", "#d7aefb", "#46bdc6"];
+// Generate vibrant and appealing colors for event cards
+const generateColor = (key) => {
+  const colors = ["#ffadad", "#ffd6a5", "#fdffb6", "#caffbf", "#9bf6ff", "#a0c4ff", "#bdb2ff", "#ffc6ff", "#ffafcc"];
+  const hash = key.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return colors[hash % colors.length];
+};
+
+// Generate event-specific colors for more randomness
+const generateEventColor = (index) => {
+  const colors = ["#ffadad", "#ffd6a5", "#fdffb6", "#caffbf", "#9bf6ff", "#a0c4ff", "#bdb2ff", "#ffc6ff", "#ffafcc"];
   return colors[index % colors.length];
 };
 

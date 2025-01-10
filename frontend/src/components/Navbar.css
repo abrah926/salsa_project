@@ -1,51 +1,53 @@
 /* Navbar container */
 .navbar {
-    background-color: #8b0000; /* Red background */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    padding: 15px 0;
     display: flex;
     justify-content: flex-end; /* Align items to the right */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background-color: #8b0000; /* Red background */
+    padding: 15px 0;
   }
   
-  /* Navbar toggler button */
+ /* Navbar toggler button */
 .navbar-toggler {
-    background-color: #8b0000; /* Red background */
-    border: 2px solid black; /* Black outline */
+    border: 2px solid black !important; /* Black outline */
     border-radius: 5px; /* Optional: Rounded corners for better aesthetics */
+    background-color: #8b0000 !important; /* Red background */
+    box-shadow: none !important; /* Ensure no unwanted shadow */
   }
+  
   
   
   /* Navbar items */
   .navbar-nav {
-    margin-left: auto; /* Push items to the right */
     display: flex;
     gap: 20px; /* Add spacing between elements */
+    margin-left: auto; /* Push items to the right */
   }
   
   /* Nav links base style */
   .nav-link {
-    background-color: black; /* Black background for links */
-    color: red; /* Red text */
-    padding: 8px 16px;
+    position: relative; /* For pseudo-elements */
+    transition: color 0.3s ease, background-color 0.3s ease;
     border-radius: 20px; /* Rounded corners */
+    background-color: black; /* Black background for links */
+    padding: 8px 16px;
+    overflow: hidden; /* Prevent shine effect overflow */
+    color: red; /* Red text */
     font-weight: 500;
     text-decoration: none;
-    position: relative; /* For pseudo-elements */
-    overflow: hidden; /* Prevent shine effect overflow */
-    transition: color 0.3s ease, background-color 0.3s ease;
   }
   
   /* Add the shine effect */
   .nav-link::after {
-    content: "";
     position: absolute;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
-    height: 3px; /* Height of the shine effect */
-    background: linear-gradient(to right, red, #ff4500, red); /* Gradient shine effect */
     transform: scaleX(0); /* Initially hidden */
     transition: transform 0.3s ease; /* Smooth transition */
+    background: linear-gradient(to right, red, #ff4500, red); /* Gradient shine effect */
+    height: 3px; /* Height of the shine effect */
+    content: "";
   }
   
   /* On hover or focus, show the shine effect */
@@ -74,8 +76,8 @@
   
   /* Collapsed view for mobile */
   .navbar-collapse {
-    background-color: #8b0000; /* Red background for collapsed menu */
     border: none; /* Remove the border */
+    background-color: #8b0000; /* Red background for collapsed menu */
     padding: 10px;
   }
   

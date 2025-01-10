@@ -47,18 +47,43 @@ const Calendar = () => {
         </h2>
         {showCalendar && (
           <div className="calendar-popup">
-            {dates.map((date) => (
-              <div
-                key={date}
-                className="calendar-day"
-                onClick={() => {
-                  setSelectedMonth(moment(date));
-                  setShowCalendar(false);
-                }}
-              >
-                {moment(date).format("D")}
-              </div>
-            ))}
+            <table className="mini-calendar">
+              <thead>
+                <tr>
+                  {moment.weekdaysShort().map((day) => (
+                    <th key={day}>{day}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 6 }).map((_, weekIndex) => (
+                  <tr key={weekIndex}>
+                    {Array.from({ length: 7 }).map((_, dayIndex) => {
+                      const currentDay = selectedMonth.clone()
+                        .startOf("month")
+                        .startOf("week")
+                        .add(weekIndex * 7 + dayIndex, "days");
+                      return (
+                        <td
+                          key={dayIndex}
+                          className={
+                            currentDay.month() === selectedMonth.month()
+                              ? "current-month"
+                              : "other-month"
+                          }
+                          onClick={() => {
+                            setSelectedMonth(currentDay);
+                            setShowCalendar(false);
+                          }}
+                        >
+                          {currentDay.date()}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
@@ -69,14 +94,23 @@ const Calendar = () => {
             <div
               className="event-item"
               key={date}
-              style={{ backgroundColor: generateColor(date) }}
+              style={{ backgroundColor: generateColor(date), border: "1px solid black" }}
             >
               <h3>{moment(date).format("MMMM Do, YYYY")}</h3>
               {dayEvents.length === 0 ? (
                 <p className="no-events">No events for this date.</p>
               ) : (
                 dayEvents.map((event, index) => (
-                  <div className="event-card" key={index} style={{ backgroundColor: generateEventColor(index) }}>
+                  <div
+                    className="event-card"
+                    key={index}
+                    style={{
+                      backgroundColor: generateEventColor(index),
+                      border: "1px solid black",
+                      margin: "5px 0",
+                      padding: "5px",
+                    }}
+                  >
                     <p>{event.title}</p>
                   </div>
                 ))
@@ -91,14 +125,14 @@ const Calendar = () => {
 
 // Generate vibrant and appealing colors for event cards
 const generateColor = (key) => {
-  const colors = ["#ffadad", "#ffd6a5", "#fdffb6", "#caffbf", "#9bf6ff", "#a0c4ff", "#bdb2ff", "#ffc6ff", "#ffafcc"];
+  const colors = ["#4A148C", "#880E4F", "#0D47A1", "#1976D2", "#AD1457", "#6A1B9A", "#283593", "#512DA8", "#1565C0"];
   const hash = key.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return colors[hash % colors.length];
 };
 
 // Generate event-specific colors for more randomness
 const generateEventColor = (index) => {
-  const colors = ["#ffadad", "#ffd6a5", "#fdffb6", "#caffbf", "#9bf6ff", "#a0c4ff", "#bdb2ff", "#ffc6ff", "#ffafcc"];
+  const colors = ["#4A148C", "#880E4F", "#0D47A1", "#1976D2", "#AD1457", "#6A1B9A", "#283593", "#512DA8", "#1565C0"];
   return colors[index % colors.length];
 };
 

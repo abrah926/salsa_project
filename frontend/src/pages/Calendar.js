@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Calendar as BigCalendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./Calendar.css"; // Enhanced styles
-import { useNavigate } from "react-router-dom";
 import { fetchEvents } from "../services/api";
-
-const localizer = momentLocalizer(moment);
+import "./Calendar.css";
+import moment from "moment";
 
 const Calendar = () => {
   const [events, setEvents] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [calendarVisible, setCalendarVisible] = useState(true); // Toggle visibility
-  const navigate = useNavigate();
 
   useEffect(() => {
     const getEvents = async () => {
@@ -20,9 +12,7 @@ const Calendar = () => {
         const data = await fetchEvents();
         const formattedEvents = data.map((event) => ({
           title: event.name,
-          start: new Date(event.event_date),
-          end: new Date(event.event_date),
-          id: event.id,
+          date: moment(event.event_date).format("YYYY-MM-DD"),
         }));
         setEvents(formattedEvents);
       } catch (error) {
@@ -33,52 +23,54 @@ const Calendar = () => {
     getEvents();
   }, []);
 
-  const handleSelectDate = (slotInfo) => {
-    setSelectedDate(slotInfo.start); // Update selected date
+  // Generate all dates for the current month
+  const generateDatesForMonth = () => {
+    const startOfMonth = moment().startOf("month");
+    const endOfMonth = moment().endOf("month");
+    const dates = [];
+
+    for (let date = startOfMonth; date.isBefore(endOfMonth); date.add(1, "day")) {
+      dates.push(date.format("YYYY-MM-DD"));
+    }
+    return dates;
   };
 
-  const filteredEvents = selectedDate
-    ? events.filter((event) => moment(event.start).isSame(selectedDate, "day"))
-    : [];
-
-  const toggleCalendar = () => {
-    setCalendarVisible(!calendarVisible);
-  };
+  const dates = generateDatesForMonth();
 
   return (
     <div className="calendar-container">
       <h1 className="calendar-header">Event Calendar</h1>
-      <button className="toggle-calendar-btn" onClick={toggleCalendar}>
-        {calendarVisible ? "Hide Calendar" : "Show Calendar"}
-      </button>
-      {calendarVisible && (
-        <BigCalendar
-          localizer={localizer}
-          events={[]} // Remove events from the calendar cells
-          selectable={true} // Enable date selection
-          onSelectSlot={handleSelectDate} // Handle date selection
-          style={{ height: 500, marginBottom: 20 }}
-        />
-      )}
       <div className="event-list">
-        <h2>
-          Events for {selectedDate ? moment(selectedDate).format("MMMM Do, YYYY") : "Selected Date"}
-        </h2>
-        {filteredEvents.length === 0 ? (
-          <p className="no-events">No events for this date.</p>
-        ) : (
-          filteredEvents.map((event) => (
-            <div className="event-item" key={event.id}>
-              <h3>{event.title}</h3>
-              <p>
-                {moment(event.start).format("h:mm A")} - {moment(event.end).format("h:mm A")}
-              </p>
+        {dates.map((date) => {
+          const dayEvents = events.filter((event) => event.date === date);
+          return (
+            <div className="event-item" key={date}>
+              <h3>{moment(date).format("MMMM Do, YYYY")}</h3>
+              {dayEvents.length === 0 ? (
+                <p className="no-events">No events for this date.</p>
+              ) : (
+                dayEvents.map((event, index) => (
+                  <div
+                    className="event-card"
+                    key={index}
+                    style={{ backgroundColor: generateColor(index) }}
+                  >
+                    <p>{event.title}</p>
+                  </div>
+                ))
+              )}
             </div>
-          ))
-        )}
+          );
+        })}
       </div>
     </div>
   );
+};
+
+// Generate vibrant colors for event cards
+const generateColor = (index) => {
+  const colors = ["#f28b82", "#fbbc04", "#34a853", "#4285f4", "#d7aefb", "#46bdc6"];
+  return colors[index % colors.length];
 };
 
 export default Calendar;

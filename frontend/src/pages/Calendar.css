@@ -1,4 +1,4 @@
-/* General Container */
+/* General Calendar Styles */
 .calendar-container {
     padding: 20px;
     background-color: #f5f5f5;
@@ -8,7 +8,6 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
   
-  /* Header Styling */
   .calendar-header {
     text-align: center;
     font-size: 28px;
@@ -17,158 +16,72 @@
     color: #333333;
   }
   
-  /* Toggle Button */
-  .toggle-calendar-btn {
-    display: block;
-    margin: 0 auto 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffffff;
-    background-color: #8b0000;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .toggle-calendar-btn:hover {
-    background-color: #a30000;
-  }
-  
   /* Event List Container */
   .event-list {
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
   }
   
-  .event-list h2 {
-    text-align: center;
-    font-size: 22px;
-    color: #333333;
+  /* Event Item (Date Section) */
+  .event-item {
     margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
   }
   
+  .event-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .event-item h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #333333;
+  }
+  
+  /* No Events Message */
   .no-events {
     text-align: center;
     color: #999999;
     font-size: 16px;
   }
   
-  /* Event Item Styling */
-  .event-item {
-    background-color: #f0f8ff;
+  /* Event Card */
+  .event-card {
+    padding: 10px;
+    margin: 10px 0;
     border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   
-  .event-item:nth-child(odd) {
-    background-color: #e6ffe6;
-  }
-  
-  .event-item:hover {
-    transform: scale(1.02);
+  .event-card:hover {
+    transform: scale(1.03);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
   
-  .event-item h3 {
-    margin: 0;
-    font-size: 18px;
-    color: #333333;
-  }
-  
-  .event-item p {
-    margin: 5px 0 0;
-    font-size: 14px;
-    color: #666666;
-  }
-  
-  /* Responsive Design */
+  /* Responsive Adjustments */
   @media (max-width: 768px) {
     .calendar-container {
-      padding: 15px;
+      padding: 10px;
     }
   
     .calendar-header {
-      font-size: 22px;
-    }
-  
-    .toggle-calendar-btn {
-      font-size: 14px;
-      padding: 8px 16px;
-    }
-  
-    .event-list {
-      padding: 15px;
+      font-size: 24px;
     }
   
     .event-item {
       padding: 10px;
     }
   
-    .event-item h3 {
-      font-size: 16px;
+    .event-card {
+      padding: 8px;
+      font-size: 14px;
     }
-  
-    .event-item p {
-      font-size: 12px;
-    }
-  }
-  
-  /* Calendar Specific Styling */
-  .rbc-calendar {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .rbc-toolbar {
-    background-color: #8b0000;
-    color: #ffffff;
-    border-radius: 8px 8px 0 0;
-    padding: 10px;
-  }
-  
-  .rbc-toolbar button {
-    color: #ffffff;
-    background-color: transparent;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 0 5px;
-  }
-  
-  .rbc-toolbar button:hover {
-    text-decoration: underline;
-  }
-  
-  .rbc-day-bg {
-    background-color: #f9f9f9;
-  }
-  
-  .rbc-day-bg:hover {
-    background-color: #ffe6e6;
-  }
-  
-  .rbc-date-cell {
-    font-weight: bold;
-    color: #8b0000;
-  }
-  
-  .rbc-event {
-    background-color: #8b0000;
-    color: #ffffff;
-    border-radius: 5px;
-    padding: 5px;
-  }
-  
-  .rbc-event:hover {
-    background-color: #a30000;
   }
   

@@ -14,7 +14,6 @@ const Calendar = () => {
         const data = await fetchEvents();
         const formattedEvents = data.map((event) => ({
           title: event.name,
-          time: moment(event.event_date).format("h:mm A"),
           date: moment(event.event_date).format("YYYY-MM-DD"),
         }));
         setEvents(formattedEvents);
@@ -26,6 +25,7 @@ const Calendar = () => {
     getEvents();
   }, []);
 
+  // Generate all dates for the selected month
   const generateDatesForMonth = () => {
     const startOfMonth = selectedMonth.clone().startOf("month");
     const endOfMonth = selectedMonth.clone().endOf("month");
@@ -35,7 +35,6 @@ const Calendar = () => {
       dates.push(date.format("YYYY-MM-DD"));
     }
     return dates;
-    
   };
 
   const dates = generateDatesForMonth();
@@ -52,8 +51,7 @@ const Calendar = () => {
     <div className="calendar-container">
       <div className="month-selector">
         <h2 onClick={() => setShowCalendar(!showCalendar)}>
-          {selectedMonth.format("MMM YYYY")}{" "}
-          <span className="dropdown-arrow">&#9662;</span>
+          {selectedMonth.format("MMMM YYYY")} <span className="dropdown-arrow">&#9662;</span>
         </h2>
         {showCalendar && (
           <div className="calendar-popup">
@@ -97,48 +95,51 @@ const Calendar = () => {
       <div className="event-list">
         {dates.map((date) => {
           const dayEvents = events.filter((event) => event.date === date);
-          const dayName = moment(date).format("ddd");
-          const dayNumber = moment(date).format("D");
           return (
-            <div id={`event-${date}`} className="event-item" key={date}>
-              <div className="event-date">
-                <span className="day-name">{dayName}</span>
-                <span className="day-number">{dayNumber}</span>
-              </div>
-              <div
-                className="event-content"
-                style={{
-                  backgroundColor: "#FF0000", // Red background
-                  borderRadius: "8px",
-                  padding: "10px",
-                }}
-              >
-                {dayEvents.length === 0 ? (
-                  <p className="no-events">No events for this date.</p>
-                ) : (
-                  dayEvents.map((event, index) => (
-                    <div
-                      className="event-card"
-                      key={index}
-                      style={{
-                        backgroundColor: "#FF0000", // Red background
-                        color: "black",
-                        margin: "5px 0",
-                        padding: "5px",
-                      }}
-                    >
-                      <p>{event.title}</p>
-                      <p>{event.time}</p>
-                    </div>
-                  ))
-                )}
-              </div>
+            <div
+              id={`event-${date}`}
+              className="event-item"
+              key={date}
+              style={{ backgroundColor: generateColor(date), border: "1px solid black" }}
+            >
+              <h3>{moment(date).format("MMMM Do, YYYY")}</h3>
+              {dayEvents.length === 0 ? (
+                <p className="no-events">No events for this date.</p>
+              ) : (
+                dayEvents.map((event, index) => (
+                  <div
+                    className="event-card"
+                    key={index}
+                    style={{
+                      backgroundColor: generateEventColor(index),
+                      border: "1px solid black",
+                      margin: "5px 0",
+                      padding: "5px",
+                    }}
+                  >
+                    <p>{event.title}</p>
+                  </div>
+                ))
+              )}
             </div>
           );
         })}
       </div>
     </div>
   );
+};
+
+// Generate vibrant and appealing colors for event cards
+const generateColor = (key) => {
+  const colors = ["#A239CA", "#FF3F81", "#3A86FF", "#8338EC", "#FF006E", "#FB5607", "#FFBE0B", "#FF9F1C"];
+  const hash = key.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return colors[hash % colors.length];
+};
+
+// Generate event-specific colors for more randomness
+const generateEventColor = (index) => {
+  const colors = ["#A239CA", "#FF3F81", "#3A86FF", "#8338EC", "#FF006E", "#FB5607", "#FFBE0B", "#FF9F1C"];
+  return colors[index % colors.length];
 };
 
 export default Calendar;

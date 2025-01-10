@@ -1,49 +1,82 @@
-/* General container styling */
+/* Calendar Container */
 .calendar-container {
     padding: 20px;
     background-color: #f5f5f5;
   }
   
-  /* Calendar header */
+  /* Calendar Header */
   .calendar-header {
     text-align: center;
+    font-size: 28px;
+    color: #333333;
     margin-bottom: 20px;
-    font-size: 24px;
   }
   
-  /* Event list container */
+  /* Toggle Button */
+  .toggle-calendar-btn {
+    display: block;
+    margin: 0 auto 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #8b0000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .toggle-calendar-btn:hover {
+    background-color: #a30000;
+  }
+  
+  /* Event List */
   .event-list {
-    margin-top: 20px;
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
   }
   
-  /* Event list item styling */
+  .event-list h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #333333;
+    text-align: center;
+  }
+  
+  .no-events {
+    text-align: center;
+    color: #999999;
+    font-size: 16px;
+  }
+  
+  /* Event Item */
   .event-item {
-    margin-bottom: 15px;
-    padding: 15px;
+    background-color: #f0f8ff; /* Light blue */
     border-radius: 8px;
-    background-color: #f0f8ff; /* Light blue background */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease; /* Add hover effect */
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   
   .event-item:nth-child(odd) {
-    background-color: #e6ffe6; /* Light green for alternating rows */
+    background-color: #e6ffe6; /* Light green */
   }
   
-  /* Hover effect for event items */
   .event-item:hover {
-    transform: scale(1.02); /* Slight zoom on hover */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
   
-  /* Event titles */
   .event-item h3 {
     margin: 0;
     font-size: 18px;
+    color: #333333;
   }
   
   .event-item p {
@@ -52,21 +85,19 @@
     color: #666666;
   }
   
-  /* Calendar styling */
-  .rbc-calendar {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Responsive adjustments */
+  /* Responsive Design */
   @media (max-width: 768px) {
     .calendar-container {
       padding: 10px;
     }
   
     .calendar-header {
-      font-size: 20px;
+      font-size: 22px;
+    }
+  
+    .toggle-calendar-btn {
+      font-size: 14px;
+      padding: 8px 16px;
     }
   
     .event-list {
@@ -83,10 +114,6 @@
   
     .event-item p {
       font-size: 12px;
-    }
-  
-    .rbc-calendar {
-      font-size: 12px; /* Adjust font size for smaller screens */
     }
   }
   

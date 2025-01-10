@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import "./Navbar.css"; // Import the CSS file
 
 const Navbar = () => {
   const location = useLocation();
@@ -9,43 +10,14 @@ const Navbar = () => {
     return location.pathname === path ? "active" : "";
   };
 
-  // Function to close the mobile menu
   const closeNavbar = () => {
-    if (window.innerWidth < 992) { // Bootstrap's lg breakpoint
+    if (window.innerWidth < 992) {
       navbarToggler.current.click();
     }
   };
 
-  // Base style for all nav links
-  const navLinkStyle = {
-    backgroundColor: 'white',
-    color: '#8b0000',
-    padding: '8px 16px',
-    borderRadius: '20px',
-    fontWeight: '500',
-    transition: 'all 0.3s ease',
-    textDecoration: 'none',
-    transform: 'translateY(0)',
-    margin: '0 8px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  };
-
-  // Hover style for all nav links
-  const navLinkHoverStyle = {
-    backgroundColor: '#f0f0f0',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 8px 15px rgba(0, 0, 0, 0.3)',
-  };
-
   return (
-    <nav
-      className="navbar navbar-expand-lg"
-      style={{
-        backgroundColor: "#8b0000",
-        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-        padding: "15px 0", // Add more vertical padding
-      }}
-    >
+    <nav className="navbar navbar-expand-lg">
       <div className="container">
         <button
           ref={navbarToggler}
@@ -56,90 +28,51 @@ const Navbar = () => {
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
-          style={{
-            backgroundColor: 'white',
-            border: 'none',
-          }}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav mx-auto" style={{ gap: '15px' }}> {/* Added gap between items */}
+          <ul className="navbar-nav">
             <li className="nav-item">
-              <Link 
+              <Link
                 className={`nav-link ${getActiveClass("/")}`}
                 to="/"
-                style={navLinkStyle}
-                onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
-                }}
-                onMouseOut={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkStyle);
-                }}
                 onClick={closeNavbar}
               >
                 Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
+              <Link
                 className={`nav-link ${getActiveClass("/events")}`}
                 to="/events"
-                style={navLinkStyle}
-                onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
-                }}
-                onMouseOut={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkStyle);
-                }}
                 onClick={closeNavbar}
               >
                 Events
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
+              <Link
                 className={`nav-link ${getActiveClass("/calendar")}`}
                 to="/calendar"
-                style={navLinkStyle}
-                onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
-                }}
-                onMouseOut={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkStyle);
-                }}
                 onClick={closeNavbar}
               >
                 Calendar
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
+              <Link
                 className={`nav-link ${getActiveClass("/contact")}`}
                 to="/contact"
-                style={navLinkStyle}
-                onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
-                }}
-                onMouseOut={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkStyle);
-                }}
                 onClick={closeNavbar}
               >
                 Contact
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
+              <Link
                 className={`nav-link ${getActiveClass("/events/create")}`}
                 to="/events/create"
-                style={navLinkStyle}
-                onMouseOver={(e) => {
-                  Object.assign(e.currentTarget.style, {...navLinkStyle, ...navLinkHoverStyle});
-                }}
-                onMouseOut={(e) => {
-                  Object.assign(e.currentTarget.style, navLinkStyle);
-                }}
                 onClick={closeNavbar}
               >
                 + Create Event

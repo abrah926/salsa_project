@@ -1,0 +1,46 @@
+/* Navbar container */
+.navbar {
+    background-color: #8b0000; /* Dark red background */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+    padding: 15px 0;
+  }
+  
+  /* Navbar toggler */
+  .navbar-toggler {
+    background-color: white;
+    border: none;
+  }
+  
+  /* Navbar items */
+  .navbar-nav {
+    gap: 15px; /* Space between items */
+    margin: 0 auto;
+  }
+  
+  /* Nav links base style */
+  .nav-link {
+    background-color: black; /* Black background */
+    color: red; /* Red text color */
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  /* Hover effect for nav links */
+  .nav-link:hover {
+    background-color: red; /* Red background on hover */
+    color: black; /* Black text on hover */
+    transform: translateY(-2px); /* Slight lift */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Active link styling */
+  .nav-link.active {
+    background-color: #f0f0f0;
+    color: black;
+    font-weight: bold;
+  }
+  

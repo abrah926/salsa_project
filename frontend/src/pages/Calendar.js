@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Calendar as BigCalendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import "./calendar.css"; // Import CSS for styling
+import { useNavigate } from "react-router-dom";
 import { fetchEvents } from "../services/api";
 
 const localizer = momentLocalizer(moment);
 
 const Calendar = () => {
   const [events, setEvents] = useState([]);
-  const navigate = useNavigate(); // React Router's navigation hook
+  const [selectedDate, setSelectedDate] = useState(null); // State for selected date
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getEvents = async () => {
@@ -19,7 +21,7 @@ const Calendar = () => {
           title: event.name,
           start: new Date(event.event_date),
           end: new Date(event.event_date),
-          id: event.id, // Include the event ID for linking
+          id: event.id,
         }));
         setEvents(formattedEvents);
       } catch (error) {
@@ -31,21 +33,49 @@ const Calendar = () => {
   }, []);
 
   const handleSelectEvent = (event) => {
-    // Navigate to the Event Details page when an event is clicked
     navigate(`/events/${event.id}`);
   };
 
+  const handleSelectDate = (date) => {
+    setSelectedDate(date); // Update selected date
+  };
+
+  const filteredEvents = selectedDate
+    ? events.filter(
+        (event) =>
+          moment(event.start).isSame(selectedDate, "day") // Compare dates
+      )
+    : [];
+
   return (
-    <div className="container mt-5">
-      <h1 className="mb-4">Event Calendar</h1>
+    <div className="calendar-container">
+      <h1 className="calendar-header">Event Calendar</h1>
       <BigCalendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 500 }}
-        onSelectEvent={handleSelectEvent} // Attach the click handler
+        selectable={true} // Make dates selectable
+        onNavigate={(date) => handleSelectDate(date)} // Update selected date
+        onSelectEvent={handleSelectEvent}
       />
+      <div className="event-list">
+        <h2>Events for {selectedDate ? moment(selectedDate).format("MMMM Do, YYYY") : "Selected Date"}</h2>
+        {filteredEvents.length === 0 ? (
+          <p>No events for this date.</p>
+        ) : (
+          filteredEvents.map((event) => (
+            <div className="event-item" key={event.id}>
+              <h3>{event.title}</h3>
+              <p>
+                {moment(event.start).format("h:mm A")} -{" "}
+                {moment(event.end).format("h:mm A")}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };

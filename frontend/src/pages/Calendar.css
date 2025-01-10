@@ -1,0 +1,92 @@
+/* General container styling */
+.calendar-container {
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
+  /* Calendar header */
+  .calendar-header {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  /* Event list container */
+  .event-list {
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Event list item styling */
+  .event-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f0f8ff; /* Light blue background */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease; /* Add hover effect */
+  }
+  
+  .event-item:nth-child(odd) {
+    background-color: #e6ffe6; /* Light green for alternating rows */
+  }
+  
+  /* Hover effect for event items */
+  .event-item:hover {
+    transform: scale(1.02); /* Slight zoom on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Event titles */
+  .event-item h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .event-item p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #666666;
+  }
+  
+  /* Calendar styling */
+  .rbc-calendar {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .calendar-container {
+      padding: 10px;
+    }
+  
+    .calendar-header {
+      font-size: 20px;
+    }
+  
+    .event-list {
+      padding: 15px;
+    }
+  
+    .event-item {
+      padding: 10px;
+    }
+  
+    .event-item h3 {
+      font-size: 16px;
+    }
+  
+    .event-item p {
+      font-size: 12px;
+    }
+  
+    .rbc-calendar {
+      font-size: 12px; /* Adjust font size for smaller screens */
+    }
+  }
+  

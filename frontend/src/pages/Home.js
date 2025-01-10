@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
-import danceBackground from '../images/dance-bg.webp'; // Import the image dynamically
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const Home = () => {
     <div
       className="home-container"
       style={{
-        background: `url(${danceBackground}) no-repeat center center fixed`,
+        background: "url('/images/dance-bg.webp') no-repeat center center fixed", // Direct URL for the background image
         backgroundSize: 'cover', // Ensure the background image covers the entire container
       }}
     >

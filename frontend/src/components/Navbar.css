@@ -9,10 +9,10 @@
   
  /* Navbar toggler button */
 .navbar-toggler {
+    box-shadow: none !important; /* Ensure no unwanted shadow */
     border: 2px solid black !important; /* Black outline */
     border-radius: 5px; /* Optional: Rounded corners for better aesthetics */
     background-color: #8b0000 !important; /* Red background */
-    box-shadow: none !important; /* Ensure no unwanted shadow */
   }
   
   

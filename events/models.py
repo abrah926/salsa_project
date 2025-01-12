@@ -24,6 +24,7 @@ class Salsa(models.Model):
         null=True, blank=True, 
         help_text="Last date of recurrence"
     )  # End date for recurring events
+    image_url = models.URLField(max_length=500, null=True, blank=True)  # Image field
 
     def __str__(self):
         return self.name or "Unnamed Event"

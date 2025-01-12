@@ -2,6 +2,7 @@ import dj_database_url
 from pathlib import Path
 from decouple import config
 import os
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,7 +13,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME', '127.0.0.1')
-ALLOWED_HOSTS = ['salsa-backend.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['salsa-backend.onrender.com', '127.0.0.1', 'localhost', 'ed15-66-9-164-229.ngrok-free.app']
 
 
 ROOT_URLCONF = 'salsa.urls'
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # Add Whitenoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -44,7 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -52,7 +54,22 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'https://salsa-events.netlify.app',
     "https://salsa-frontend.onrender.com",
+    'https://ed15-66-9-164-229.ngrok-free.app',
 ]
+
+NGROK_ORIGIN = os.getenv('NGROK_HOST', None)
+if NGROK_ORIGIN:
+    CORS_ALLOWED_ORIGINS.append(f"https://{NGROK_ORIGIN}")
+else:
+    # Optionally, fallback to a default or print a warning
+    print("NGROK_HOST is not set. Ensure it is configured correctly.")
+
+
+#Allow specific headers if needed
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Content-Type',
+]
+
 
 DATABASES = {
     'default': dj_database_url.config(

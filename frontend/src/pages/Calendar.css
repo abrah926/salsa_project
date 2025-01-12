@@ -1,7 +1,7 @@
 /* Calendar container styles */
 .calendar-container {
-    padding: 20px;
     background-color: #121212;
+    padding: 20px;
     color: white;
   }
   
@@ -10,44 +10,44 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.5rem;
     cursor: pointer;
     margin-bottom: 20px;
+    font-size: 1.5rem;
   }
   
   .dropdown-arrow {
-    font-size: 1.2rem;
     margin-left: 10px;
+    font-size: 1.2rem;
   }
   
   /* Mini calendar styles */
   .calendar-popup {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
     background-color: #1e1e1e;
     padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
   }
   
   .mini-calendar {
-    width: 100%;
     border-collapse: collapse;
+    width: 100%;
   }
   
   .mini-calendar th {
     padding: 5px;
-    text-align: center;
     color: #ffbe0b;
     font-weight: bold;
+    text-align: center;
   }
   
   .mini-calendar td {
+    transition: background-color 0.3s ease;
+    cursor: pointer;
     width: 14.2%;
     height: 40px;
-    text-align: center;
-    cursor: pointer;
     color: white;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    text-align: center;
   }
   
   .mini-calendar td:hover {
@@ -71,8 +71,8 @@
   
   .event-item {
     margin-bottom: 20px;
-    padding: 15px;
     border-radius: 8px;
+    padding: 15px;
     color: white;
   }
   
@@ -85,8 +85,8 @@
   }
   
   .event-card {
-    padding: 10px;
     border-radius: 4px;
+    padding: 10px;
     color: white;
     font-size: 0.9rem;
   }

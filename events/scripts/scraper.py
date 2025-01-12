@@ -122,7 +122,7 @@ def run_scraper():
     Main script to scrape events from Facebook and DanceUS.org and save them into the database.
     """
     # Facebook URL
-    facebook_url = "https://www.facebook.com/your-facebook-page-name"  # Replace with your actual Facebook page URL
+    facebook_url = "https://www.facebook.com/groups/SalsaConEstiloPR/?ref=share&mibextid=NSMWBT"  # Facebook page URL
     print(f"Fetching Facebook events from: {facebook_url}")
     fb_events = fetch_facebook_events(facebook_url)
     if fb_events:

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@bochilteam/scraper": "^5.0.1",
+    "puppeteer": "^24.0.0"
+  }
+}

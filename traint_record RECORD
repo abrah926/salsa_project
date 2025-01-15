@@ -1,0 +1,23 @@
+                                          Table "public.salsas"
+       Column        |          Type          | Collation | Nullable |              Default               
+---------------------+------------------------+-----------+----------+------------------------------------
+ id                  | integer                |           | not null | nextval('salsas_id_seq'::regclass)
+ event_date          | date                   |           |          | 
+ day                 | character varying(50)  |           |          | 
+ time                | time without time zone |           |          | 
+ name                | character varying(255) |           |          | 
+ location            | text                   |           |          | 
+ source              | character varying(100) |           |          | 
+ price               | character varying(50)  |           |          | 
+ details             | text                   |           |          | 
+ recurrence          | character varying(50)  |           |          | 
+ recurrence_interval | integer                |           |          | 1
+ end_date            | date                   |           |          | 
+ end_recurring_date  | date                   |           |          | 
+ image_url           | character varying(500) |           |          | 
+Indexes:
+    "salsas_pkey" PRIMARY KEY, btree (id)
+    "unique_event" UNIQUE CONSTRAINT, btree (name, location, event_date)
+Referenced by:
+    TABLE "events_maplocation" CONSTRAINT "events_maplocation_event_id_e1bd92b5_fk_salsas_id" FOREIGN KEY (event_id) REFERENCES salsas(id) DEFERRABLE INITIALLY DEFERRED
+

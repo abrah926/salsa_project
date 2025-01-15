@@ -1,9 +1,11 @@
 from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 from .models import Salsa
 
 # Define limits for future dates
 MAX_FUTURE_LIMIT = date.today() + timedelta(days=365)  # 1 year
 MIN_FUTURE_LIMIT = date.today() + timedelta(days=6 * 30)  # 6 months
+
 
 def fetch_recurring_events():
     """
@@ -12,9 +14,11 @@ def fetch_recurring_events():
     today = date.today()
     # Query all events with recurrence rules
     return Salsa.objects.filter(
-        recurrence__isnull=False,  # Events with a recurrence rule
+        recurrence__in=["WEEKLY", "MONTHLY"],  # Include only supported recurrence types
+        recurrence_interval=1,  # Include only events with interval = 1
         event_date__lte=today  # Include only events starting today or earlier
     )
+
 
 def generate_future_dates(event, end_date):
     """
@@ -22,31 +26,25 @@ def generate_future_dates(event, end_date):
     """
     start_date = event.event_date
     recurrence = event.recurrence
-    interval = event.recurrence_interval or 1
+    interval = event.recurrence_interval or 1  # Default to 1 if None
 
     future_dates = []
     current_date = start_date
 
     while current_date <= end_date:
-        if recurrence == "DAILY":
-            current_date += timedelta(days=interval)
-        elif recurrence == "WEEKLY":
+        if recurrence == "WEEKLY":
             current_date += timedelta(weeks=interval)
         elif recurrence == "MONTHLY":
-            # Handle monthly increments
-            next_month = (current_date.month % 12) + 1
-            year_increment = (current_date.month + interval - 1) // 12
-            current_date = current_date.replace(
-                year=current_date.year + year_increment,
-                month=next_month
-            )
+            # Use relativedelta to handle monthly increments correctly
+            current_date += relativedelta(months=interval)
         else:
-            break  # Unsupported recurrence type
+            break  # Skip unsupported recurrence types
 
         if current_date <= end_date:
             future_dates.append(current_date)
 
     return future_dates
+
 
 def populate_future_events():
     """

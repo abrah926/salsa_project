@@ -1,4 +1,4 @@
-import dj_database_url
+import dj_database_url  # noqa
 from pathlib import Path
 from decouple import config
 import os
@@ -27,31 +27,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'events',
+    'corsheaders',
     'rest_framework',
     'drf_yasg',
     'django_filters',
     'django_extensions',
-    'corsheaders',
     'django_q',
+    'events',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add Whitenoise for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://localhost:5173',  # Add this for Vite
+    'http://127.0.0.1:5173',  # Add this for Vite
     'https://salsa-events.netlify.app',
     "https://salsa-frontend.onrender.com",
     'https://ed15-66-9-164-229.ngrok-free.app',
@@ -72,10 +73,14 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'salsadb',
+        'USER': 'abrah926',
+        'PASSWORD': 'KEbP5I9Rdj0M9Gh4u13WrkvrMfo9EUKp',
+        'HOST': 'dpg-ctippotumphs73f5jbsg-a.virginia-postgres.render.com',
+        'PORT': '5432',
+    }
 }
 
 TEMPLATES = [

@@ -36,7 +36,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
       className="p-3"
     >
       <Card 
-        className="cursor-pointer overflow-hidden relative h-[500px] rounded-2xl border border-white/10 shadow-lg w-[calc(100%+60px)] -ml-[30px] flex flex-col" 
+        className="cursor-pointer overflow-hidden relative h-[500px] rounded-2xl border border-white/10 shadow-lg w-[300px] mx-2 flex flex-col" 
         onClick={onClick}
       >
         {/* Top section with event details */}

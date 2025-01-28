@@ -57,8 +57,8 @@ const Events = () => {
           <div className="w-[90%] md:w-[65%] mx-auto aspect-[4/3] bg-gray-800/50 animate-pulse rounded-3xl" />
         </div>
       ) : (
-        <div className="flex-1 flex items-center touch-pan-x">
-          <div className="snap-x snap-mandatory overflow-x-auto overflow-y-hidden flex w-full scrollbar-hide">
+        <div className="flex-1 flex items-center">
+          <div className="snap-x snap-mandatory overflow-x-auto overflow-y-hidden flex w-full">
             {sortedEvents.length === 0 ? (
               <div className="flex-shrink-0 w-full flex items-center justify-center py-12 text-white/60">
                 No events found for the selected date
@@ -66,7 +66,7 @@ const Events = () => {
             ) : (
               sortedEvents.map((event) => (
                 <div key={event.id} className="flex-shrink-0 w-full flex items-center justify-center snap-center">
-                  <div className="max-w-[65%] mx-auto">
+                  <div className="max-w-[65%] md:mx-auto mx-auto sm:-ml-[30px]">
                     <EventCard
                       event={event}
                       onClick={() => setLocation(`/events/${event.id}`)}

@@ -51,9 +51,13 @@ const EventDetails = () => {
     'Time TBA';
 
   // Format the full date
-  const formattedDate = event?.event_date ? 
-    format(new Date(event.event_date), 'MMMM d, yyyy') : 
-    'Date TBA';
+  const eventDateValue = event?.event_date || event?.eventDate;
+
+const formattedDate = eventDateValue
+  ? format(new Date(eventDateValue), 'MMMM d, yyyy')
+  : 'Date TBA';
+
+
 
   return (
     <motion.div
@@ -85,12 +89,10 @@ const EventDetails = () => {
         </div>
 
         <div className="flex items-center gap-2 text-gray-600">
-          <MapPin className="w-5 h-5" />
-          <div>
-            <div>{event.location}</div>
-            <div className="text-sm">{event.location}</div>
-          </div>
-        </div>
+  <MapPin className="w-5 h-5" />
+  <span>{event.location}</span>
+</div>
+
       </div>
 
       <div className="prose max-w-none mb-8">

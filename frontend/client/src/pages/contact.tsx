@@ -17,9 +17,17 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const name = (form.elements.namedItem('name') as HTMLInputElement).value;
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value;
+    
+    const mailtoLink = `mailto:abrahamvidalcastillo2@gmail.com?subject=Dance Events Contact Form&body=Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${message}`;
+    window.location.href = mailtoLink;
+    
     toast({
-      title: "Message Sent",
-      description: "We'll get back to you as soon as possible.",
+      title: "Opening Email Client",
+      description: "Redirecting to your email client to send the message.",
     });
   };
 
@@ -31,7 +39,7 @@ const Contact = () => {
       exit="exit"
       className="container mx-auto p-4 max-w-2xl"
     >
-      <Card>
+      <Card className="bg-background border-none shadow-lg">
         <CardHeader>
           <CardTitle>Contact Us</CardTitle>
           <CardDescription>
@@ -42,18 +50,20 @@ const Contact = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-medium">Name</label>
-              <Input />
+              <Input name="name" required />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Email</label>
-              <Input type="email" />
+              <Input name="email" type="email" required />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Message</label>
               <Textarea
+                name="message"
                 className="min-h-[150px]"
+                required
               />
             </div>
 
@@ -68,8 +78,8 @@ const Contact = () => {
         <div>
           <h3 className="text-lg font-semibold mb-2">Contact Information</h3>
           <div className="space-y-1 text-gray-600">
-            <p>Email: info@sanjuansalsa.com</p>
-            <p>Phone: (123) 456-7890</p>
+            <p>Email: abrahamvidalcastillo2@gmail.com</p>
+            <p>Phone: (787) 317-6695</p>
           </div>
         </div>
 

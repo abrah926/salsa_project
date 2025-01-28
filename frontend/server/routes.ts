@@ -8,9 +8,17 @@ export function registerRoutes(app: Express): Server {
   // Get all events
   app.get("/api/events", async (_req, res) => {
     const allEvents = await db.query.events.findMany({
-      orderBy: (events, { desc }) => [desc(events.date)],
+      orderBy: (events) => [events.eventDate],
     });
-    res.json(allEvents);
+    
+    // Ensure dates are properly formatted
+    const formattedEvents = allEvents.map(event => ({
+      ...event,
+      eventDate: event.eventDate instanceof Date ? event.eventDate.toISOString() : null,
+      date: event.eventDate instanceof Date ? event.eventDate.toISOString() : null
+    }));
+    
+    res.json(formattedEvents);
   });
 
   // Get single event

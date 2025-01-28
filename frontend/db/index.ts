@@ -1,8 +1,12 @@
-import { drizzle } from "drizzle-orm/neon-serverless";
-import ws from "ws";
-import * as schema from "@db/schema";
+import 'dotenv/config';
 
-// Add better error handling and logging for database connection
+console.log('Current DATABASE_URL:', process.env.DATABASE_URL);
+
+import { drizzle } from 'drizzle-orm/node-postgres';
+import pkg from 'pg';
+const { Pool } = pkg;
+import * as schema from "./schema";
+
 const databaseUrl = process.env.DATABASE_URL;
 console.log("Attempting database connection...");
 
@@ -14,11 +18,14 @@ if (!databaseUrl) {
 }
 
 console.log("Initializing database connection...");
-const db = drizzle({
-  connection: databaseUrl,
-  schema,
-  ws: ws,
+const pool = new Pool({
+  connectionString: databaseUrl,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
+
+const db = drizzle(pool, { schema });
 console.log("Database connection initialized successfully");
 
 export { db };

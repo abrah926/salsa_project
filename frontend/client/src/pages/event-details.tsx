@@ -3,55 +3,15 @@ import { useParams } from "wouter";
 import { motion } from "framer-motion";
 import { Calendar, Clock, MapPin, User, Phone } from "lucide-react";
 import { pageTransition } from "@/lib/animations";
-import { Event, ApiEvent } from "@/lib/types";
+import { type Event } from "@db/schema";
 import { format } from "date-fns";
 
 const EventDetails = () => {
   const { id } = useParams();
-  console.log('Event ID:', id);
 
-  const { data: event, isLoading, error } = useQuery<Event>({
-    queryKey: ['event', id],
-    queryFn: async () => {
-      console.log('Fetching event details for ID:', id);
-      const response = await fetch(`/api/salsas/${id}/`);
-      console.log('Response:', response);
-      if (!response.ok) {
-        console.error('Error response:', response.statusText);
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      console.log('Raw event data:', data);
-      
-      // Transform API data to match Event type
-      const transformed = {
-        id: data.id.toString(),
-        title: data.name,
-        description: data.details || '',
-        date: new Date(data.event_date).toISOString(),
-        time: data.time,
-        venue: data.location.split(',')[0] || '',
-        address: data.location,
-        price: data.price || 'Free',
-        imageUrl: data.image_url || '/default-event-image.jpg',
-        organizerName: data.source || 'Unknown Organizer',
-        organizerContact: '',
-        createdAt: new Date(data.created_at || new Date()).toISOString(),
-        updatedAt: new Date(data.updated_at || new Date()).toISOString(),
-      };
-      console.log('Transformed event:', transformed);
-      return transformed;
-    },
+  const { data: event, isLoading } = useQuery<Event>({
+    queryKey: [`/api/events/${id}`],
   });
-
-  if (error) {
-    console.error('Query error:', error);
-    return (
-      <div className="container mx-auto p-4 text-center text-red-500">
-        Error loading event: {error.message}
-      </div>
-    );
-  }
 
   if (isLoading) {
     return (
@@ -90,7 +50,9 @@ const EventDetails = () => {
 
         <div className="flex items-center gap-2 text-gray-600">
           <Calendar className="w-5 h-5" />
-          <span>{format(new Date(event.date), "MMMM d, yyyy")}</span>
+          <span>
+            {event.eventDate ? format(new Date(event.eventDate), "MMMM d, yyyy") : "Date TBA"}
+          </span>
         </div>
 
         <div className="flex items-center gap-2 text-gray-600">

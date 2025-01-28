@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { CalendarDropdown } from "@/components/events/calendar-dropdown";
 import EventCard from "@/components/events/event-card";
 import { pageTransition, staggerContainer } from "@/lib/animations";
-import { Event, ApiEvent } from "@/lib/types";
+import { type Event } from "@db/schema";
 
 const Events = () => {
   const [, setLocation] = useLocation();
@@ -13,58 +13,17 @@ const Events = () => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ['events'],
-    queryFn: async (): Promise<Event[]> => {
-      console.log('Fetching events...');
-      const response = await fetch('/api/salsas/');
-      console.log('API Response:', response);
-      if (!response.ok) {
-        console.error('Error response:', response.statusText);
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      console.log('Raw API data:', data);
-      const transformedData = data.map((event: ApiEvent) => ({
-        id: event.id.toString(),
-        title: event.name,
-        description: event.details || '',
-        date: new Date(event.event_date).toISOString(),
-        time: event.time,
-        venue: event.location.split(',')[0] || '',
-        address: event.location,
-        price: event.price || 'Free',
-        imageUrl: event.image_url || '/default-event-image.jpg',
-        organizerName: event.source || 'Unknown Organizer',
-        organizerContact: '',
-        createdAt: new Date(event.created_at || new Date()).toISOString(),
-        updatedAt: new Date(event.updated_at || new Date()).toISOString(),
-      }));
-      console.log('Transformed events:', transformedData);
-      return transformedData;
-    },
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
+    queryKey: ['/api/events'],
   });
 
-  console.log('Current events:', events);
-
   const filteredEvents = selectedDate
-    ? events.filter(event => {
-        const eventDate = new Date(event.date);
-        return (
-          eventDate.getDate() === selectedDate.getDate() &&
-          eventDate.getMonth() === selectedDate.getMonth() &&
-          eventDate.getFullYear() === selectedDate.getFullYear()
-        );
-      })
+    ? events.filter(event => event.eventDate && new Date(event.eventDate).toDateString() === selectedDate.toDateString())
     : events;
 
   // Sort events by date and time
   const sortedEvents = [...filteredEvents].sort((a, b) => {
-    const dateA = new Date(a.date).getTime();
-    const dateB = new Date(b.date).getTime();
-    return dateA - dateB;
+    if (!a.eventDate || !b.eventDate) return 0;
+    return new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime();
   });
 
   return (
@@ -86,13 +45,16 @@ const Events = () => {
               setShowCalendar(false);
             }}
           />
-          <span className="text-lg font-medium text-white/90">Events</span>
+          <span className="absolute left-1/2 -translate-x-1/2 text-xl font-medium text-white/90">Events</span>
+          <div className="w-12 opacity-0">
+            {/* Empty div to maintain spacing */}
+          </div>
         </div>
       </div>
 
       {isLoading ? (
         <div className="p-6">
-          <div className="w-[65%] mx-auto aspect-[4/3] bg-gray-800/50 animate-pulse rounded-3xl" />
+          <div className="w-[90%] md:w-[65%] mx-auto aspect-[4/3] bg-gray-800/50 animate-pulse rounded-3xl" />
         </div>
       ) : (
         <div className="flex-1 flex items-end pb-[calc(1rem+60px)]">
@@ -103,14 +65,11 @@ const Events = () => {
               </div>
             ) : (
               sortedEvents.map((event) => (
-                <div key={event.id} className="flex-shrink-0 w-full snap-center">
-                  <div className="max-w-[65%] mx-auto">
+                <div key={event.id} className="flex-shrink-0 w-full min-h-screen md:min-h-0 flex items-center justify-center snap-center">
+                  <div className="max-w-[65%] h-[80vh] md:h-auto mx-auto">
                     <EventCard
                       event={event}
-                      onClick={() => {
-                        console.log('Navigating to:', `/events/${event.id}`);
-                        setLocation(`/events/${event.id}`);
-                      }}
+                      onClick={() => setLocation(`/events/${event.id}`)}
                     />
                   </div>
                 </div>

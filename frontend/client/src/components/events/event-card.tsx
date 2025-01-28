@@ -28,10 +28,10 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
       initial="initial"
       animate="animate"
       whileTap={{ scale: 0.98 }}
-      className="-mt-6 p-3"
+      className="p-3"
     >
       <Card 
-        className="cursor-pointer overflow-hidden relative h-[750px] rounded-2xl border border-white/10 shadow-lg w-[calc(100%+60px)] -ml-[30px] flex flex-col" 
+        className="cursor-pointer overflow-hidden relative h-[500px] rounded-2xl border border-white/10 shadow-lg w-[calc(100%+60px)] -ml-[30px] flex flex-col" 
         onClick={onClick}
       >
         {/* Top section with event details */}

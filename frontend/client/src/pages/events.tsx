@@ -17,13 +17,13 @@ const Events = () => {
   });
 
   const filteredEvents = selectedDate
-    ? events.filter(event => event.eventDate && new Date(event.eventDate).toDateString() === selectedDate.toDateString())
+    ? events.filter(event => event.event_date && new Date(event.event_date).toDateString() === selectedDate.toDateString())
     : events;
 
   // Sort events by date and time
   const sortedEvents = [...filteredEvents].sort((a, b) => {
-    if (!a.eventDate || !b.eventDate) return 0;
-    return new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime();
+    if (!a.event_date || !b.event_date) return 0;
+    return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
   });
 
   return (

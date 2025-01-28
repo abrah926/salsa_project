@@ -1,12 +1,12 @@
-import { pgTable, text, serial, timestamp, uuid, time, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, uuid, time, integer, date } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const events = pgTable("salsas", {
   id: uuid("id").defaultRandom().primaryKey(),
-  event_date: timestamp("event_date"),
+  event_date: date("event_date"),
   day: text("day"),
-  time: text("time"),
+  time: time("time"),
   name: text("name"),
   location: text("location"),
   source: text("source"),
@@ -40,5 +40,28 @@ export const insertEventSchema = createInsertSchema(events, {
 });
 
 export const selectEventSchema = createSelectSchema(events);
-export type Event = typeof events.$inferSelect;
+
+// Update Event type to include both field names for compatibility
+export interface Event {
+  id: string;
+  event_date: Date | null;  // Database field
+  eventDate: Date | null;   // Frontend field (for compatibility)
+  day: string | null;
+  time: string | null;
+  name: string | null;
+  location: string | null;
+  source: string | null;
+  price: string | null;
+  details: string | null;
+  recurrence: string | null;
+  recurrenceInterval: number | null;
+  endRecurringDate: Date | null;
+  imageUrl: string | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+}
+
+// Remove the automatic type inference
+// export type Event = typeof events.$inferSelect;
+
 export type NewEvent = typeof events.$inferInsert;

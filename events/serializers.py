@@ -28,7 +28,23 @@ class SalsaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Salsa
-        fields = '__all__'
+        fields = [
+            'id',
+            'event_date',
+            'name',
+            'day',
+            'time',
+            'location',
+            'source',
+            'price',
+            'details',
+            'recurrence',
+            'recurrence_interval',
+            'end_recurring_date',
+            'image_url',
+            'created_at',
+            'updated_at'
+        ]
 
     def validate_time(self, value):
         """
@@ -153,3 +169,15 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         data['start'] = data.pop('event_date', None)
         data['end'] = instance.end_time if instance.end_time else None
         return data
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Salsa
+        fields = [
+            'id',
+            'event_date',
+            'name',  # We have name here
+            'title',  # And title - one of these is redundant
+            # ... other fields
+        ]

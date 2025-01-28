@@ -32,7 +32,7 @@ const Events = () => {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="min-h-screen bg-black/95 flex flex-col overflow-hidden"
+      className="fixed inset-0 bg-black/95 flex flex-col overflow-hidden touch-none"
     >
       <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
         <div className="flex items-center justify-between px-6 py-4">
@@ -57,7 +57,7 @@ const Events = () => {
           <div className="w-[90%] md:w-[65%] mx-auto aspect-[4/3] bg-gray-800/50 animate-pulse rounded-3xl" />
         </div>
       ) : (
-        <div className="flex-1 flex items-center">
+        <div className="flex-1 flex items-center touch-pan-x">
           <div className="snap-x snap-mandatory overflow-x-auto overflow-y-hidden flex w-full scrollbar-hide">
             {sortedEvents.length === 0 ? (
               <div className="flex-shrink-0 w-full flex items-center justify-center py-12 text-white/60">

@@ -22,6 +22,11 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
     format(new Date(`2000-01-01T${event.time}`), 'h:mm a') : 
     'Time TBA';
 
+  // Add date formatting
+  const formattedDate = event.event_date ? 
+    format(new Date(event.event_date), 'MMM d, yyyy') : 
+    'Date TBA';
+
   return (
     <motion.div
       variants={fadeIn}

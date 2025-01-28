@@ -13,6 +13,20 @@ const EventDetails = () => {
     queryKey: [`/api/events/${id}`],
   });
 
+  console.log('Event from query:', event);
+  console.log('Event fields:', {
+    id: event?.id,
+    event_date: event?.event_date,
+    eventDate: event?.eventDate,
+    day: event?.day,
+    time: event?.time
+  });
+
+  // Add console logs to debug
+  console.log('Raw event:', event);
+  console.log('Event date field:', event?.event_date);
+  console.log('Event day field:', event?.day);
+
   if (isLoading) {
     return (
       <div className="container mx-auto p-4">
@@ -30,6 +44,16 @@ const EventDetails = () => {
       </div>
     );
   }
+
+  // Format time from "20:00:00" to "8:00 PM"
+  const formattedTime = event?.time ? 
+    format(new Date(`2000-01-01T${event.time}`), 'h:mm a') : 
+    'Time TBA';
+
+  // Format the full date
+  const formattedDate = event?.event_date ? 
+    format(new Date(event.event_date), 'MMMM d, yyyy') : 
+    'Date TBA';
 
   return (
     <motion.div
@@ -51,13 +75,13 @@ const EventDetails = () => {
         <div className="flex items-center gap-2 text-gray-600">
           <Calendar className="w-5 h-5" />
           <span>
-            {event.eventDate ? format(new Date(event.eventDate), "MMMM d, yyyy") : "Date TBA"}
+            {formattedDate}
           </span>
         </div>
 
         <div className="flex items-center gap-2 text-gray-600">
           <Clock className="w-5 h-5" />
-          <span>{event.time}</span>
+          <span>{formattedTime}</span>
         </div>
 
         <div className="flex items-center gap-2 text-gray-600">

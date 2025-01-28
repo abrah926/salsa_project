@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "types": ["node", "vite/client"],
     "paths": {
-      "@db": ["./db/index.ts"],
+      "@db": ["./db"],
       "@db/*": ["./db/*"],
       "@/*": ["./client/src/*"]
     }

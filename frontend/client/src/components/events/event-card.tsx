@@ -11,8 +11,11 @@ interface EventCardProps {
 }
 
 const EventCard = ({ event, onClick }: EventCardProps) => {
-  const date = event.eventDate ? new Date(event.eventDate) : null;
+  console.log('Raw event:', event);  // Log the raw event
+  const date = event.event_date ? new Date(event.event_date) : null;
+  console.log('Parsed date:', date);  // Log the parsed date
   const isValidDate = date && !isNaN(date.getTime());
+  console.log('Is valid date:', isValidDate);  // Log if date is valid
 
   return (
     <motion.div
@@ -34,10 +37,10 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
                 {event.name}
               </h3>
               <div className="text-sm font-medium tracking-wide mb-1.5">
-                {isValidDate ? format(date, 'EEE').toUpperCase() : 'Date TBA'}
+                {event.day || 'Day TBA'}
               </div>
               <div className="text-2xl font-light">
-                {isValidDate ? format(date, 'h:mm a') : 'Time TBA'}
+                {event.time || 'Time TBA'}
               </div>
             </div>
             <a 

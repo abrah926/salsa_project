@@ -41,12 +41,12 @@ const EventDetails = () => {
     >
       <img
         src={event.imageUrl}
-        alt={event.title}
+        alt={event.name}
         className="w-full h-64 object-cover rounded-lg mb-6"
       />
 
       <div className="space-y-4 mb-6">
-        <h1 className="text-3xl font-bold mb-4">{event.title}</h1>
+        <h1 className="text-3xl font-bold mb-4">{event.name}</h1>
 
         <div className="flex items-center gap-2 text-gray-600">
           <Calendar className="w-5 h-5" />
@@ -63,28 +63,14 @@ const EventDetails = () => {
         <div className="flex items-center gap-2 text-gray-600">
           <MapPin className="w-5 h-5" />
           <div>
-            <div>{event.venue}</div>
-            <div className="text-sm">{event.address}</div>
+            <div>{event.location}</div>
+            <div className="text-sm">{event.location}</div>
           </div>
         </div>
       </div>
 
       <div className="prose max-w-none mb-8">
-        <p>{event.description}</p>
-      </div>
-
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Organizer Information</h2>
-        <div className="space-y-3 text-gray-600">
-          <div className="flex items-center gap-2">
-            <User className="w-5 h-5" />
-            <span>{event.organizerName}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Phone className="w-5 h-5" />
-            <span>{event.organizerContact}</span>
-          </div>
-        </div>
+        <p>{event.details}</p>
       </div>
     </motion.div>
   );

@@ -2,9 +2,9 @@ import { pgTable, text, serial, timestamp, uuid, time, integer } from "drizzle-o
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const events = pgTable("events", {
+export const events = pgTable("salsas", {
   id: uuid("id").defaultRandom().primaryKey(),
-  eventDate: timestamp("event_date"),
+  event_date: timestamp("event_date"),
   day: text("day"),
   time: text("time"),
   name: text("name"),
@@ -26,7 +26,7 @@ export const RecurrenceType = z.enum(["DAILY", "WEEKLY", "MONTHLY"]);
 // Create Zod schemas for validation
 export const insertEventSchema = createInsertSchema(events, {
   recurrence: RecurrenceType.optional(),
-  eventDate: z.date().optional(),
+  event_date: z.date().optional(),
   day: z.string().optional(),
   time: z.string().optional(),
   name: z.string().optional(),

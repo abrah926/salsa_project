@@ -17,6 +17,11 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
   const isValidDate = date && !isNaN(date.getTime());
   console.log('Is valid date:', isValidDate);  // Log if date is valid
 
+  // Format time from "20:00:00" to "8:00 PM"
+  const formattedTime = event.time ? 
+    format(new Date(`2000-01-01T${event.time}`), 'h:mm a') : 
+    'Time TBA';
+
   return (
     <motion.div
       variants={fadeIn}
@@ -40,7 +45,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
                 {event.day || 'Day TBA'}
               </div>
               <div className="text-2xl font-light">
-                {event.time || 'Time TBA'}
+                {formattedTime}
               </div>
             </div>
             <a 

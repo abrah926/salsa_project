@@ -22,7 +22,7 @@ const Home = () => {
       >
         <div className="absolute inset-0 flex flex-col justify-center items-center p-8 text-center">
           <h1 className="text-[2.75rem] font-medium leading-tight mb-3 text-white/90">
-            San Juan Salsa Dance Events
+            Salsa Dance Events
           </h1>
           <p className="text-xl font-light mb-8 text-white/80">
             Discover the rhythm of the Caribbean

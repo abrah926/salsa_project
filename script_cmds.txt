@@ -5,3 +5,7 @@ python manage.py runscript run_populate_future_events
 # turns the location of events into coordinates for maps
 
 python manage.py runscript populate_geolocation
+
+# copy csv for recurring events
+
+\copy (SELECT DISTINCT ON (location) id, event_date, day, time, name, location, source, price, details FROM salsas WHERE recurrence = 'Weekly' ORDER BY location, event_date) TO '/home/abrah926/Desktop/weekly_events_newer.csv' WITH CSV HEADER;

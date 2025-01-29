@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { fadeIn } from "@/lib/animations";
 import { type Event } from "@db/schema";
 import { format, isDate } from "date-fns";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface EventCardProps {
   event: Event;
@@ -26,6 +27,9 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
   const formattedDate = event.event_date ? 
     format(new Date(event.event_date), 'MMM d, yyyy') : 
     'Date TBA';
+
+  // Default image URL for when event.image_url is null or empty
+  const defaultImageUrl = "https://w0.peakpx.com/wallpaper/1021/361/HD-wallpaper-tango-music-entertainment-passion-dance-couplemen-couple-women.jpg";
 
   return (
     <motion.div
@@ -68,7 +72,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
         {/* Bottom section with image */}
         <div className="flex-1 relative">
           <img
-            src={event.imageUrl || ''}
+            src={event.imageUrl || defaultImageUrl}
             alt={event.name || 'Event'}
             className="w-full h-full object-cover"
           />

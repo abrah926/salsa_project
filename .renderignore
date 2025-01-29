@@ -1,0 +1,29 @@
+# Virtual environment
+venv/
+
+# Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+
+# Node.js dependencies
+frontend/node_modules/
+frontend/.next/
+frontend/build/
+frontend/dist/
+
+# Database and migration caches
+*.sqlite3
+*.db
+
+# Logs and temp files
+*.log
+tmp/
+*.swp
+.DS_Store
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development

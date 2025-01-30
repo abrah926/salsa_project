@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { ChevronDown } from "lucide-react";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,

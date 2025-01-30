@@ -22,10 +22,10 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { pageTransition } from "@/lib/animations";
+import { cn } from "@/components/utils";
+import { pageTransition } from "@/components/animations";
 import { useToast } from "@/hooks/use-toast";
-import { type EventFormData } from "@/lib/types";
+import { type EventFormData } from "@/components/types";
 import { insertEventSchema } from "@db/schema";
 
 const CreateEvent = () => {

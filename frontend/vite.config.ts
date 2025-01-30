@@ -18,6 +18,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "client", "src"),
       "@db": path.resolve(__dirname, "db"),
     },
+    extensions: ['.js', '.ts', '.jsx', '.tsx']
   },
   root: path.resolve(__dirname, "client"),
   build: {

@@ -15,7 +15,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "client", "src"),
+      "@": path.resolve(__dirname, "client/src"),
       "@db": path.resolve(__dirname, "db"),
     },
     extensions: ['.js', '.ts', '.jsx', '.tsx']
@@ -26,7 +26,9 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
-      input: path.resolve(__dirname, "client/index.html")
+      input: {
+        main: path.resolve(__dirname, "client/index.html")
+      }
     }
   },
 });

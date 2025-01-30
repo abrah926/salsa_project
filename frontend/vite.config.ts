@@ -26,9 +26,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, "client/index.html")
-      }
+      input: path.resolve(__dirname, "client/src/main.tsx")
     }
   },
 });

@@ -18,7 +18,7 @@ export default defineConfig({
       { find: '@', replacement: path.resolve(__dirname, './client/src') },
       { find: '@db', replacement: path.resolve(__dirname, './db') }
     ],
-    extensions: ['.js', '.ts', '.jsx', '.tsx']
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '']
   },
   root: path.resolve(__dirname, "client"),
   build: {

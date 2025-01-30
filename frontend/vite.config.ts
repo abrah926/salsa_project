@@ -15,13 +15,18 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@db": path.resolve(__dirname, "db"),
       "@": path.resolve(__dirname, "client", "src"),
+      "@db": path.resolve(__dirname, "db"),
     },
   },
   root: path.resolve(__dirname, "client"),
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "client/index.html")
+      }
+    }
   },
 });

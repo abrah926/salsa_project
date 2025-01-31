@@ -3,9 +3,31 @@ import { useParams } from "wouter";
 import { motion } from "framer-motion";
 import { Calendar, Clock, MapPin, User, Phone } from "lucide-react";
 import { pageTransition } from "@/components/animations";
-import { type Event } from "@db/schema";
+import { type Event as SchemaEvent } from "@db/schema";
 import { format } from "date-fns";
 import { API_URL } from "@/config";
+
+interface EventResponse {
+  id: number;
+  event_date: string;
+  name: string;
+  day: string;
+  time: string;
+  location: string;
+  details: string;
+  image_url: string;  // Backend field
+}
+
+interface Event {
+  id: number;
+  event_date: string;
+  name: string;
+  day: string;
+  time: string;
+  location: string;
+  details: string;
+  imageUrl: string;  // Frontend field
+}
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -26,16 +48,22 @@ const EventDetails = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return response.json();
+      const data: EventResponse = await response.json();
+      
+      // Transform backend response to frontend format
+      return {
+        ...data,
+        imageUrl: data.image_url  // Map backend field to frontend field
+      };
     },
-    enabled: !!id  // Only run query if we have an ID
+    enabled: !!id
   });
 
   console.log('Event from query:', event);
   console.log('Event fields:', {
     id: event?.id,
     event_date: event?.event_date,
-    eventDate: event?.eventDate,
+    eventDate: event?.event_date,
     day: event?.day,
     time: event?.time
   });
@@ -69,7 +97,7 @@ const EventDetails = () => {
     'Time TBA';
 
   // Format the full date
-  const eventDateValue = event?.event_date || event?.eventDate;
+  const eventDateValue = event?.event_date || event?.event_date;
 
 const formattedDate = eventDateValue
   ? format(new Date(eventDateValue), 'MMMM d, yyyy')

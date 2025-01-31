@@ -25,14 +25,20 @@ class SalsaViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
+            # Add debug logging
+            logger.info("Received request for events list")
             logger.info(f"Request headers: {request.headers}")
             logger.info(f"Request META: {request.META}")
             
+            # Get the data
+            queryset = self.get_queryset()
+            logger.info(f"Found {queryset.count()} events")
+            
             response = super().list(request, *args, **kwargs)
-            logger.info(f"Response data count: {len(response.data)}")
+            logger.info(f"Sending response with {len(response.data)} events")
             return response
         except Exception as e:
-            logger.error(f"Error fetching events: {str(e)}", exc_info=True)
+            logger.error(f"Error in events list: {str(e)}", exc_info=True)
             return JsonResponse(
                 {"error": "Internal server error", "details": str(e)}, 
                 status=500

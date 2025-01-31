@@ -19,25 +19,23 @@ const fetchEvents = async () => {
       credentials: 'omit'  // Try without credentials first
     });
 
-    // Log everything about the response
-    console.log('Response object:', response);
+    // Log response details safely
     console.log('Response status:', response.status);
-    console.log('Response headers:', [...response.headers.entries()]);
+    console.log('Response headers:', Object.fromEntries(response.headers));
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Error response body:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     
     const data = await response.json();
     console.log('Successfully parsed data:', data);
     return data;
-  } catch (error) {
-    console.error('Full error details:', {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
+  } catch (error: any) { // Type assertion for error
+    console.error('Fetch error:', {
+      message: error?.message || 'Unknown error',
+      status: error?.status,
     });
     throw error;
   }

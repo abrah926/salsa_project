@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "wouter";
 import { motion } from "framer-motion";
 import { Calendar, Clock, MapPin, User, Phone } from "lucide-react";
-import { pageTransition } from "@/lib/animations";
+import { pageTransition } from "@/components/animations";
 import { type Event } from "@db/schema";
 import { format } from "date-fns";
 

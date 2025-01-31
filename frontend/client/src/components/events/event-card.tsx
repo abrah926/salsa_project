@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import { motion } from "framer-motion";
-import { fadeIn } from "@/lib/animations";
+import { fadeIn } from "@/components/animations";
 import { type Event } from "@db/schema";
 import { format, isDate } from "date-fns";
 import { AspectRatio } from "@/components/ui/aspect-ratio";

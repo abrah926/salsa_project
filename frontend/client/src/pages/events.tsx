@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { CalendarDropdown } from "@/components/events/calendar-dropdown";
 import EventCard from "@/components/events/event-card";
-import { pageTransition, staggerContainer } from "@/lib/animations";
+import { pageTransition, staggerContainer } from "@/components/animations";
 import { type Event } from "@db/schema";
 
 const Events = () => {

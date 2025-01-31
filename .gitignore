@@ -125,3 +125,8 @@ docker-compose.override.yml.docker_temp*
 docker-compose upcompose.yaml
 docker-compose upcompose.yml
 .env
+
+# Environment variables
+.env
+.env.local
+.env.*.local

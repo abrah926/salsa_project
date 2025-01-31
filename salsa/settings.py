@@ -13,7 +13,13 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME', '127.0.0.1')
-ALLOWED_HOSTS = ['salsa-backend.onrender.com', '127.0.0.1', 'localhost', 'ed15-66-9-164-229.ngrok-free.app']
+ALLOWED_HOSTS = [
+    'salsa-backend.onrender.com',
+    '127.0.0.1',
+    'localhost',
+    'ed15-66-9-164-229.ngrok-free.app',
+    'salsa-frontend.onrender.com'
+]
 
 
 ROOT_URLCONF = 'salsa.urls'
@@ -48,21 +54,31 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Temporarily disable SSL redirect for testing
+SECURE_SSL_REDIRECT = False  # Change this to True after confirming it works
+
+# Update CORS settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    "http://0.0.0.0:5000",
-    "http://0.0.0.0:8000",
-    "http://localhost:5000",
-    "http://127.0.0.1:5000",
-    "http://127.0.0.1:8000",
-    'http://localhost:5173',  # Add this for Vite
-    'http://127.0.0.1:5173',  # Add this for Vite
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
     'https://salsa-events.netlify.app',
-    "https://salsa-frontend.onrender.com",
+    'https://salsa-frontend.onrender.com',
+    'http://salsa-frontend.onrender.com',  # Add HTTP version temporarily
     'https://ed15-66-9-164-229.ngrok-free.app',
 ]
 
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 #Allow specific headers if needed
 CORS_ALLOW_HEADERS = list(default_headers) + [
@@ -73,12 +89,23 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'salsadb',
-        'USER': 'abrah926',
-        'PASSWORD': 'KEbP5I9Rdj0M9Gh4u13WrkvrMfo9EUKp',
-        'HOST': 'dpg-ctippotumphs73f5jbsg-a.virginia-postgres.render.com',
-        'PORT': '5432',
+        'NAME': config('DB_NAME', default='salsadb'),
+        'USER': config('DB_USER', default='abrah926'),
+        'PASSWORD': config('DB_PASSWORD', default='KEbP5I9Rdj0M9Gh4u13WrkvrMfo9EUKp'),
+        'HOST': config('DB_HOST', default='dpg-ctippotumphs73f5jbsg-a.virginia-postgres.render.com'),
+        'PORT': config('DB_PORT', default='5432'),
+        'CONN_MAX_AGE': 60,  # persistent connections
+        'OPTIONS': {
+            'connect_timeout': 10,
+            'sslmode': 'require',  # Force SSL
+        },
     }
+}
+
+# Add some timeout settings
+DATABASE_OPTIONS = {
+    'connect_timeout': 10,
+    'options': '-c statement_timeout=15000ms'
 }
 
 TEMPLATES = [
@@ -135,3 +162,25 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'ERROR',
+            },
+            'django.request': {
+                'handlers': ['console'],
+                'level': 'ERROR',
+                'propagate': False,
+            },
+        },
+    }

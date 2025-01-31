@@ -5,7 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django.http import JsonResponse
+import logging
 
+logger = logging.getLogger(__name__)
 
 class SalsaViewSet(viewsets.ModelViewSet):
     """
@@ -18,6 +21,16 @@ class SalsaViewSet(viewsets.ModelViewSet):
     filterset_fields = ['event_date', 'location', 'recurrence']
     ordering_fields = ['event_date', 'name']
     ordering = ['event_date']
+
+    def list(self, request, *args, **kwargs):
+        try:
+            logger.info(f"Request headers: {request.headers}")
+            response = super().list(request, *args, **kwargs)
+            logger.info(f"Response data: {response.data}")
+            return response
+        except Exception as e:
+            logger.error(f"Error fetching events: {str(e)}")
+            return JsonResponse({"error": str(e)}, status=500)
 
 class EventCalendarView(APIView):
     def get(self, request):

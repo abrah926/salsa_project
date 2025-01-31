@@ -43,7 +43,10 @@ class SalsaSerializer(serializers.ModelSerializer):
             'end_recurring_date',
             'image_url',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'end_date',
+            'description',
+            'map_location',
         ]
 
     def validate_time(self, value):

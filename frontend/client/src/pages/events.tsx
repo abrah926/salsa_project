@@ -1,32 +1,52 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { CalendarDropdown } from "@/components/events/calendar-dropdown";
 import EventCard from "@/components/events/event-card";
-import { pageTransition, staggerContainer } from "@/components/animations";
+import { pageTransition } from "@/components/animations";
 import { type Event } from "@db/schema";
 import fetchEvents from "@/hooks/useEvents";
+
+const EVENTS_PER_PAGE = 50;
 
 const Events = () => {
   const [, setLocation] = useLocation();
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [showCalendar, setShowCalendar] = useState(false);
-
+  const [visibleCount, setVisibleCount] = useState(EVENTS_PER_PAGE);
+  
   const { data: events = [], isLoading } = useQuery<Event[]>({
     queryKey: ["events"],
     queryFn: fetchEvents,
   });
+
+  // Reference for the last event element
+  const observer = useRef<IntersectionObserver>();
+  const lastEventRef = useCallback((node: HTMLDivElement | null) => {
+    if (isLoading) return;
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && visibleCount < events.length) {
+        setVisibleCount(prev => Math.min(prev + EVENTS_PER_PAGE, events.length));
+      }
+    });
+
+    if (node) observer.current.observe(node);
+  }, [isLoading, events.length, visibleCount]);
 
   const filteredEvents = selectedDate
     ? events.filter(event => event.event_date && new Date(event.event_date).toDateString() === selectedDate.toDateString())
     : events;
 
   // Sort events by date and time
-  const sortedEvents = [...filteredEvents].sort((a, b) => {
-    if (!a.event_date || !b.event_date) return 0;
-    return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
-  });
+  const sortedEvents = [...filteredEvents]
+    .sort((a, b) => {
+      if (!a.event_date || !b.event_date) return 0;
+      return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
+    })
+    .slice(0, visibleCount);  // Only show the visible events
 
   return (
     <motion.div
@@ -66,8 +86,12 @@ const Events = () => {
                 No events found for the selected date
               </div>
             ) : (
-              sortedEvents.map((event) => (
-                <div key={event.id} className="flex-shrink-0 w-full flex items-center justify-center snap-center snap-always">
+              sortedEvents.map((event, index) => (
+                <div 
+                  key={event.id} 
+                  ref={index === sortedEvents.length - 1 ? lastEventRef : null}
+                  className="flex-shrink-0 w-full flex items-center justify-center snap-center snap-always"
+                >
                   <div className="max-w-[65%] md:mx-auto mx-auto sm:-ml-[30px] transform -translate-x-10 sm:translate-x-0">
                     <EventCard
                       event={event}

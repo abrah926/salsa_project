@@ -85,6 +85,9 @@ CORS_ALLOW_METHODS = [
 #Allow specific headers if needed
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'Content-Type',
+    'Cache-Control',
+    'Pragma',
+    'Accept',
 ]
 
 

@@ -5,12 +5,30 @@ import { Calendar, Clock, MapPin, User, Phone } from "lucide-react";
 import { pageTransition } from "@/components/animations";
 import { type Event } from "@db/schema";
 import { format } from "date-fns";
+import { API_URL } from "@/config";
 
 const EventDetails = () => {
   const { id } = useParams();
 
   const { data: event, isLoading } = useQuery<Event>({
-    queryKey: [`/api/events/${id}`],
+    queryKey: ["event", id],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/events/${id}/`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        },
+        mode: 'cors',
+        credentials: 'omit'
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    },
+    enabled: !!id  // Only run query if we have an ID
   });
 
   console.log('Event from query:', event);
@@ -67,11 +85,13 @@ const formattedDate = eventDateValue
       exit="exit"
       className="container mx-auto p-4 max-w-4xl"
     >
-      <img
-        src={event.imageUrl}
-        alt={event.name}
-        className="w-full h-64 object-cover rounded-lg mb-6"
-      />
+      {event?.imageUrl && (  // Change imageUrl to image_url to match backend
+        <img
+          src={event.imageUrl}
+          alt={event.name || ''}  // Add fallback for null
+          className="w-full h-64 object-cover rounded-lg mb-6"
+        />
+      )}
 
       <div className="space-y-4 mb-6">
         <h1 className="text-3xl font-bold mb-4">{event.name}</h1>

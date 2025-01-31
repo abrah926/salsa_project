@@ -25,12 +25,17 @@ class SalsaViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             logger.info(f"Request headers: {request.headers}")
+            logger.info(f"Request META: {request.META}")
+            
             response = super().list(request, *args, **kwargs)
-            logger.info(f"Response data: {response.data}")
+            logger.info(f"Response data count: {len(response.data)}")
             return response
         except Exception as e:
-            logger.error(f"Error fetching events: {str(e)}")
-            return JsonResponse({"error": str(e)}, status=500)
+            logger.error(f"Error fetching events: {str(e)}", exc_info=True)
+            return JsonResponse(
+                {"error": "Internal server error", "details": str(e)}, 
+                status=500
+            )
 
 class EventCalendarView(APIView):
     def get(self, request):

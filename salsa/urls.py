@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
 
-# Swagger Schema Configuration
+# Update Swagger Schema Configuration
 schema_view = get_schema_view(
     openapi.Info(
         title="Salsa Events API",
@@ -19,6 +19,7 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
+    url='https://salsa-backend.onrender.com',  # Add your production URL
 )
 
 def root_view(request):

@@ -10,7 +10,6 @@ import EventDetails from "@/pages/event-details";
 import CreateEvent from "@/pages/create-event";
 import Contact from "@/pages/contact";
 import NotFound from "@/pages/not-found";
-import ErrorPage from "@/pages/error-page";
 
 function Router() {
   return (
@@ -29,38 +28,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <main className="min-h-screen pb-16">
-        <ErrorBoundary fallback={<ErrorPage />}>
-          <Router />
-          <BottomNav />
-        </ErrorBoundary>
+        <Router />
+        <BottomNav />
       </main>
       <Toaster />
     </QueryClientProvider>
   );
-}
-
-function ErrorBoundary({ children, fallback }: { children: React.ReactNode; fallback: React.ReactNode }) {
-  const [hasError, setHasError] = React.useState(false);
-
-  React.useEffect(() => {
-    const handleError = () => {
-      setHasError(true);
-    };
-
-    window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', handleError);
-
-    return () => {
-      window.removeEventListener('error', handleError);
-      window.removeEventListener('unhandledrejection', handleError);
-    };
-  }, []);
-
-  if (hasError) {
-    return fallback;
-  }
-
-  return children;
 }
 
 export default App;

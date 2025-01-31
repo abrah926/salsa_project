@@ -13,9 +13,9 @@ const Events = () => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ["/events/salsas"], // Ensure this matches your backend route
+    queryKey: ["/api/events"], // ✅ Fix queryKey
     queryFn: async () => {
-      const res = await fetch("/api/events/salsas/", { credentials: "include" });
+      const res = await fetch("/api/events/", { credentials: "include" });
       if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
       return res.json();
     },

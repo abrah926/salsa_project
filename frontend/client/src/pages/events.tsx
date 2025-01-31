@@ -13,7 +13,12 @@ const Events = () => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ['/api/events'],
+    queryKey: ["/events/salsas"], // Ensure this matches your backend route
+    queryFn: async () => {
+      const res = await fetch("/api/events/salsas/", { credentials: "include" });
+      if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
+      return res.json();
+    },
   });
 
   const filteredEvents = selectedDate

@@ -1,13 +1,12 @@
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.shortcuts import redirect
-from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
 
-# Update Swagger Schema Configuration
+# Swagger Schema Configuration
 schema_view = get_schema_view(
     openapi.Info(
         title="Salsa Events API",
@@ -33,10 +32,9 @@ def health_check(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('events.urls')),  # Link to app-level URLs
-    path('', root_view, name='root'),  # Root route redirects to Swagger
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('api/', include('events.urls')),  # All events routes will be under /api/
+    path('health/', health_check, name='health_check'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path('health/', health_check, name='health_check'),
+    path('', lambda request: redirect('swagger/')),  # Redirect root to swagger
 ]

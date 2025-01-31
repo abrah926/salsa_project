@@ -1,12 +1,13 @@
 from django.urls import path, include
-from .views import SalsaViewSet, EventCalendarView
+from .views import SalsaViewSet, EventCalendarView, api_health_check
 from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
+# Create a router instance
 router = DefaultRouter()
-router.register(r'salsas', SalsaViewSet, basename='salsa')
+router.register(r'events', SalsaViewSet, basename='event')  # Changed from 'salsas' to 'events'
 
 
 # Swagger schema view
@@ -24,8 +25,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include(router.urls)),  # This will include /events/
     path('calendar/', EventCalendarView.as_view(), name='event-calendar'),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-    path('events/', include(router.urls)),
+    path('health/', api_health_check, name='api_health_check'),
 ]

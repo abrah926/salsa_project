@@ -7,6 +7,7 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django.http import JsonResponse
 import logging
+from rest_framework.decorators import api_view
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +52,22 @@ class EventCalendarView(APIView):
             for event in events
         ]
         return Response(event_list)
+
+@api_view(['GET'])
+def api_health_check(request):
+    try:
+        # Try to query your database
+        event_count = Salsa.objects.count()
+        return Response({
+            "status": "healthy",
+            "database": "connected",
+            "event_count": event_count
+        })
+    except Exception as e:
+        return Response({
+            "status": "unhealthy",
+            "error": str(e)
+        }, status=500)
 
 
     

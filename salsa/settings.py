@@ -54,8 +54,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Temporarily disable SSL redirect for testing
-SECURE_SSL_REDIRECT = False  # Change this to True after confirming it works
+# Security Settings
+SECURE_SSL_REDIRECT = False  # Keep False during testing
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Update CORS settings
 CORS_ALLOWED_ORIGINS = [
@@ -65,8 +68,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'https://salsa-events.netlify.app',
     'https://salsa-frontend.onrender.com',
-    'http://salsa-frontend.onrender.com',  # Add HTTP version temporarily
-    'https://ed15-66-9-164-229.ngrok-free.app',
 ]
 
 
@@ -178,14 +179,10 @@ LOGGING = {
     },
 }
 
-# Add these settings
+# Update Swagger settings
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
-    'SECURITY_DEFINITIONS': {
-        'Basic': {
-            'type': 'basic'
-        }
-    },
+    'SECURITY_DEFINITIONS': None,  # Remove security definitions
     'SUPPORTED_SUBMIT_METHODS': [
         'get',
         'post',
@@ -193,4 +190,18 @@ SWAGGER_SETTINGS = {
         'delete',
         'patch',
     ],
+    'OPERATIONS_SORTER': None,
+    'TAGS_SORTER': None,
+    'DOC_EXPANSION': 'none',
+    'DEFAULT_MODEL_RENDERING': 'example',
+    'DEFAULT_MODEL_DEPTH': 3,
+}
+
+# Update REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
 }

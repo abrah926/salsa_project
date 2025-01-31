@@ -66,12 +66,11 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-    'https://salsa-events.netlify.app',
-    'https://salsa-frontend.onrender.com',
+    'https://salsa-frontend.onrender.com',  # Make sure this matches exactly
 ]
 
-# Add this for debugging CORS issues
-CORS_ALLOW_ALL_ORIGINS = True  # Temporarily enable for testing
+# For debugging
+CORS_ALLOW_ALL_ORIGINS = True  # Temporarily enable this
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [

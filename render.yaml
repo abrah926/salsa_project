@@ -1,6 +1,7 @@
 services:
+  # ✅ Backend Service (Django or Express)
   - type: web
-    name: salsa_project
+    name: salsa_backend
     env: python
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
     startCommand: gunicorn salsa.wsgi:application
@@ -8,3 +9,20 @@ services:
       - build-essential
       - libffi-dev
       - libssl-dev
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: PORT
+        value: "8000"  # ✅ Django backend uses port 8000
+
+  # ✅ Frontend Service (Vite + React)
+  - type: web
+    name: salsa_frontend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: PORT
+        value: "5173"  # ✅ Ensure Vite runs on port 5173

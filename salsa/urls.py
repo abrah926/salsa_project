@@ -18,7 +18,10 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    url='https://salsa-backend.onrender.com',  # Add your production URL
+    url=None,  # Remove the hardcoded URL
+    patterns=[
+        path('api/', include('events.urls')),  # Include your API patterns
+    ],
 )
 
 def root_view(request):
@@ -32,9 +35,9 @@ def health_check(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('events.urls')),  # All events routes will be under /api/
     path('health/', health_check, name='health_check'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('api/', include('events.urls')),  # Add this back
     path('', lambda request: redirect('swagger/')),  # Redirect root to swagger
 ]

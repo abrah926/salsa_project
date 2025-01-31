@@ -70,6 +70,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://salsa-frontend.onrender.com',
 ]
 
+# Add this for debugging CORS issues
+CORS_ALLOW_ALL_ORIGINS = True  # Temporarily enable for testing
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
@@ -182,19 +184,14 @@ LOGGING = {
 # Update Swagger settings
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
-    'SECURITY_DEFINITIONS': None,  # Remove security definitions
-    'SUPPORTED_SUBMIT_METHODS': [
-        'get',
-        'post',
-        'put',
-        'delete',
-        'patch',
-    ],
+    'SECURITY_DEFINITIONS': None,
+    'SUPPORTED_SUBMIT_METHODS': ['get', 'post', 'put', 'delete', 'patch'],
     'OPERATIONS_SORTER': None,
     'TAGS_SORTER': None,
-    'DOC_EXPANSION': 'none',
-    'DEFAULT_MODEL_RENDERING': 'example',
+    'DOC_EXPANSION': 'list',
+    'DEFAULT_MODEL_RENDERING': 'model',
     'DEFAULT_MODEL_DEPTH': 3,
+    'VALIDATOR_URL': None,
 }
 
 # Update REST Framework settings

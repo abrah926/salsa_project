@@ -1,7 +1,9 @@
+import { API_URL } from '@/config';
+
 const fetchEvents = async () => {
   try {
     console.log('Fetching from:', API_URL); // Debug log
-    const response = await fetch(`${API_URL}/api/events/`);
+    const response = await fetch(`${API_URL}/events/`);
     console.log('Response status:', response.status); // Debug log
     
     if (!response.ok) {
@@ -17,4 +19,6 @@ const fetchEvents = async () => {
     console.error('Error fetching events:', error);
     throw error;
   }
-}; 
+};
+
+export default fetchEvents; 

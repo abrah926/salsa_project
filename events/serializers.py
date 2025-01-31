@@ -46,7 +46,6 @@ class SalsaSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
             'end_date',
-            'description',
             'map_location',
         ]
 

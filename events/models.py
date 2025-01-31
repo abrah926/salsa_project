@@ -1,5 +1,6 @@
 from django.db import models
 import requests
+from django.utils import timezone
 
 GOOGLE_API_KEY = 'YOUR_GOOGLE_API_KEY'
 
@@ -25,6 +26,9 @@ class Salsa(models.Model):
         help_text="Last date of recurrence"
     )  # End date for recurring events
     image_url = models.URLField(max_length=500, null=True, blank=True)  # Image field
+    description = models.TextField(null=True, blank=True)  # Add this field
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name or "Unnamed Event"

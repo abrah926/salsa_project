@@ -34,6 +34,7 @@ class SalsaSerializer(serializers.ModelSerializer):
             'name',
             'day',
             'time',
+            'end_time',
             'location',
             'source',
             'price',

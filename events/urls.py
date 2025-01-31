@@ -27,4 +27,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('calendar/', EventCalendarView.as_view(), name='event-calendar'),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+    path('events/', include(router.urls)),
 ]

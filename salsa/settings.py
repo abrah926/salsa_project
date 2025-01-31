@@ -63,13 +63,6 @@ CORS_ALLOWED_ORIGINS = [
     'https://ed15-66-9-164-229.ngrok-free.app',
 ]
 
-NGROK_ORIGIN = os.getenv('NGROK_HOST', None)
-if NGROK_ORIGIN:
-    CORS_ALLOWED_ORIGINS.append(f"https://{NGROK_ORIGIN}")
-else:
-    # Optionally, fallback to a default or print a warning
-    print("NGROK_HOST is not set. Ensure it is configured correctly.")
-
 
 #Allow specific headers if needed
 CORS_ALLOW_HEADERS = list(default_headers) + [

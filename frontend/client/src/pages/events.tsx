@@ -6,6 +6,7 @@ import { CalendarDropdown } from "@/components/events/calendar-dropdown";
 import EventCard from "@/components/events/event-card";
 import { pageTransition, staggerContainer } from "@/components/animations";
 import { type Event } from "@db/schema";
+import fetchEvents from "@/hooks/useEvents";
 
 const Events = () => {
   const [, setLocation] = useLocation();
@@ -13,12 +14,8 @@ const Events = () => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ["/api/events"], // ✅ Fix queryKey
-    queryFn: async () => {
-      const res = await fetch("/api/events/", { credentials: "include" });
-      if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
-      return res.json();
-    },
+    queryKey: ["events"],
+    queryFn: fetchEvents,
   });
 
   const filteredEvents = selectedDate

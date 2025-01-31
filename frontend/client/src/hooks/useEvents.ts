@@ -1,22 +1,22 @@
 import { API_URL } from '@/config';
 
 const fetchEvents = async () => {
-  // Log the API_URL value first
-  console.log('API_URL from config:', API_URL);
-
   try {
-    const apiUrl = `${API_URL}/events/`;
+    // Make sure API_URL doesn't end with a slash
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const apiUrl = `${baseUrl}/events/`;
+    
+    console.log('Base URL:', baseUrl);
     console.log('Full request URL:', apiUrl);
     
-    // Add more request options
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
       },
-      credentials: 'omit'  // Try without credentials first
+      mode: 'cors',  // Add this
+      credentials: 'omit'
     });
 
     // Log response details safely
@@ -32,10 +32,11 @@ const fetchEvents = async () => {
     const data = await response.json();
     console.log('Successfully parsed data:', data);
     return data;
-  } catch (error: any) { // Type assertion for error
+  } catch (error: any) {
     console.error('Fetch error:', {
       message: error?.message || 'Unknown error',
       status: error?.status,
+      url: API_URL  // Log the URL in errors too
     });
     throw error;
   }

@@ -23,6 +23,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
 
   // Truncate location to 4 words
   const truncateLocation = (location: string) => {
+    if (!location) return 'Location TBA';
     const words = location.split(' ');
     if (words.length > 4) {
       return words.slice(0, 4).join(' ') + '...';
@@ -32,6 +33,11 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
 
   // Default image URL
   const defaultImageUrl = "https://w0.peakpx.com/wallpaper/1021/361/HD-wallpaper-tango-music-entertainment-passion-dance-couplemen-couple-women.jpg";
+
+  // Fix image URL handling
+  const getImageUrl = () => {
+    return event.imageUrl || defaultImageUrl;  // Only use the correct property name
+  };
 
   return (
     <motion.div
@@ -55,12 +61,15 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
               <div className="text-sm font-medium tracking-wide mb-1.5">
                 {formattedDate}
               </div>
+              <div className="text-sm text-white/70 mb-1">
+                {truncateLocation(event.location || '')}
+              </div>
               <div className="text-2xl font-light">
                 {formattedTime}
               </div>
             </div>
             <a 
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(truncateLocation(event.location || ''))}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location || '')}`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
@@ -74,7 +83,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
         {/* Bottom section with image */}
         <div className="flex-1 relative">
           <img
-            src={event.imageUrl || defaultImageUrl}
+            src={getImageUrl()}
             alt={event.name || 'Event'}
             className="w-full h-full object-cover"
           />

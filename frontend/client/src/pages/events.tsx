@@ -25,7 +25,21 @@ const Events = () => {
   // Sort events by date and time
   const sortedEvents = [...filteredEvents].sort((a, b) => {
     if (!a.event_date || !b.event_date) return 0;
-    return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
+    
+    // Get today's date at midnight for comparison
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const dateA = new Date(a.event_date);
+    const dateB = new Date(b.event_date);
+    
+    // If date A is before today, move it to the end
+    if (dateA < today) return 1;
+    // If date B is before today, move it to the end
+    if (dateB < today) return -1;
+    
+    // Sort by date
+    return dateA.getTime() - dateB.getTime();
   });
 
   return (

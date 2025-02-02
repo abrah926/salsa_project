@@ -16,6 +16,8 @@ const Events = () => {
   const { data: events = [], isLoading } = useQuery<Event[]>({
     queryKey: ["events"],
     queryFn: fetchEvents,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    refetchOnWindowFocus: false
   });
 
   const filteredEvents = selectedDate

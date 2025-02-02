@@ -3,11 +3,7 @@ import { API_URL } from '@/config';
 const fetchEvents = async () => {
   try {
     const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-    const apiUrl = `${baseUrl}/events/`;
-    
-    console.log('Full request URL:', apiUrl);
-    
-    const response = await fetch(apiUrl, {
+    const response = await fetch(`${baseUrl}/events/`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json'
@@ -17,8 +13,6 @@ const fetchEvents = async () => {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Error response body:', errorText);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     

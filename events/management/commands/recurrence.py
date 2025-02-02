@@ -1,32 +1,26 @@
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
-from .models import Salsa
+from django.core.management.base import BaseCommand
+from events.models import Salsa
 
 # Define limits for future dates
 MAX_FUTURE_LIMIT = date.today() + timedelta(days=365)  # 1 year
 MIN_FUTURE_LIMIT = date.today() + timedelta(days=6 * 30)  # 6 months
 
-
 def fetch_recurring_events():
-    """
-    Fetch recurring events from the database.
-    """
+    """Fetch recurring events from the database."""
     today = date.today()
-    # Query all events with recurrence rules
     return Salsa.objects.filter(
-        recurrence__in=["WEEKLY", "MONTHLY"],  # Include only supported recurrence types
-        recurrence_interval=1,  # Include only events with interval = 1
-        event_date__lte=today  # Include only events starting today or earlier
+        recurrence__in=["WEEKLY", "MONTHLY"],
+        recurrence_interval=1,
+        event_date__lte=today
     )
 
-
 def generate_future_dates(event, end_date):
-    """
-    Generate future dates based on the event's recurrence rules.
-    """
+    """Generate future dates based on the event's recurrence rules."""
     start_date = event.event_date
     recurrence = event.recurrence
-    interval = event.recurrence_interval or 1  # Default to 1 if None
+    interval = event.recurrence_interval or 1
 
     future_dates = []
     current_date = start_date
@@ -35,7 +29,6 @@ def generate_future_dates(event, end_date):
         if recurrence == "WEEKLY":
             current_date += timedelta(weeks=interval)
         elif recurrence == "MONTHLY":
-            # Use relativedelta to handle monthly increments correctly
             current_date += relativedelta(months=interval)
         else:
             break  # Skip unsupported recurrence types
@@ -45,30 +38,22 @@ def generate_future_dates(event, end_date):
 
     return future_dates
 
-
 def populate_future_events():
-    """
-    Fetch recurring events, generate future dates up to a defined limit, and populate the database.
-    """
+    """Generate future events without duplication."""
     print("Starting to populate future events...")
     recurring_events = fetch_recurring_events()
 
     for event in recurring_events:
-        # Determine the end date for recurrence
         event_end_date = event.end_recurring_date or MAX_FUTURE_LIMIT
-        end_date = min(event_end_date, MAX_FUTURE_LIMIT)  # Respect the 1-year limit
+        end_date = min(event_end_date, MAX_FUTURE_LIMIT)
 
-        # Generate future dates
         future_dates = generate_future_dates(event, end_date)
 
         for future_date in future_dates:
-            # Ensure that future dates are at least 6 months from today
             if future_date < MIN_FUTURE_LIMIT:
                 continue
 
-            # Check if the event already exists for the date
             if not Salsa.objects.filter(name=event.name, event_date=future_date).exists():
-                # Create a new event instance
                 Salsa.objects.create(
                     name=event.name,
                     event_date=future_date,
@@ -77,7 +62,7 @@ def populate_future_events():
                     source=event.source,
                     price=event.price,
                     details=event.details,
-                    recurrence=None,  # Future events are non-recurring
+                    recurrence=None,
                     recurrence_interval=None,
                     end_recurring_date=None
                 )
@@ -86,3 +71,10 @@ def populate_future_events():
                 print(f"Skipped duplicate event: {event.name} on {future_date}")
 
     print("Future events populated successfully.")
+
+# 🔹 **This is the missing class that makes Django recognize the command!**
+class Command(BaseCommand):
+    help = "Generate future recurring events up to a defined limit"
+
+    def handle(self, *args, **kwargs):
+        populate_future_events()

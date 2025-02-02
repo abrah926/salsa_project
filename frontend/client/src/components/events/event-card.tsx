@@ -8,7 +8,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface EventCardProps {
   event: Event;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const EventCard = ({ event, onClick }: EventCardProps) => {
@@ -18,15 +18,15 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
   const isValidDate = date && !isNaN(date.getTime());
   console.log('Is valid date:', isValidDate);  // Log if date is valid
 
-  // Format time from "20:00:00" to "8:00 PM"
-  const formattedTime = event.time ? 
-    format(new Date(`2000-01-01T${event.time}`), 'h:mm a') : 
-    'Time TBA';
+  // Format the date
+  const formattedDate = event.event_date 
+    ? format(new Date(event.event_date), 'MMMM d, yyyy')
+    : 'Date TBA';
 
-  // Add date formatting
-  const formattedDate = event.event_date ? 
-    format(new Date(event.event_date), 'MMM d, yyyy') : 
-    'Date TBA';
+  // Format time from "20:00:00" to "8:00 PM"
+  const formattedTime = event.time
+    ? format(new Date(`2000-01-01T${event.time}`), 'h:mm a')
+    : 'Time TBA';
 
   // Default image URL for when event.image_url is null or empty
   const defaultImageUrl = "https://w0.peakpx.com/wallpaper/1021/361/HD-wallpaper-tango-music-entertainment-passion-dance-couplemen-couple-women.jpg";
@@ -51,7 +51,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
                 {event.name}
               </h3>
               <div className="text-sm font-medium tracking-wide mb-1.5">
-                {event.day || 'Day TBA'}
+                {formattedDate}
               </div>
               <div className="text-2xl font-light">
                 {formattedTime}

@@ -36,7 +36,10 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
 
   // Fix image URL handling
   const getImageUrl = () => {
-    return event.imageUrl || defaultImageUrl;  // Only use the correct property name
+    console.log('Image URL from event:', event.imageUrl); // Debug log
+    const url = event.imageUrl || defaultImageUrl;
+    console.log('Using URL:', url); // Debug log
+    return url;
   };
 
   return (

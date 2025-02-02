@@ -8,6 +8,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.http import JsonResponse
 import logging
 from rest_framework.decorators import api_view
+from django.core.cache import cache
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -25,17 +27,19 @@ class SalsaViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
-            # Add debug logging
-            logger.info("Received request for events list")
-            logger.info(f"Request headers: {request.headers}")
-            logger.info(f"Request META: {request.META}")
+            # Try to get from cache first
+            cache_key = 'events_list'
+            cached_data = cache.get(cache_key)
             
-            # Get the data
-            queryset = self.get_queryset()
-            logger.info(f"Found {queryset.count()} events")
+            if cached_data is not None:
+                return Response(cached_data)
             
+            # If not in cache, get from DB
             response = super().list(request, *args, **kwargs)
-            logger.info(f"Sending response with {len(response.data)} events")
+            
+            # Store in cache
+            cache.set(cache_key, response.data, timeout=settings.CACHE_TTL)
+            
             return response
         except Exception as e:
             logger.error(f"Error in events list: {str(e)}", exc_info=True)

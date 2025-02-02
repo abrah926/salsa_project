@@ -29,16 +29,23 @@ class SalsaViewSet(viewsets.ModelViewSet):
         try:
             # Try to get from cache first
             cache_key = 'events_list'
-            cached_data = cache.get(cache_key)
+            try:
+                cached_data = cache.get(cache_key)
+                if cached_data is not None:
+                    return Response(cached_data)
+            except Exception as cache_error:
+                logger.error(f"Cache error: {str(cache_error)}")
+                # Continue without cache if there's an error
             
-            if cached_data is not None:
-                return Response(cached_data)
-            
-            # If not in cache, get from DB
+            # Get data from DB
             response = super().list(request, *args, **kwargs)
             
-            # Store in cache
-            cache.set(cache_key, response.data, timeout=settings.CACHE_TTL)
+            # Try to cache the response
+            try:
+                cache.set(cache_key, response.data, timeout=settings.CACHE_TTL)
+            except Exception as cache_error:
+                logger.error(f"Cache set error: {str(cache_error)}")
+                # Continue even if caching fails
             
             return response
         except Exception as e:

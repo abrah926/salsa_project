@@ -17,6 +17,15 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
     ? format(new Date(`2000-01-01T${event.time}`), 'h:mm a')
     : 'Time TBA';
 
+  // Truncate location to 4 words
+  const truncateLocation = (location: string) => {
+    const words = location.split(' ');
+    if (words.length > 4) {
+      return words.slice(0, 4).join(' ') + '...';
+    }
+    return location;
+  };
+
   return (
     <div
       onClick={onClick}
@@ -31,7 +40,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
         
         <div className="space-y-1 text-white/60">
           <p>{formattedDate}</p>
-          <p>{event.location}</p>
+          <p className="truncate">{truncateLocation(event.location || '')}</p>
           <p>{formattedTime}</p>
         </div>
       </div>

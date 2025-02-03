@@ -17,13 +17,10 @@ const fetchEvents = async () => {
     }
     
     const data = await response.json();
+    console.log('API Response:', data[0]); // Log first event to check structure
     return data;
   } catch (error: any) {
-    console.error('Fetch error:', {
-      message: error?.message || 'Unknown error',
-      status: error?.status,
-      url: API_URL
-    });
+    console.error('Fetch error:', error);
     throw error;
   }
 };

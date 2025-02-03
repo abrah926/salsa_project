@@ -37,20 +37,9 @@ class SalsaViewSet(viewsets.ModelViewSet):
         )
 
     def list(self, request, *args, **kwargs):
-        page = int(request.query_params.get('page', 1))
-        page_size = 20  # Load fewer events initially
-        
         queryset = self.get_queryset()
-        start = (page - 1) * page_size
-        end = start + page_size
-        
-        events = list(queryset[start:end])
-        
-        return Response({
-            'results': SalsaSerializer(events, many=True).data,
-            'next': page + 1 if len(events) == page_size else None,
-            'total': queryset.count()
-        })
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)  # Return simple list of events
 
 class EventCalendarView(APIView):
     def get(self, request):

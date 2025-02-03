@@ -18,6 +18,10 @@ const fetchEvents = async () => {
     
     const data = await response.json();
     console.log('First event from API:', data[0]); // Debug log
+    if (!Array.isArray(data)) {
+      console.error('Expected array of events, got:', data);
+      return [];
+    }
     return data;
   } catch (error: any) {
     console.error('Fetch error:', error);

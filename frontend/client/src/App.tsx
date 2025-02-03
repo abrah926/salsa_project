@@ -4,10 +4,10 @@ import { queryClient } from "@/components/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import BottomNav from "@/components/navigation/bottom-nav";
-import Home from "@/pages/home";  // Keep Home eager loaded
+import Events from "@/pages/events";  // Direct import for Events page
 
-// Lazy load non-critical pages
-const Events = lazy(() => import("@/pages/events"));
+// Lazy load other pages
+const Home = lazy(() => import("@/pages/home"));
 const EventDetails = lazy(() => import("@/pages/event-details"));
 const CreateEvent = lazy(() => import("@/pages/create-event"));
 const Contact = lazy(() => import("@/pages/contact"));

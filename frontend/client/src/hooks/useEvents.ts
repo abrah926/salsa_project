@@ -3,13 +3,16 @@ import { API_URL } from '@/config';
 const fetchEvents = async () => {
   try {
     const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    console.log('Fetching from URL:', `${baseUrl}/events/`); // Debug URL
+
     const response = await fetch(`${baseUrl}/events/`, {
       method: 'GET',
       headers: {
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
       mode: 'cors',
-      credentials: 'omit'
+      credentials: 'include'  // Changed from 'omit' to 'include'
     });
 
     if (!response.ok) {
@@ -17,7 +20,7 @@ const fetchEvents = async () => {
     }
     
     const data = await response.json();
-    console.log('First event from API:', data[0]); // Debug log
+    console.log('API Response:', data); // Debug response
     if (!Array.isArray(data)) {
       console.error('Expected array of events, got:', data);
       return [];

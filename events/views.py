@@ -26,20 +26,23 @@ class SalsaViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         today = date.today()
+        # Select specific fields and limit to recent/upcoming events
         return (
             Salsa.objects
             .filter(event_date__gte=today)
+            .filter(event_date__lte=today + timezone.timedelta(days=90))  # Next 90 days only
             .order_by('event_date')
             .only(
                 'id', 'name', 'event_date', 'time', 'location',
-                'image_url'  # Make sure we're selecting this field
+                'image_url', 'source', 'price'
             )
+            .iterator()  # Use iterator for memory efficiency
         )
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = list(self.get_queryset())[:100]  # Limit to first 100 events
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)  # Return simple list of events
+        return Response(serializer.data)
 
 class EventCalendarView(APIView):
     def get(self, request):

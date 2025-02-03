@@ -15,16 +15,20 @@ const Home = () => {
 
   const handleEventClick = () => {
     const today = new Date().toISOString().split('T')[0];
+    console.log('Today:', today); // Debug
     
-    // Find first event for today
+    // Find first event for today or next available
     const todayEvent = events.find(event => 
-      event.event_date === today
+      event.event_date && new Date(event.event_date).getTime() >= new Date(today).getTime()
     );
 
+    console.log('Found event:', todayEvent); // Debug
+
     if (todayEvent) {
+      console.log('Navigating to:', `/events/${todayEvent.id}`);
       setLocation(`/events/${todayEvent.id}`);
     } else {
-      // If no event today, go to events page
+      console.log('No events found, going to events page');
       setLocation("/events");
     }
   };

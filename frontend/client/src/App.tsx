@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import BottomNav from "@/components/navigation/bottom-nav";
 import Events from "@/pages/events";  // Direct import for Events page
+import Calendar from "@/pages/calendar";  // Add import
 
 // Lazy load other pages
 const Home = lazy(() => import("@/pages/home"));
@@ -22,6 +23,7 @@ function Router() {
         <Route path="/events/:id" component={EventDetails} />
         <Route path="/create" component={CreateEvent} />
         <Route path="/contact" component={Contact} />
+        <Route path="/calendar" component={Calendar} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

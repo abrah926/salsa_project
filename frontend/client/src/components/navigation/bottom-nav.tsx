@@ -12,7 +12,7 @@ const BottomNav = () => {
 
   const navItems = [
     { icon: Home, path: "/" },
-    { icon: Calendar, path: "/events" },
+    { icon: Calendar, path: "/calendar" },
     { icon: PlusCircle, path: "/create" },
     { icon: MessageCircle, path: "/contact" },
     { icon: ListMusic, path: getTodayEventPath() },  // Dynamic path based on date

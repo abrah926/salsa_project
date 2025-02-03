@@ -26,7 +26,7 @@ class Salsa(models.Model):
         help_text="Last date of recurrence"
     )  # End date for recurring events
     image_url = models.URLField(max_length=500, null=True, blank=True)  # Image field
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

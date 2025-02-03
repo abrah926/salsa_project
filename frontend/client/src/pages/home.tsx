@@ -30,7 +30,7 @@ const Home = () => {
           </p>
           <Button
             size="lg"
-            onClick={() => setLocation("/events")}
+            onClick={() => setLocation("/events-details")}
             className="bg-white text-black hover:bg-white/90 text-base px-8 rounded-full"
           >
             Find Events

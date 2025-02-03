@@ -49,12 +49,13 @@ const Events = () => {
     return () => observer.disconnect();
   }, [visibleCount, allEvents.length, isLoading, fetchEvents]);
 
+  // Get filtered events based on selected date
   const getFilteredAndSortedEvents = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     // First, sort all events by date
-    const allSortedEvents = [...allEvents].sort((a, b) => {
+    const allSortedEvents = [...events].sort((a, b) => {
       if (!a.event_date || !b.event_date) return 0;
       return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
     });
@@ -65,14 +66,14 @@ const Events = () => {
         event.event_date && new Date(event.event_date).toDateString() === selectedDate.toDateString()
       );
 
-      // If no events on selected date, include next available events
+      // If no events on selected date, find next available event
       if (selectedEvents.length === 0) {
         const nextEvents = allSortedEvents.filter(event => {
           if (!event.event_date) return false;
           const eventDate = new Date(event.event_date);
-          return eventDate > selectedDate;
+          return eventDate >= selectedDate;
         });
-        return nextEvents;
+        return nextEvents.length > 0 ? nextEvents : allSortedEvents;
       }
 
       return selectedEvents;
@@ -87,6 +88,16 @@ const Events = () => {
   };
 
   const sortedEvents = getFilteredAndSortedEvents();
+
+  // Scroll to first event when date changes
+  useEffect(() => {
+    if (selectedDate && sortedEvents.length > 0) {
+      const firstEventCard = document.querySelector('.snap-center');
+      if (firstEventCard) {
+        firstEventCard.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [selectedDate, sortedEvents.length]);
 
   return (
     <motion.div
@@ -121,12 +132,12 @@ const Events = () => {
       ) : (
         <div className="flex-1 flex items-center">
           <div className="snap-x snap-mandatory scroll-smooth overflow-x-auto overflow-y-hidden flex w-full [scroll-snap-stop:always]">
-            {visibleEvents.length === 0 ? (
+            {sortedEvents.length === 0 ? (
               <div className="flex-shrink-0 w-full flex items-center justify-center py-12 text-white/60">
-                No events found for the selected date
+                No events found for the selected date. Scroll to see next available events.
               </div>
             ) : (
-              visibleEvents.map((event) => (
+              sortedEvents.map((event) => (
                 <div key={event.id} className="flex-shrink-0 w-full flex items-center justify-center snap-center snap-always">
                   <div className="max-w-[65%] md:mx-auto mx-auto sm:-ml-[30px] transform -translate-x-10 sm:translate-x-0">
                     <EventCard

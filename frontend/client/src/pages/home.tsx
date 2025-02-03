@@ -1,11 +1,33 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { pageTransition } from "@/components/animations"; // ✅ New path (works)
-
+import { pageTransition } from "@/components/animations";
+import { useQuery } from "@tanstack/react-query";
+import fetchEvents from "@/hooks/useEvents";
 
 const Home = () => {
   const [, setLocation] = useLocation();
+
+  const { data: events = [] } = useQuery({
+    queryKey: ["events"],
+    queryFn: fetchEvents
+  });
+
+  const handleEventClick = () => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Find first event for today
+    const todayEvent = events.find(event => 
+      event.event_date === today
+    );
+
+    if (todayEvent) {
+      setLocation(`/events/${todayEvent.id}`);
+    } else {
+      // If no event today, go to events page
+      setLocation("/events");
+    }
+  };
 
   return (
     <motion.div
@@ -30,7 +52,7 @@ const Home = () => {
           </p>
           <Button
             size="lg"
-            onClick={() => setLocation("/events-details")}
+            onClick={handleEventClick}
             className="bg-white text-black hover:bg-white/90 text-base px-8 rounded-full"
           >
             Find Events

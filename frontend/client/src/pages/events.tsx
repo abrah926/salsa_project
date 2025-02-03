@@ -20,28 +20,44 @@ const Events = () => {
     refetchOnWindowFocus: false
   });
 
-  const filteredEvents = selectedDate
-    ? events.filter(event => event.event_date && new Date(event.event_date).toDateString() === selectedDate.toDateString())
-    : events;
-
-  // Sort events by date and time
-  const sortedEvents = [...filteredEvents].sort((a, b) => {
-    if (!a.event_date || !b.event_date) return 0;
-    
+  const getFilteredAndSortedEvents = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
-    const dateA = new Date(a.event_date);
-    dateA.setHours(0, 0, 0, 0);
-    const dateB = new Date(b.event_date);
-    dateB.setHours(0, 0, 0, 0);
-    
-    // If date is before today, move to end
-    if (dateA < today) return 1;
-    if (dateB < today) return -1;
-    
-    return dateA.getTime() - dateB.getTime();
-  });
+
+    // First, sort all events by date
+    const allSortedEvents = [...events].sort((a, b) => {
+      if (!a.event_date || !b.event_date) return 0;
+      return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
+    });
+
+    if (selectedDate) {
+      // Get events for selected date
+      const selectedEvents = allSortedEvents.filter(event => 
+        event.event_date && new Date(event.event_date).toDateString() === selectedDate.toDateString()
+      );
+
+      // If no events on selected date, include next available events
+      if (selectedEvents.length === 0) {
+        const nextEvents = allSortedEvents.filter(event => {
+          if (!event.event_date) return false;
+          const eventDate = new Date(event.event_date);
+          return eventDate > selectedDate;
+        });
+        return nextEvents;
+      }
+
+      return selectedEvents;
+    }
+
+    // If no date selected, return all future events
+    return allSortedEvents.filter(event => {
+      if (!event.event_date) return false;
+      const eventDate = new Date(event.event_date);
+      return eventDate >= today;
+    });
+  };
+
+  const sortedEvents = getFilteredAndSortedEvents();
 
   return (
     <motion.div

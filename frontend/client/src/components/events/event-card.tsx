@@ -86,7 +86,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
         {/* Bottom section with image */}
         <div className="flex-1 relative">
           <img
-            src={getImageUrl()}
+            src={event.imageUrl || defaultImageUrl}
             alt={event.name || 'Event'}
             className="w-full h-full object-cover"
           />

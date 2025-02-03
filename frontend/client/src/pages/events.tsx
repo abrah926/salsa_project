@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
@@ -20,12 +20,41 @@ const Events = () => {
     refetchOnWindowFocus: false
   });
 
+  const [visibleCount, setVisibleCount] = useState(10);
+  
+  // Just use events directly, no need for flatMap
+  const allEvents = events ?? [];
+  const visibleEvents = allEvents.slice(0, visibleCount);
+
+  // Load more when reaching the end
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          if (visibleCount < allEvents.length) {
+            setVisibleCount(prev => prev + 10);
+          } else if (isLoading) {
+            // Add void to handle the Promise
+            void fetchEvents();
+          }
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    // Add event-card class to fix querySelector error
+    const lastCard = document.querySelector('div[class*="flex-shrink-0"]:last-child');
+    if (lastCard) observer.observe(lastCard);
+
+    return () => observer.disconnect();
+  }, [visibleCount, allEvents.length, isLoading, fetchEvents]);
+
   const getFilteredAndSortedEvents = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     // First, sort all events by date
-    const allSortedEvents = [...events].sort((a, b) => {
+    const allSortedEvents = [...allEvents].sort((a, b) => {
       if (!a.event_date || !b.event_date) return 0;
       return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
     });
@@ -92,12 +121,12 @@ const Events = () => {
       ) : (
         <div className="flex-1 flex items-center">
           <div className="snap-x snap-mandatory scroll-smooth overflow-x-auto overflow-y-hidden flex w-full [scroll-snap-stop:always]">
-            {sortedEvents.length === 0 ? (
+            {visibleEvents.length === 0 ? (
               <div className="flex-shrink-0 w-full flex items-center justify-center py-12 text-white/60">
                 No events found for the selected date
               </div>
             ) : (
-              sortedEvents.map((event) => (
+              visibleEvents.map((event) => (
                 <div key={event.id} className="flex-shrink-0 w-full flex items-center justify-center snap-center snap-always">
                   <div className="max-w-[65%] md:mx-auto mx-auto sm:-ml-[30px] transform -translate-x-10 sm:translate-x-0">
                     <EventCard

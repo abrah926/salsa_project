@@ -10,6 +10,8 @@ import logging
 from rest_framework.decorators import api_view
 from django.core.cache import cache
 from django.conf import settings
+from django.utils import timezone
+from datetime import date
 
 logger = logging.getLogger(__name__)
 
@@ -18,42 +20,37 @@ class SalsaViewSet(viewsets.ModelViewSet):
     A viewset that provides the standard actions
     (list, create, retrieve, update, partial_update, destroy).
     """
-    queryset = Salsa.objects.all()
     serializer_class = SalsaSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['event_date', 'location', 'recurrence']
-    ordering_fields = ['event_date', 'name']
     ordering = ['event_date']
+    
+    def get_queryset(self):
+        today = date.today()
+        return (
+            Salsa.objects
+            .filter(event_date__gte=today)
+            .order_by('event_date')
+            .only(
+                'id', 'name', 'event_date', 'time', 'location',
+                'image_url'  # Make sure we're selecting this field
+            )
+        )
 
     def list(self, request, *args, **kwargs):
-        try:
-            # Try to get from cache first
-            cache_key = 'events_list'
-            try:
-                cached_data = cache.get(cache_key)
-                if cached_data is not None:
-                    return Response(cached_data)
-            except Exception as cache_error:
-                logger.error(f"Cache error: {str(cache_error)}")
-                # Continue without cache if there's an error
-            
-            # Get data from DB
-            response = super().list(request, *args, **kwargs)
-            
-            # Try to cache the response
-            try:
-                cache.set(cache_key, response.data, timeout=settings.CACHE_TTL)
-            except Exception as cache_error:
-                logger.error(f"Cache set error: {str(cache_error)}")
-                # Continue even if caching fails
-            
-            return response
-        except Exception as e:
-            logger.error(f"Error in events list: {str(e)}", exc_info=True)
-            return JsonResponse(
-                {"error": "Internal server error", "details": str(e)}, 
-                status=500
-            )
+        page = int(request.query_params.get('page', 1))
+        page_size = 20  # Load fewer events initially
+        
+        queryset = self.get_queryset()
+        start = (page - 1) * page_size
+        end = start + page_size
+        
+        events = list(queryset[start:end])
+        
+        return Response({
+            'results': SalsaSerializer(events, many=True).data,
+            'next': page + 1 if len(events) == page_size else None,
+            'total': queryset.count()
+        })
 
 class EventCalendarView(APIView):
     def get(self, request):

@@ -1,27 +1,24 @@
-import { Home, Calendar, PlusCircle, MessageCircle } from "lucide-react";
-import { useLocation } from "wouter";
+import { Home, Calendar, PlusCircle, MessageCircle, LucideIcon } from "lucide-react";
+import { useLocation, Link } from "wouter";
 import eventDetailsIcon from "@/assets/event_details.png";
 import { useQuery } from "@tanstack/react-query";
 import fetchEvents from "@/hooks/useEvents";
-import { API_URL } from "@/config";
 import { type Event } from "@db/schema";
 
-interface NavItem {
-  icon: React.ComponentType<any> | (() => JSX.Element);
-  path: string;
+interface NavLink {
+  href: string;
+  icon: typeof Home | (() => JSX.Element);
   label: string;
 }
 
 const BottomNav = () => {
   const [location, setLocation] = useLocation();
   
-  // Use our existing query hook
   const { data: events = [] } = useQuery<Event[]>({
     queryKey: ["events"],
     queryFn: fetchEvents
   });
 
-  // Get today's first event path
   const getTodayEventPath = () => {
     const today = new Date().toISOString().split('T')[0];
     const todayEvent = events.find(event => 
@@ -30,46 +27,53 @@ const BottomNav = () => {
     return todayEvent ? `/events/${todayEvent.id}` : '/events';
   };
 
-  const navItems = [
-    { icon: Home, path: "/", label: "Home" },
-    { icon: Calendar, path: "/calendar", label: "Calendar" },
+  const links: NavLink[] = [
+    { href: "/", icon: Home, label: "Home" },
+    { href: "/calendar", icon: Calendar, label: "Calendar" },
     { 
+      href: getTodayEventPath(),
       icon: () => (
         <img 
           src={eventDetailsIcon} 
-          alt="Event Details"
-          className="w-6 h-6 invert" // Invert to make icon white
+          alt="Details"
+          className="w-6 h-6"
         />
-      ), 
-      path: getTodayEventPath(),
-      label: "Today's Event"
+      ),
+      label: "Details"
     },
-    { icon: PlusCircle, path: "/create", label: "Create" },
-    { icon: MessageCircle, path: "/contact", label: "Contact" }
+    { href: "/create", icon: PlusCircle, label: "Create" },
+    { href: "/contact", icon: MessageCircle, label: "Contact" },
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t">
-      <div className="flex items-center justify-around px-6 py-2">
-        {navItems.map(({ icon: Icon, path, label }) => (
-          <button
-            key={path}
-            onClick={() => setLocation(path)}
-            className={`p-3 rounded-full transition-colors ${
-              location.startsWith(path.split('?')[0]) 
-                ? "bg-black/10" 
-                : "hover:bg-black/5"
-            }`}
-            aria-label={label}
-          >
-            {typeof Icon === 'function' && 'type' in Icon ? 
-              <Icon className="w-6 h-6 text-black" /> : 
-              <Icon />
-            }
-          </button>
-        ))}
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+      <div className="flex justify-around items-center h-16">
+        {links.map(({ href, icon: Icon, label }) => {
+          const isActive = location === href;
+          return (
+            <Link key={href} href={href}>
+              <a className="flex flex-col items-center gap-1">
+                {typeof Icon === 'function' && 'type' in Icon ? (
+                  <Icon 
+                    size={24}
+                    className={isActive ? "text-primary" : "text-gray-500"}
+                  />
+                ) : (
+                  <Icon />
+                )}
+                <span
+                  className={`text-xs ${
+                    isActive ? "text-primary" : "text-gray-500"
+                  }`}
+                >
+                  {label}
+                </span>
+              </a>
+            </Link>
+          );
+        })}
       </div>
-    </div>
+    </nav>
   );
 };
 

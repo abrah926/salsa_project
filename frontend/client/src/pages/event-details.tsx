@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useLocation } from "wouter";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, MapPin, User, Phone } from "lucide-react";
 import { pageTransition } from "@/components/animations";
 import { type Event as SchemaEvent } from "@db/schema";
@@ -225,51 +225,81 @@ const formattedDate = eventDateValue
       exit="exit"
       className="container mx-auto p-4 max-w-4xl"
     >
-      {event?.imageUrl && (  // Change imageUrl to image_url to match backend
-        <img
-          src={event.imageUrl}
-          alt={event.name || ''}  // Add fallback for null
-          className="w-full h-64 object-cover rounded-lg mb-6"
-        />
-      )}
-
-      <div className="space-y-4 mb-6">
-        <h1 className="text-3xl font-bold mb-4">{event.name}</h1>
-
-        <div className="flex items-center gap-2 text-gray-600">
-          <Calendar className="w-5 h-5" />
-          <span>
-            {formattedDate}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 text-gray-600">
-          <Clock className="w-5 h-5" />
-          <span>{formattedTime}</span>
-        </div>
-
-        <div className="flex items-center gap-2 text-gray-600">
-  <MapPin className="w-5 h-5" />
-  <span>{event.location}</span>
-</div>
-
-      </div>
-
-      <div className="prose max-w-none mb-8">
-        <p>{event.details}</p>
-      </div>
-
-      {/* Optional: Add visual indicators for available swipe directions */}
-      {currentDateEvents.length > 1 && (
-        <div className="fixed right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2">
-          {Array.from({ length: currentDateEvents.length }).map((_, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full ${
-                index === currentDateIndex ? 'bg-white' : 'bg-white/30'
-              }`}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={event.id}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="w-full"
+        >
+          {event?.imageUrl && (
+            <motion.img
+              src={event.imageUrl}
+              alt={event.name || ''}
+              className="w-full h-64 object-cover rounded-lg mb-6"
+              loading="eager"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
             />
-          ))}
+          )}
+
+          <div className="space-y-4 mb-6">
+            <motion.h1 
+              className="text-3xl font-bold mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              {event.name}
+            </motion.h1>
+
+            <motion.div 
+              className="space-y-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
+              <div className="flex items-center gap-2 text-gray-600">
+                <Calendar className="w-5 h-5" />
+                <span>
+                  {formattedDate}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 text-gray-600">
+                <Clock className="w-5 h-5" />
+                <span>{formattedTime}</span>
+              </div>
+
+              <div className="flex items-center gap-2 text-gray-600">
+                <MapPin className="w-5 h-5" />
+                <span>{event.location}</span>
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="prose max-w-none mb-8">
+            <p>{event.details}</p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Updated dots indicator */}
+      {currentDateEvents.length > 1 && (
+        <div className="fixed right-4 top-[65%] flex flex-col gap-2">
+          <div
+            className={`w-2 h-2 rounded-full transition-opacity ${
+              currentDateIndex === 0 ? 'bg-white' : 'bg-white/30'
+            }`}
+          />
+          <div
+            className={`w-2 h-2 rounded-full transition-opacity ${
+              currentDateIndex === 1 ? 'bg-white' : 'bg-white/30'
+            }`}
+          />
         </div>
       )}
     </motion.div>

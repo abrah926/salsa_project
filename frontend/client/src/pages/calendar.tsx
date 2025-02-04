@@ -13,11 +13,13 @@ const CalendarPage = () => {
   const [, setLocation] = useLocation();
   const [noEventsDate, setNoEventsDate] = useState<Date | null>(null);
   
+  // Set default date to 2025 since all events are in 2025
+  const defaultDate = new Date('2025-02-01');
+
   const { data: events = [] } = useQuery<Event[]>({
     queryKey: ["events"],
     queryFn: async () => {
       const data = await fetchEvents();
-      // Ensure all dates are in consistent format
       return data.map(event => ({
         ...event,
         event_date: event.event_date ? new Date(event.event_date).toISOString().split('T')[0] : null
@@ -28,42 +30,25 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
 
-    // Set time to noon to avoid timezone issues
-    const selectedDate = new Date(date.setHours(12, 0, 0, 0)).toISOString().split('T')[0];
+    // Ensure we're using 2025 as the year
+    const dateIn2025 = new Date(date);
+    dateIn2025.setFullYear(2025);
     
-    console.log('Selected date (after noon):', selectedDate);
-    console.log('All events:', events.map(e => ({
-      id: e.id,
-      date: e.event_date,
-      normalized: e.event_date ? 
-        new Date(new Date(e.event_date).setHours(12, 0, 0, 0)).toISOString().split('T')[0] 
-        : null
-    })));
+    const selectedDate = new Date(dateIn2025.setHours(12, 0, 0, 0)).toISOString().split('T')[0];
+    
+    console.log('Selected date (2025):', selectedDate);
     
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
-      const eventDate = new Date(new Date(event.event_date).setHours(12, 0, 0, 0))
-        .toISOString().split('T')[0];
-      const matches = eventDate === selectedDate;
-      console.log('Date comparison:', {
-        eventDate,
-        selectedDate,
-        matches,
-        originalEventDate: event.event_date
-      });
-      return matches;
+      return new Date(event.event_date).toISOString().split('T')[0] === selectedDate;
     });
 
     console.log('Matching events:', eventsOnDate);
 
     if (eventsOnDate.length > 0) {
-      // If events exist on selected date, show first event
-      console.log('Navigating to event:', eventsOnDate[0]);
       setLocation(`/events/${eventsOnDate[0].id}`);
     } else {
-      // If no events on selected date, show message
-      console.log('No events found, showing message');
-      setNoEventsDate(date);
+      setNoEventsDate(dateIn2025);
     }
   };
 
@@ -113,6 +98,7 @@ const CalendarPage = () => {
         <Calendar
           mode="single"
           onSelect={handleSelect}
+          defaultMonth={defaultDate}
           className="rounded-md border border-white/10 bg-black/50 backdrop-blur-md p-4 scale-125"
         />
 

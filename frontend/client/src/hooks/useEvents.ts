@@ -16,29 +16,20 @@ const fetchEvents = async (): Promise<Event[]> => {
     });
 
     if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Server response:', errorData);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: Event[] = await response.json();
+    const data = await response.json();
+    console.log('Received events:', data); // Debug log
     localStorage.setItem('events', JSON.stringify(data));
     localStorage.setItem('eventsTimestamp', Date.now().toString());
     
     return data;
   } catch (error) {
-    console.error('Error fetching events:', error);
-    
-    const cachedData = localStorage.getItem('events');
-    const timestamp = localStorage.getItem('eventsTimestamp');
-    
-    if (cachedData && timestamp) {
-      const age = Date.now() - parseInt(timestamp);
-      if (age < 24 * 60 * 60 * 1000) {
-        console.log('Using cached event data');
-        return JSON.parse(cachedData) as Event[];
-      }
-    }
-    
-    throw error;
+    console.error('Error details:', error);
+    return []; // Return empty array on error
   }
 };
 

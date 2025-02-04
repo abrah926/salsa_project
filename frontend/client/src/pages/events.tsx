@@ -136,7 +136,7 @@ const Events = () => {
                 No events found for the selected date. Scroll to see next available events.
               </div>
             ) : (
-              sortedEvents.map((event) => (
+              sortedEvents.map((event: Event) => (
                 <div key={event.id} className="flex-shrink-0 w-full flex items-center justify-center snap-center snap-always">
                   <div className="max-w-[65%] md:mx-auto mx-auto sm:-ml-[30px] transform -translate-x-10 sm:translate-x-0">
                     <EventCard

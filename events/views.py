@@ -12,6 +12,7 @@ from django.core.cache import cache
 from django.conf import settings
 from django.utils import timezone
 from datetime import date
+from rest_framework import status
 
 logger = logging.getLogger(__name__)
 
@@ -83,5 +84,17 @@ def api_health_check(request):
             "error": str(e)
         }, status=500)
 
+class EventListView(APIView):
+    def get(self, request):
+        try:
+            events = Salsa.objects.all()
+            serializer = SalsaSerializer(events, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            logger.error(f"Error fetching events: {str(e)}")
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     

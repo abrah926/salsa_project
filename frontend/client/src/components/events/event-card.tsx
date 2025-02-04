@@ -7,10 +7,10 @@ import { format } from "date-fns";
 
 interface EventCardProps {
   event: Event;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
-const EventCard = ({ event, onClick }: EventCardProps) => {
+const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
   // Format the date
   const formattedDate = event.event_date 
     ? format(new Date(event.event_date), 'MMMM d, yyyy')

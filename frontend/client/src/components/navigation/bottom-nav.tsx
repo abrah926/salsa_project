@@ -46,7 +46,7 @@ const BottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 max-w-screen-lg mx-auto safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 max-w-screen-lg mx-auto safe-area-bottom rounded-t-xl">
       <div className="flex justify-around items-center h-[4.5rem] px-2">
         {links.map(({ href, icon: Icon, label }) => {
           const isActive = location === href;
@@ -57,15 +57,15 @@ const BottomNav = () => {
                   {typeof Icon === 'function' && 'type' in Icon ? (
                     <Icon 
                       size={24}
-                      className={isActive ? "text-blue-600" : "text-gray-500"}
+                      className={isActive ? "text-black font-bold" : "text-black"}
                     />
                   ) : (
                     <Icon />
                   )}
                 </div>
                 <span
-                  className={`text-[0.625rem] leading-tight ${
-                    isActive ? "text-blue-600" : "text-gray-500"
+                  className={`text-[0.625rem] leading-tight font-medium ${
+                    isActive ? "text-black font-bold" : "text-black"
                   }`}
                 >
                   {label}

@@ -61,8 +61,6 @@ class EventCalendarView(APIView):
                 "title": event.name,
                 "start": event.event_date,
                 "location": event.location,
-                "latitude": event.map_location.latitude if hasattr(event, 'map_location') else None,
-                "longitude": event.map_location.longitude if hasattr(event, 'map_location') else None,
             }
             for event in events
         ]

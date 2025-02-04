@@ -56,14 +56,14 @@ const BottomNav = () => {
                 {typeof Icon === 'function' && 'type' in Icon ? (
                   <Icon 
                     size={24}
-                    className={isActive ? "text-primary" : "text-gray-500"}
+                    className={isActive ? "text-blue-600" : "text-gray-500"}
                   />
                 ) : (
                   <Icon />
                 )}
                 <span
                   className={`text-xs ${
-                    isActive ? "text-primary" : "text-gray-500"
+                    isActive ? "text-blue-600" : "text-gray-500"
                   }`}
                 >
                   {label}

@@ -234,6 +234,20 @@ const formattedDate = eventDateValue
       <div className="prose max-w-none mb-8">
         <p>{event.details}</p>
       </div>
+
+      {/* Optional: Add visual indicators for available swipe directions */}
+      {currentDateEvents.length > 1 && (
+        <div className="fixed right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2">
+          {Array.from({ length: currentDateEvents.length }).map((_, index) => (
+            <div
+              key={index}
+              className={`w-2 h-2 rounded-full ${
+                index === currentIndex ? 'bg-white' : 'bg-white/30'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 };

@@ -6,15 +6,17 @@ const RETRY_DELAY = 5000;
 
 const fetchEvents = async (): Promise<Event[]> => {
   try {
-    console.log('Fetching from:', `${API_URL}/events/`); // Debug URL
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    console.log('Fetching from URL:', `${baseUrl}/events/`);
 
-    const response = await fetch(`${API_URL}/events/`, {
+    const response = await fetch(`${baseUrl}/events/`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
       mode: 'cors',
-      credentials: 'omit'
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -29,29 +31,17 @@ const fetchEvents = async (): Promise<Event[]> => {
     }
 
     const data = await response.json();
-    console.log('Received events:', data);
+    console.log('API Response:', data);
     
-    const transformedData = data.map((event: any) => ({
-      ...event,
-      id: Number(event.id),
-      event_date: event.event_date,
-      name: event.name || '',
-      day: event.day || '',
-      time: event.time || '',
-      location: event.location || '',
-      details: event.details || '',
-      source: event.source || '',
-      price: event.price || '',
-      image_url: event.image_url || event.imageUrl || '',
-    }));
+    if (!Array.isArray(data)) {
+      console.error('Expected array of events, got:', data);
+      return [];
+    }
 
-    localStorage.setItem('events', JSON.stringify(transformedData));
-    localStorage.setItem('eventsTimestamp', Date.now().toString());
-    
-    return transformedData;
+    return data;
   } catch (error) {
-    console.error('Error details:', error);
-    return []; // Return empty array on error
+    console.error('Fetch error:', error);
+    throw error;
   }
 };
 

@@ -15,32 +15,25 @@ const fetchEvents = async (): Promise<Event[]> => {
         'Content-Type': 'application/json'
       },
       mode: 'cors',
-      credentials: 'omit'
+      credentials: 'omit',
+      signal: AbortSignal.timeout(10000)
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Full error response:', {
+      console.error('API Error:', {
         status: response.status,
         statusText: response.statusText,
-        headers: Object.fromEntries(response.headers),
-        body: errorData
+        data: errorData
       });
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('API Response:', data);
-    
-    if (!Array.isArray(data)) {
-      console.error('Expected array of events, got:', data);
       return [];
     }
 
-    return data;
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('Fetch error:', error);
-    throw error;
+    return [];
   }
 };
 

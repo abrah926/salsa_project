@@ -6,9 +6,9 @@ const RETRY_DELAY = 5000;
 
 const fetchEvents = async (): Promise<Event[]> => {
   try {
-    console.log('Fetching from:', `${API_URL}/api/events/`); // Debug URL
+    console.log('Fetching from:', `${API_URL}/events/`); // Debug URL
 
-    const response = await fetch(`${API_URL}/api/events/`, {
+    const response = await fetch(`${API_URL}/events/`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

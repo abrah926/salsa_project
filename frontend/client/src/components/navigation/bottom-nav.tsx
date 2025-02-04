@@ -36,7 +36,7 @@ const BottomNav = () => {
         <img 
           src={eventDetailsIcon} 
           alt="Details"
-          className="w-6 h-6"
+          className={`w-6 h-6 ${location === getTodayEventPath() ? "invert" : "invert opacity-60"}`}
         />
       ),
       label: "Details"

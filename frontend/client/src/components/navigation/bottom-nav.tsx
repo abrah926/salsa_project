@@ -46,23 +46,25 @@ const BottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
-      <div className="flex justify-around items-center h-16">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 max-w-screen-lg mx-auto safe-area-bottom">
+      <div className="flex justify-around items-center h-[4.5rem] px-2">
         {links.map(({ href, icon: Icon, label }) => {
           const isActive = location === href;
           return (
             <Link key={href} href={href}>
-              <a className="flex flex-col items-center gap-1">
-                {typeof Icon === 'function' && 'type' in Icon ? (
-                  <Icon 
-                    size={24}
-                    className={isActive ? "text-blue-600" : "text-gray-500"}
-                  />
-                ) : (
-                  <Icon />
-                )}
+              <a className="flex flex-col items-center justify-center w-full min-w-[3rem] py-1 px-2 touch-manipulation">
+                <div className="h-6 mb-1">
+                  {typeof Icon === 'function' && 'type' in Icon ? (
+                    <Icon 
+                      size={24}
+                      className={isActive ? "text-blue-600" : "text-gray-500"}
+                    />
+                  ) : (
+                    <Icon />
+                  )}
+                </div>
                 <span
-                  className={`text-xs ${
+                  className={`text-[0.625rem] leading-tight ${
                     isActive ? "text-blue-600" : "text-gray-500"
                   }`}
                 >

@@ -16,7 +16,7 @@ const fetchEvents = async (): Promise<Event[]> => {
         'Content-Type': 'application/json'
       },
       mode: 'cors',
-      credentials: 'include'
+      credentials: 'omit'
     });
 
     if (!response.ok) {

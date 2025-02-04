@@ -51,12 +51,14 @@ const BottomNav = () => {
                   <Icon 
                     size={24}
                     strokeWidth={1.5}
-                    className={isActive ? "text-white" : "text-white/60"}
+                    className={`transition-opacity ${
+                      isActive ? "text-white opacity-100" : "text-white opacity-60"
+                    }`}
                   />
                 </div>
                 <span
-                  className={`text-[0.625rem] leading-tight font-medium ${
-                    isActive ? "text-white" : "text-white/60"
+                  className={`text-[0.625rem] leading-tight font-medium transition-opacity ${
+                    isActive ? "text-white opacity-100" : "text-white opacity-60"
                   }`}
                 >
                   {label}

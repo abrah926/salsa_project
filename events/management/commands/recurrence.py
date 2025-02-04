@@ -1,5 +1,21 @@
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta, MO, TU, WE, TH, FR, SA, SU
+from django.core.management.base import BaseCommand
+from events.models import Salsa
+
+# Define limits for future dates
+MAX_FUTURE_LIMIT = date.today() + timedelta(days=365)  # 1 year
+MIN_FUTURE_LIMIT = date.today() + timedelta(days=6 * 30)  # 6 months
+
+def fetch_recurring_events():
+    """Fetch recurring events from the database."""
+    today = date.today()
+    events = Salsa.objects.filter(
+        recurrence__in=["Weekly", "Monthly"],
+        recurrence_interval__gte=1,
+        event_date__lte=today
+    )
+    return events
 
 def generate_future_dates(event, end_date):
     """Generate future dates based on the event's recurrence rules and ensure they fall on the correct weekday."""
@@ -38,3 +54,43 @@ def generate_future_dates(event, end_date):
     print(f"- Interval: {interval}")
 
     return future_dates
+
+def populate_future_events():
+    """Generate future events without duplication."""
+    recurring_events = fetch_recurring_events()
+    total_created = 0
+
+    for event in recurring_events:
+        event_end_date = event.end_recurring_date or MAX_FUTURE_LIMIT
+        end_date = min(event_end_date, MAX_FUTURE_LIMIT)
+        
+        future_dates = generate_future_dates(event, end_date)
+
+        for future_date in future_dates:
+            if future_date < MIN_FUTURE_LIMIT:
+                continue
+
+            exists = Salsa.objects.filter(name=event.name, event_date=future_date).exists()
+            if not exists:
+                Salsa.objects.create(
+                    name=event.name,
+                    event_date=future_date,
+                    time=event.time,
+                    location=event.location,
+                    source=event.source,
+                    price=event.price,
+                    details=event.details,
+                    recurrence=None,
+                    recurrence_interval=None,
+                    end_recurring_date=None
+                )
+                total_created += 1
+
+    return total_created
+
+class Command(BaseCommand):
+    help = "Generate future recurring events up to a defined limit"
+
+    def handle(self, *args, **kwargs):
+        total = populate_future_events()
+        self.stdout.write(self.style.SUCCESS(f'Successfully created {total} future events'))

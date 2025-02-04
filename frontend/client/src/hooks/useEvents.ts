@@ -6,6 +6,8 @@ const RETRY_DELAY = 5000;
 
 const fetchEvents = async (): Promise<Event[]> => {
   try {
+    console.log('Fetching from:', `${API_URL}/events/`); // Debug URL
+
     const response = await fetch(`${API_URL}/events/`, {
       method: 'GET',
       headers: {
@@ -17,7 +19,12 @@ const fetchEvents = async (): Promise<Event[]> => {
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Server response:', errorData);
+      console.error('Full error response:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers),
+        body: errorData
+      });
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 

@@ -65,7 +65,42 @@ const CalendarPage = () => {
     }
   };
 
-  // ... rest of the component code remains unchanged ...
+  return (
+    <motion.div
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="fixed inset-0 bg-black/95 flex flex-col overflow-hidden"
+    >
+      <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
+        <div className="flex items-center justify-center px-6 py-4">
+          <span className="text-xl font-medium text-white/90">Calendar</span>
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col items-center justify-center p-4">
+        <Calendar
+          mode="single"
+          onSelect={handleSelect}
+          className="rounded-md border border-white/10 bg-black/50 backdrop-blur-md p-4 scale-125"
+        />
+
+        {noEventsDate && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-12 text-white/80 text-center"
+          >
+            <p>No events available on {format(noEventsDate, 'MMMM d, yyyy')}</p>
+            <p className="text-sm mt-2 text-white/60">
+              Swipe left or right to see nearest available events
+            </p>
+          </motion.div>
+        )}
+      </div>
+    </motion.div>
+  );
 };
 
 export default CalendarPage;

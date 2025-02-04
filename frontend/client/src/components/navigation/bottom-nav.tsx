@@ -24,14 +24,14 @@ const BottomNav = () => {
     const todayEvent = events.find(event => 
       typeof event.event_date === 'string' && event.event_date === today
     );
-    return todayEvent ? `/events/${todayEvent.id}` : '/events';
+    return todayEvent ? `/events/${todayEvent.id}` : null;
   };
 
   const links: NavLink[] = [
     { href: "/", icon: Home, label: "Home" },
     { href: "/calendar", icon: Calendar, label: "Calendar" },
     { 
-      href: getTodayEventPath(),
+      href: getTodayEventPath() || "#",
       icon: Search,
       label: "Details"
     },

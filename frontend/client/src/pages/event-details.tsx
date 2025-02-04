@@ -187,19 +187,39 @@ const EventDetails = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-4">
-        <div className="h-96 bg-gray-100 animate-pulse rounded-lg mb-4" />
-        <div className="h-8 bg-gray-100 animate-pulse rounded mb-4" />
-        <div className="h-24 bg-gray-100 animate-pulse rounded" />
-      </div>
+      <motion.div
+        variants={pageTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen"
+      >
+        <div className="space-y-4 text-center">
+          <div className="h-96 bg-black/20 animate-pulse rounded-lg mb-4" />
+          <div className="h-8 bg-black/20 animate-pulse rounded mb-4 w-3/4 mx-auto" />
+          <div className="h-24 bg-black/20 animate-pulse rounded w-1/2 mx-auto" />
+          <p className="text-white/60">Loading event details...</p>
+        </div>
+      </motion.div>
     );
   }
 
   if (!event) {
     return (
-      <div className="container mx-auto p-4 text-center">
-        Event not found
-      </div>
+      <motion.div
+        variants={pageTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="container mx-auto p-4 flex items-center justify-center min-h-screen"
+      >
+        <div className="text-center space-y-4">
+          <p className="text-xl text-white/90">Event not found</p>
+          <p className="text-sm text-white/60">
+            The event you're looking for might have been removed or is no longer available.
+          </p>
+        </div>
+      </motion.div>
     );
   }
 
@@ -225,66 +245,69 @@ const formattedDate = eventDateValue
       exit="exit"
       className="container mx-auto p-4 max-w-4xl relative"
     >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={event.id}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="w-full"
-        >
-          {event?.imageUrl && (
-            <motion.img
-              src={event.imageUrl}
-              alt={event.name || ''}
-              className="w-full h-64 object-cover rounded-lg mb-6"
-              loading="eager"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            />
-          )}
+      <AnimatePresence mode="sync">
+        {!isLoading && event && (
+          <motion.div
+            key={event.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            {event?.imageUrl && (
+              <motion.img
+                src={event.imageUrl}
+                alt={event.name || ''}
+                className="w-full h-64 object-cover rounded-lg mb-6"
+                loading="eager"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              />
+            )}
 
-          <div className="space-y-4 mb-6">
-            <motion.h1 
-              className="text-3xl font-bold mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-            >
-              {event.name}
-            </motion.h1>
+            <div className="space-y-4 mb-6">
+              <motion.h1 
+                className="text-3xl font-bold mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+              >
+                {event.name}
+              </motion.h1>
 
-            <motion.div 
-              className="space-y-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-            >
-              <div className="flex items-center gap-2 text-gray-600">
-                <Calendar className="w-5 h-5" />
-                <span>
-                  {formattedDate}
-                </span>
-              </div>
+              <motion.div 
+                className="space-y-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+              >
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="w-5 h-5" />
+                  <span>
+                    {formattedDate}
+                  </span>
+                </div>
 
-              <div className="flex items-center gap-2 text-gray-600">
-                <Clock className="w-5 h-5" />
-                <span>{formattedTime}</span>
-              </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Clock className="w-5 h-5" />
+                  <span>{formattedTime}</span>
+                </div>
 
-              <div className="flex items-center gap-2 text-gray-600">
-                <MapPin className="w-5 h-5" />
-                <span>{event.location}</span>
-              </div>
-            </motion.div>
-          </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <MapPin className="w-5 h-5" />
+                  <span>{event.location}</span>
+                </div>
+              </motion.div>
+            </div>
 
-          <div className="prose max-w-none mb-8">
-            <p>{event.details}</p>
-          </div>
-        </motion.div>
+            <div className="prose max-w-none mb-8">
+              <p>{event.details}</p>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* Fixed position dots without animation */}

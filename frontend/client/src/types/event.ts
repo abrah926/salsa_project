@@ -15,4 +15,9 @@ export interface Event {
   imageUrl?: string;
   created_at?: string;
   updated_at?: string;
+  eventDate?: string;
+  recurrenceInterval?: number;
+  endRecurringDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
 } 

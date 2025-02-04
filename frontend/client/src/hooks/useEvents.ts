@@ -22,11 +22,26 @@ const fetchEvents = async (): Promise<Event[]> => {
     }
 
     const data = await response.json();
-    console.log('Received events:', data); // Debug log
-    localStorage.setItem('events', JSON.stringify(data));
+    console.log('Received events:', data);
+    
+    const transformedData = data.map((event: any) => ({
+      ...event,
+      id: event.id,
+      event_date: event.event_date,
+      name: event.name || '',
+      day: event.day || '',
+      time: event.time || '',
+      location: event.location || '',
+      details: event.details || '',
+      source: event.source || '',
+      price: event.price || '',
+      image_url: event.image_url || event.imageUrl || '',
+    }));
+
+    localStorage.setItem('events', JSON.stringify(transformedData));
     localStorage.setItem('eventsTimestamp', Date.now().toString());
     
-    return data;
+    return transformedData;
   } catch (error) {
     console.error('Error details:', error);
     return []; // Return empty array on error

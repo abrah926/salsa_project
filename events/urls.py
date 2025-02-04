@@ -29,5 +29,4 @@ urlpatterns = [
     path('calendar/', EventCalendarView.as_view(), name='event-calendar'),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path('health/', api_health_check, name='api_health_check'),
-    path('events/', EventListView.as_view(), name='event-list'),
 ]

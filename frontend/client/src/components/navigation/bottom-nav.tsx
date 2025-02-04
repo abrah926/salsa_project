@@ -3,7 +3,7 @@ import { useLocation, Link } from "wouter";
 import eventDetailsIcon from "@/assets/event_details.png";
 import { useQuery } from "@tanstack/react-query";
 import fetchEvents from "@/hooks/useEvents";
-import { type Event } from "@db/schema";
+import { type Event } from "@/types/event";
 
 interface NavLink {
   href: string;
@@ -16,7 +16,9 @@ const BottomNav = () => {
   
   const { data: events = [] } = useQuery<Event[]>({
     queryKey: ["events"],
-    queryFn: fetchEvents
+    queryFn: () => fetchEvents(),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false
   });
 
   const getTodayEventPath = () => {

@@ -13,4 +13,6 @@ export interface Event {
   end_recurring_date?: string | null;
   image_url?: string;
   imageUrl?: string;
+  created_at?: string;
+  updated_at?: string;
 } 

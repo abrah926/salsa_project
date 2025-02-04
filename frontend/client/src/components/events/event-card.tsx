@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/components/animations";
-import { type Event } from "@db/schema";
+import { type Event } from "@/types/event";
 import { format } from "date-fns";
 
 interface EventCardProps {

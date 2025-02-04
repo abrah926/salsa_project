@@ -26,7 +26,7 @@ const fetchEvents = async (): Promise<Event[]> => {
     
     const transformedData = data.map((event: any) => ({
       ...event,
-      id: event.id,
+      id: Number(event.id),
       event_date: event.event_date,
       name: event.name || '',
       day: event.day || '',

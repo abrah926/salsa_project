@@ -3,7 +3,7 @@ import { useParams, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, MapPin, User, Phone } from "lucide-react";
 import { pageTransition } from "@/components/animations";
-import { type Event as SchemaEvent } from "@db/schema";
+import { type Event } from "@/types/event";
 import { format } from "date-fns";
 import { API_URL } from "@/config";
 import { useState, useEffect, useRef } from "react";
@@ -18,17 +18,7 @@ interface EventResponse {
   location: string;
   details: string;
   image_url: string;  // Backend field
-}
-
-interface Event {
-  id: number;
-  event_date: string;
-  name: string;
-  day: string;
-  time: string;
-  location: string;
-  details: string;
-  imageUrl: string;  // Frontend field
+  imageUrl?: string;  // Frontend field
 }
 
 const EventDetails = () => {
@@ -37,9 +27,13 @@ const EventDetails = () => {
   const [, setLocation] = useLocation();
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   
-  const { data: events = [] } = useQuery<Event[]>({
+  const { data: events = [], isLoading, error } = useQuery({
     queryKey: ["events"],
-    queryFn: fetchEvents
+    queryFn: () => fetchEvents(),
+    retry: 3,
+    retryDelay: 5000,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 24 * 60 * 60 * 1000,
   });
 
   // Get current event
@@ -144,7 +138,7 @@ const EventDetails = () => {
     };
   }, [currentEvent, currentDateEvents, currentDateIndex]);
 
-  const { data: event, isLoading } = useQuery<Event>({
+  const { data: event, isLoading: eventLoading } = useQuery<Event>({
     queryKey: ["event", id],
     queryFn: async () => {
       const response = await fetch(`${API_URL}/events/${id}/`, {
@@ -253,7 +247,7 @@ const EventDetails = () => {
       className="container mx-auto p-4 max-w-4xl relative"
     >
       <AnimatePresence mode="sync">
-        {!isLoading && event && (
+        {!eventLoading && event && (
           <motion.div
             key={event.id}
             initial={{ opacity: 0 }}

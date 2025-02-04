@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { CalendarDropdown } from "@/components/events/calendar-dropdown";
 import EventCard from "@/components/events/event-card";
 import { pageTransition, staggerContainer } from "@/components/animations";
-import { type Event } from "@db/schema";
+import { type Event } from '@/types/event';
 import fetchEvents from "@/hooks/useEvents";
 
 const Events = () => {
@@ -15,15 +15,14 @@ const Events = () => {
 
   const { data: events = [], isLoading } = useQuery<Event[]>({
     queryKey: ["events"],
-    queryFn: fetchEvents,
+    queryFn: () => fetchEvents(),
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     refetchOnWindowFocus: false
   });
 
   const [visibleCount, setVisibleCount] = useState(10);
   
-  // Just use events directly, no need for flatMap
-  const allEvents = events ?? [];
+  const allEvents = events;
   const visibleEvents = allEvents.slice(0, visibleCount);
 
   // Load more when reaching the end

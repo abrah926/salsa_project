@@ -1,33 +1,43 @@
 import { API_URL } from '@/config';
+import { Event } from '@/types/event';
 
-const fetchEvents = async () => {
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 5000;
+
+const fetchEvents = async (): Promise<Event[]> => {
   try {
-    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-    console.log('Fetching from URL:', `${baseUrl}/events/`); // Debug URL
-
-    const response = await fetch(`${baseUrl}/events/`, {
+    const response = await fetch(`${API_URL}/api/events/`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
       },
       mode: 'cors',
-      credentials: 'include'  // Changed from 'omit' to 'include'
+      credentials: 'omit'
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const data: Event[] = await response.json();
+    localStorage.setItem('events', JSON.stringify(data));
+    localStorage.setItem('eventsTimestamp', Date.now().toString());
     
-    const data = await response.json();
-    console.log('API Response:', data); // Debug response
-    if (!Array.isArray(data)) {
-      console.error('Expected array of events, got:', data);
-      return [];
-    }
     return data;
-  } catch (error: any) {
-    console.error('Fetch error:', error);
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    
+    const cachedData = localStorage.getItem('events');
+    const timestamp = localStorage.getItem('eventsTimestamp');
+    
+    if (cachedData && timestamp) {
+      const age = Date.now() - parseInt(timestamp);
+      if (age < 24 * 60 * 60 * 1000) {
+        console.log('Using cached event data');
+        return JSON.parse(cachedData) as Event[];
+      }
+    }
+    
     throw error;
   }
 };

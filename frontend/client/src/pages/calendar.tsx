@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -6,7 +6,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { motion } from "framer-motion";
 import { pageTransition } from "@/components/animations";
 import fetchEvents from "@/hooks/useEvents";
-import { type Event } from "@db/schema";
+import { type Event } from "@/types/event";
 import { format } from "date-fns";
 
 const CalendarPage = () => {
@@ -15,16 +15,15 @@ const CalendarPage = () => {
   
   // Set default date to 2025 since all events are in 2025
   const defaultDate = new Date('2025-02-01');
+  const [selectedMonth, setSelectedMonth] = useState<Date>(defaultDate);
 
-  const { data: events = [] } = useQuery<Event[]>({
+  const { data: events = [], isError, error, isLoading } = useQuery({
     queryKey: ["events"],
-    queryFn: async () => {
-      const data = await fetchEvents();
-      return data.map(event => ({
-        ...event,
-        event_date: event.event_date ? new Date(event.event_date).toISOString().split('T')[0] : null
-      }));
-    }
+    queryFn: () => fetchEvents(),
+    retry: 3,
+    retryDelay: 5000,
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    gcTime: 24 * 60 * 60 * 1000, // Keep in garbage collection for 24 hours (renamed from cacheTime)
   });
 
   const handleSelect = (date: Date | undefined) => {
@@ -33,6 +32,9 @@ const CalendarPage = () => {
     // Ensure we're using 2025 as the year
     const dateIn2025 = new Date(date);
     dateIn2025.setFullYear(2025);
+    
+    // Update selected month when date changes
+    setSelectedMonth(dateIn2025);
     
     const selectedDate = new Date(dateIn2025.setHours(12, 0, 0, 0)).toISOString().split('T')[0];
     
@@ -80,6 +82,27 @@ const CalendarPage = () => {
     }
   };
 
+  // Add loading UI
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-black/95 flex flex-col items-center justify-center p-4">
+        <p className="text-white/80 mb-4">Loading events...</p>
+      </div>
+    );
+  }
+
+  // Add error UI
+  if (isError) {
+    return (
+      <div className="fixed inset-0 bg-black/95 flex flex-col items-center justify-center p-4">
+        <p className="text-red-500 mb-4">Error loading events</p>
+        <p className="text-sm text-gray-400">
+          {error instanceof Error ? error.message : 'Please try again later'}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       variants={pageTransition}
@@ -98,7 +121,8 @@ const CalendarPage = () => {
         <Calendar
           mode="single"
           onSelect={handleSelect}
-          defaultMonth={defaultDate}
+          defaultMonth={selectedMonth}
+          selected={noEventsDate || undefined}
           className="rounded-md border border-white/10 bg-black/50 backdrop-blur-md p-4 scale-125"
         />
 
@@ -109,8 +133,6 @@ const CalendarPage = () => {
             className="mt-12 text-white/80 text-center"
           >
             <p>No events available on {format(noEventsDate, 'MMMM d, yyyy')}</p>
-            <p className="text-sm mt-2 text-white/60">
-            </p>
           </motion.div>
         )}
       </div>

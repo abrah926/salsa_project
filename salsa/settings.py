@@ -66,13 +66,13 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-    'https://salsa-frontend.onrender.com',  # Make sure this matches exactly
+    'https://salsa-frontend.onrender.com',
 ]
 
-# For debugging
-CORS_ALLOW_ALL_ORIGINS = True  # Temporarily enable this
+# Add these specific settings
+CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+CORS_ALLOW_CREDENTIALS = False  # Change to False since we're using 'omit'
 
-CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',

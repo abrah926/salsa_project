@@ -1,4 +1,4 @@
-import { Home, Calendar, PlusCircle, MessageCircle, LucideIcon } from "lucide-react";
+import { Home, Calendar, PlusCircle, MessageCircle, Search } from "lucide-react";
 import { useLocation, Link } from "wouter";
 import eventDetailsIcon from "@/assets/event_details.png";
 import { useQuery } from "@tanstack/react-query";
@@ -32,13 +32,7 @@ const BottomNav = () => {
     { href: "/calendar", icon: Calendar, label: "Calendar" },
     { 
       href: getTodayEventPath(),
-      icon: () => (
-        <img 
-          src={eventDetailsIcon} 
-          alt="Details"
-          className={`w-6 h-6 ${location === getTodayEventPath() ? "invert" : "invert opacity-60"}`}
-        />
-      ),
+      icon: Search,
       label: "Details"
     },
     { href: "/create", icon: PlusCircle, label: "Create" },
@@ -54,15 +48,11 @@ const BottomNav = () => {
             <Link key={href} href={href}>
               <a className="flex flex-col items-center justify-center w-full min-w-[3rem] py-1 px-2 touch-manipulation">
                 <div className="h-6 mb-1">
-                  {typeof Icon === 'function' && 'type' in Icon ? (
-                    <Icon 
-                      size={24}
-                      strokeWidth={1.5}
-                      className={isActive ? "text-white" : "text-white/60"}
-                    />
-                  ) : (
-                    <Icon />
-                  )}
+                  <Icon 
+                    size={24}
+                    strokeWidth={1.5}
+                    className={isActive ? "text-white" : "text-white/60"}
+                  />
                 </div>
                 <span
                   className={`text-[0.625rem] leading-tight font-medium ${

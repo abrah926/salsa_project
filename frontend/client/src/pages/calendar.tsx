@@ -30,20 +30,30 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
 
-    // Ensure we're using 2025 as the year
+    // Ensure we're using 2025 as the year and normalize to local timezone
     const dateIn2025 = new Date(date);
     dateIn2025.setFullYear(2025);
     
-    const selectedDate = new Date(dateIn2025.setHours(12, 0, 0, 0)).toISOString().split('T')[0];
+    // Format selected date to YYYY-MM-DD
+    const selectedDate = dateIn2025.toISOString().split('T')[0];
     
-    console.log('Selected date (2025):', selectedDate);
+    console.log('Selected date:', selectedDate);
     
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
-      return new Date(event.event_date).toISOString().split('T')[0] === selectedDate;
+      
+      // Direct string comparison of YYYY-MM-DD
+      const matches = event.event_date === selectedDate;
+      console.log('Comparing:', {
+        event_date: event.event_date,
+        selectedDate,
+        matches,
+        eventName: event.name
+      });
+      return matches;
     });
 
-    console.log('Matching events:', eventsOnDate);
+    console.log('Found events:', eventsOnDate);
 
     if (eventsOnDate.length > 0) {
       setLocation(`/events/${eventsOnDate[0].id}`);

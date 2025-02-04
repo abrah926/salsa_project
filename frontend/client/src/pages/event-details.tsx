@@ -180,7 +180,7 @@ const EventDetails = () => {
     time: event?.time
   });
 
-  // Add console logs to debug
+  
   console.log('Raw event:', event);
   console.log('Event date field:', event?.event_date);
   console.log('Event day field:', event?.day);

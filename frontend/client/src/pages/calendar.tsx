@@ -15,7 +15,14 @@ const CalendarPage = () => {
   
   const { data: events = [] } = useQuery<Event[]>({
     queryKey: ["events"],
-    queryFn: fetchEvents
+    queryFn: async () => {
+      const data = await fetchEvents();
+      // Ensure all dates are in consistent format
+      return data.map(event => ({
+        ...event,
+        event_date: event.event_date ? new Date(event.event_date).toISOString().split('T')[0] : null
+      }));
+    }
   });
 
   const handleSelect = (date: Date | undefined) => {
@@ -23,16 +30,25 @@ const CalendarPage = () => {
 
     const selectedDate = date.toISOString().split('T')[0];
     
-    // Find ONLY events that match the exact selected date
-    const eventsOnDate = events.filter(event => 
-      event.event_date && typeof event.event_date === 'string' && event.event_date === selectedDate
-    );
+    // Debug logs
+    console.log('Selected date:', selectedDate);
+    console.log('All events:', events);
+    
+    // Find events on exact selected date with strict comparison
+    const eventsOnDate = events.filter(event => {
+      if (!event.event_date) return false;
+      return new Date(event.event_date).toISOString().split('T')[0] === selectedDate;
+    });
+
+    console.log('Events found for date:', eventsOnDate);
 
     if (eventsOnDate.length > 0) {
       // If events exist on selected date, show first event
+      console.log('Navigating to event:', eventsOnDate[0]);
       setLocation(`/events/${eventsOnDate[0].id}`);
     } else {
       // If no events on selected date, show message
+      console.log('No events found, showing message');
       setNoEventsDate(date);
     }
   };
@@ -94,7 +110,6 @@ const CalendarPage = () => {
           >
             <p>No events available on {format(noEventsDate, 'MMMM d, yyyy')}</p>
             <p className="text-sm mt-2 text-white/60">
-              Swipe left or right to see nearest available events
             </p>
           </motion.div>
         )}

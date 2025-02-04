@@ -223,7 +223,7 @@ const formattedDate = eventDateValue
       initial="initial"
       animate="animate"
       exit="exit"
-      className="container mx-auto p-4 max-w-4xl"
+      className="container mx-auto p-4 max-w-4xl relative"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -287,21 +287,23 @@ const formattedDate = eventDateValue
         </motion.div>
       </AnimatePresence>
 
-      {/* Updated dots indicator */}
-      {currentDateEvents.length > 1 && (
-        <div className="fixed right-4 top-[65%] flex flex-col gap-2">
-          <div
-            className={`w-2 h-2 rounded-full transition-opacity ${
-              currentDateIndex === 0 ? 'bg-white' : 'bg-white/30'
-            }`}
-          />
-          <div
-            className={`w-2 h-2 rounded-full transition-opacity ${
-              currentDateIndex === 1 ? 'bg-white' : 'bg-white/30'
-            }`}
-          />
-        </div>
-      )}
+      {/* Fixed position dots without animation */}
+      <div className="absolute right-4 top-[65%] flex flex-col gap-2" style={{ transform: 'none' }}>
+        {currentDateEvents.length > 1 && (
+          <>
+            <div
+              className={`w-2 h-2 rounded-full transition-opacity ${
+                currentDateIndex === 0 ? 'bg-white' : 'bg-white/30'
+              }`}
+            />
+            <div
+              className={`w-2 h-2 rounded-full transition-opacity ${
+                currentDateIndex === 1 ? 'bg-white' : 'bg-white/30'
+              }`}
+            />
+          </>
+        )}
+      </div>
     </motion.div>
   );
 };

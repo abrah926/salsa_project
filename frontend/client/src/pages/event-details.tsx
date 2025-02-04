@@ -223,19 +223,26 @@ const EventDetails = () => {
     );
   }
 
-  // Format time from "20:00:00" to "8:00 PM"
+  // Format the full date with timezone consideration
+  const formattedDate = event?.event_date ? 
+    format(
+      // Set to noon in local timezone to avoid date shifting
+      new Date(new Date(event.event_date).setHours(12, 0, 0, 0)), 
+      'MMMM d, yyyy'
+    ) : 
+    'Date TBA';
+
+  // Format time with timezone handling
   const formattedTime = event?.time ? 
-    format(new Date(`2000-01-01T${event.time}`), 'h:mm a') : 
+    new Date(`2000-01-01T${event.time}`).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }) : 
     'Time TBA';
 
   // Format the full date
   const eventDateValue = event?.event_date || event?.event_date;
-
-const formattedDate = eventDateValue
-  ? format(new Date(eventDateValue), 'MMMM d, yyyy')
-  : 'Date TBA';
-
-
 
   return (
     <motion.div

@@ -28,16 +28,18 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
 
-    const selectedDate = date.toISOString().split('T')[0];
+    // Set time to noon to avoid timezone issues
+    const selectedDate = new Date(date.setHours(12, 0, 0, 0)).toISOString().split('T')[0];
     
-    // Debug logs
     console.log('Selected date:', selectedDate);
-    console.log('All events:', events);
     
-    // Find events on exact selected date with strict comparison
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
-      return new Date(event.event_date).toISOString().split('T')[0] === selectedDate;
+      // Normalize event date to noon as well
+      const eventDate = new Date(new Date(event.event_date).setHours(12, 0, 0, 0))
+        .toISOString().split('T')[0];
+      console.log('Comparing dates:', { eventDate, selectedDate });
+      return eventDate === selectedDate;
     });
 
     console.log('Events found for date:', eventsOnDate);

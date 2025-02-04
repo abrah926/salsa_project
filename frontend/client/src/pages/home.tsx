@@ -5,42 +5,24 @@ import { pageTransition } from "@/components/animations";
 import { useQuery } from "@tanstack/react-query";
 import { type Event } from "@/types/event";
 import fetchEvents from "@/hooks/useEvents";
-import { useEffect } from "react";
 
 const Home = () => {
   const [, setLocation] = useLocation();
 
   const { data: events = [] } = useQuery({
     queryKey: ["events"],
-    queryFn: fetchEvents,
+    queryFn: fetchEvents
   });
-
-  useEffect(() => {
-    // Get today's date in 2025
-    const today = new Date();
-    today.setFullYear(2025);
-    const todayStr = today.toISOString().split('T')[0];
-    
-    // Find first event on or after today
-    const nextEvent = events.find(event => 
-      event.event_date >= todayStr
-    );
-
-    if (nextEvent) {
-      setLocation(`/events/${nextEvent.id}`);
-    }
-  }, [events, setLocation]);
 
   const handleEventClick = () => {
     const today = new Date().toISOString().split('T')[0];
-    console.log('Today:', today); // Debug
+    console.log('Today:', today);
     
-    // Find first event for today or next available
     const todayEvent = events.find(event => 
       event.event_date && new Date(event.event_date).getTime() >= new Date(today).getTime()
     );
 
-    console.log('Found event:', todayEvent); // Debug
+    console.log('Found event:', todayEvent);
 
     if (todayEvent) {
       console.log('Navigating to:', `/events/${todayEvent.id}`);

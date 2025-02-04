@@ -46,7 +46,6 @@ class SalsaSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
             'end_date',
-            'map_location',
         ]
 
     def validate_time(self, value):
@@ -82,15 +81,15 @@ class SalsaSerializer(serializers.ModelSerializer):
         Validate recurrence interval for recurrence types.
         """
         recurrence = self.initial_data.get('recurrence')
-        if recurrence in ["WEEKLY", "MONTHLY"]:
+        if recurrence in ["Weekly", "Monthly"]:
             if value is None or value < 1:
                 raise serializers.ValidationError(
-                    "Recurrence interval must be a positive integer for weekly or monthly events."
+                    "Recurrence interval must be a positive integer for Weekly or Monthly events."
                 )
-        elif recurrence is None or recurrence == "DAILY":
+        elif recurrence is None or recurrence == "Daily":
             if value is not None:
                 raise serializers.ValidationError(
-                    "Recurrence interval must be null for non-weekly or non-monthly events."
+                    "Recurrence interval must be null for non-Weekly or non-Monthly events."
                 )
         return value
 

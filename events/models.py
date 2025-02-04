@@ -34,15 +34,3 @@ class Salsa(models.Model):
 
     class Meta:
         db_table = "salsas"  # Custom table name in the database
-
-class MapLocation(models.Model):
-    event = models.OneToOneField(
-        'events.Salsa',
-        on_delete=models.CASCADE,
-        related_name='map_location'
-    )
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-
-    def __str__(self):
-        return f"{self.event.name} Location"

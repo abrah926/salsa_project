@@ -31,18 +31,30 @@ const CalendarPage = () => {
     // Set time to noon to avoid timezone issues
     const selectedDate = new Date(date.setHours(12, 0, 0, 0)).toISOString().split('T')[0];
     
-    console.log('Selected date:', selectedDate);
+    console.log('Selected date (after noon):', selectedDate);
+    console.log('All events:', events.map(e => ({
+      id: e.id,
+      date: e.event_date,
+      normalized: e.event_date ? 
+        new Date(new Date(e.event_date).setHours(12, 0, 0, 0)).toISOString().split('T')[0] 
+        : null
+    })));
     
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
-      // Normalize event date to noon as well
       const eventDate = new Date(new Date(event.event_date).setHours(12, 0, 0, 0))
         .toISOString().split('T')[0];
-      console.log('Comparing dates:', { eventDate, selectedDate });
-      return eventDate === selectedDate;
+      const matches = eventDate === selectedDate;
+      console.log('Date comparison:', {
+        eventDate,
+        selectedDate,
+        matches,
+        originalEventDate: event.event_date
+      });
+      return matches;
     });
 
-    console.log('Events found for date:', eventsOnDate);
+    console.log('Matching events:', eventsOnDate);
 
     if (eventsOnDate.length > 0) {
       // If events exist on selected date, show first event

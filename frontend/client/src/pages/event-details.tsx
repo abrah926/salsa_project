@@ -33,55 +33,69 @@ interface Event {
 
 const EventDetails = () => {
   const params = useParams();
-  const id = params?.id;  // Get the id from params
+  const id = params?.id;
   const [, setLocation] = useLocation();
-  const today = new Date().toISOString().split('T')[0];
-  const dateParam = new URLSearchParams(window.location.search).get('date') || today;
-
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  
   const { data: events = [] } = useQuery<Event[]>({
     queryKey: ["events"],
     queryFn: fetchEvents
   });
 
-  // Get events for the current date
-  const currentDateEvents = events.filter(event => 
-    event.event_date === dateParam
+  // Get current event
+  const currentEvent = events.find(e => e.id === Number(id));
+  
+  // Get all events sorted by date
+  const sortedEvents = [...events].sort((a, b) => 
+    new Date(a.event_date).getTime() - new Date(b.event_date).getTime()
   );
 
-  // Get index of current event in the filtered list
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Get current date events
+  const currentDateEvents = events.filter(event => 
+    event.event_date === currentEvent?.event_date
+  );
 
-  // Add touch ref
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  // Get current index within same-day events
+  const currentDateIndex = currentDateEvents.findIndex(e => e.id === Number(id));
 
   // Navigation functions
-  const goToNextDate = () => {
-    const nextEvent = events.find(event => 
-      event.event_date && event.event_date > dateParam
-    );
-    if (nextEvent) {
-      setLocation(`/events?date=${nextEvent.event_date}`);
-    }
-  };
-
-  const goToPreviousDate = () => {
-    const prevEvent = [...events].reverse().find(event => 
-      event.event_date && event.event_date < dateParam
-    );
-    if (prevEvent) {
-      setLocation(`/events?date=${prevEvent.event_date}`);
-    }
-  };
-
   const goToNextEvent = () => {
-    if (currentIndex < currentDateEvents.length - 1) {
-      setCurrentIndex(prev => prev + 1);
+    if (currentDateIndex < currentDateEvents.length - 1) {
+      // Next event on same date
+      setLocation(`/events/${currentDateEvents[currentDateIndex + 1].id}`);
     }
   };
 
   const goToPreviousEvent = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1);
+    if (currentDateIndex > 0) {
+      // Previous event on same date
+      setLocation(`/events/${currentDateEvents[currentDateIndex - 1].id}`);
+    }
+  };
+
+  const goToNextDate = () => {
+    if (!currentEvent) return;
+    
+    // Find next available event after current date
+    const nextEvent = sortedEvents.find(event => 
+      new Date(event.event_date) > new Date(currentEvent.event_date)
+    );
+
+    if (nextEvent) {
+      setLocation(`/events/${nextEvent.id}`);
+    }
+  };
+
+  const goToPreviousDate = () => {
+    if (!currentEvent) return;
+    
+    // Find previous available event before current date
+    const previousEvent = [...sortedEvents].reverse().find(event => 
+      new Date(event.event_date) < new Date(currentEvent.event_date)
+    );
+
+    if (previousEvent) {
+      setLocation(`/events/${previousEvent.id}`);
     }
   };
 
@@ -99,15 +113,25 @@ const EventDetails = () => {
       const deltaX = touch.clientX - touchStart.current.x;
       const deltaY = touch.clientY - touchStart.current.y;
 
-      // Determine if horizontal or vertical swipe
+      // Determine if horizontal or vertical swipe based on which delta is larger
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // Horizontal swipe
-        if (deltaX > 50) goToPreviousDate();
-        else if (deltaX < -50) goToNextDate();
+        // Horizontal swipe - navigate between dates
+        if (Math.abs(deltaX) > 50) {
+          if (deltaX > 0) {
+            goToPreviousDate();
+          } else {
+            goToNextDate();
+          }
+        }
       } else {
-        // Vertical swipe
-        if (deltaY > 50) goToPreviousEvent();
-        else if (deltaY < -50) goToNextEvent();
+        // Vertical swipe - navigate between events on same date
+        if (Math.abs(deltaY) > 50) {
+          if (deltaY > 0) {
+            goToPreviousEvent();
+          } else {
+            goToNextEvent();
+          }
+        }
       }
     };
 
@@ -118,7 +142,7 @@ const EventDetails = () => {
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [currentDateEvents, currentIndex]);
+  }, [currentEvent, currentDateEvents, currentDateIndex]);
 
   const { data: event, isLoading } = useQuery<Event>({
     queryKey: ["event", id],
@@ -242,7 +266,7 @@ const formattedDate = eventDateValue
             <div
               key={index}
               className={`w-2 h-2 rounded-full ${
-                index === currentIndex ? 'bg-white' : 'bg-white/30'
+                index === currentDateIndex ? 'bg-white' : 'bg-white/30'
               }`}
             />
           ))}

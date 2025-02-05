@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { pageTransition } from "@/components/animations";
 import { type Event } from "@/types/event";
-import { formatInTimeZone } from "date-fns-tz";
+import * as dateFnsTz from "date-fns-tz";
 import { API_URL } from "@/config";
 import { useEffect, useRef } from "react";
 import fetchEvents from "@/hooks/useEvents";
@@ -86,7 +86,7 @@ const EventDetails = () => {
 
   // **Fix Timezone Handling**
   const formattedDate = event?.event_date
-    ? formatInTimeZone(event.event_date, "America/Puerto_Rico", "MMMM d, yyyy")
+    ? dateFnsTz.formatInTimeZone(event.event_date, "America/Puerto_Rico", "MMMM d, yyyy")
     : "Date TBA";
 
   const formattedTime = event?.time

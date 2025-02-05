@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, type UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 import path, { dirname } from "path";
@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode }: { mode: string }): UserConfig => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
@@ -22,18 +22,11 @@ export default defineConfig(({ mode }) => {
         { find: "@", replacement: path.resolve(__dirname, "./client/src") },
         { find: "@db", replacement: path.resolve(__dirname, "./db") },
       ],
-      extensions: [".js", ".ts", ".jsx", ".tsx", ""],
     },
     root: path.resolve(__dirname, "client"),
     build: {
-      outDir: path.resolve(__dirname, "dist/public"),
-      emptyOutDir: true,
-      sourcemap: true,
       rollupOptions: {
-        input: {
-          main: path.resolve(__dirname, "client/index.html"),
-        },
-        external: ["date-fns-tz"],
+        external: ["date-fns-tz"], // ✅ Ensure this is correctly placed
       },
     },
     base: "./",

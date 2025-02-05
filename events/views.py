@@ -28,7 +28,10 @@ class SalsaViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.action == 'list':
             today = timezone.now().date()  # Use timezone-aware date
-            return (
+            logger.info(f"Fetching events from today ({today}) to 90 days later ({today + timezone.timedelta(days=90)})")
+        
+            # Fetch list view query
+            queryset = (
                 Salsa.objects
                 .filter(event_date__gte=today)
                 .filter(event_date__lte=today + timezone.timedelta(days=90))
@@ -38,9 +41,15 @@ class SalsaViewSet(viewsets.ModelViewSet):
                     'image_url', 'source', 'price'
                 )
             )
+            logger.info(f"Queryset for list action: {queryset.query}")
+            return queryset
         else:
             # For detail view, get all fields
-            return Salsa.objects.all()
+            logger.info(f"Fetching all fields for detail view, action: {self.action}")
+            queryset = Salsa.objects.all()
+            logger.info(f"Queryset for detail action: {queryset.query}")
+            return queryset
+
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()[:100]  # Limit to first 100 events
@@ -55,15 +64,18 @@ class SalsaViewSet(viewsets.ModelViewSet):
 class EventCalendarView(APIView):
     def get(self, request):
         events = Salsa.objects.all()
-        event_list = [
-            {
+        event_list = []
+        
+        for event in events:
+            logger.info(f"Event ID: {event.id}, Event Date: {event.event_date}")
+            event_list.append({
                 "title": event.name,
-                "start": event.event_date,
+                "start": event.event_date,  # Will log the serialized value
                 "location": event.location,
-            }
-            for event in events
-        ]
+            })
+
         return Response(event_list)
+
 
 @api_view(['GET'])
 def api_health_check(request):

@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@bochilteam/scraper": "^5.0.1",
+    "date-fns-tz": "^3.2.0",
     "puppeteer": "^24.0.0"
   }
 }

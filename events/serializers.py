@@ -2,6 +2,10 @@ from rest_framework import serializers
 from .models import Salsa
 import datetime
 import re
+from django.utils.timezone import make_aware
+import pytz
+from django.utils.timezone import localtime
+import pytz
 
 
 class SalsaSerializer(serializers.ModelSerializer):
@@ -48,6 +52,15 @@ class SalsaSerializer(serializers.ModelSerializer):
             'end_date',
         ]
 
+    def get_event_date(self, obj):
+        """
+        Convert event_date from UTC to America/Puerto_Rico timezone.
+        """
+        puerto_rico_tz = pytz.timezone('America/Puerto_Rico')
+        if obj.event_date:
+            return localtime(obj.event_date, puerto_rico_tz).isoformat()
+        return None
+
     def validate_time(self, value):
         """
         Extracts and validates the first 5 characters of the time input (e.g., '17:00').
@@ -65,15 +78,15 @@ class SalsaSerializer(serializers.ModelSerializer):
                     "Invalid time format. Ensure the time is in 'hh:mm' format."
                 )
         return value
-
     def validate_event_date(self, value):
-        # Keep as is
-        try:
-            datetime.datetime.strptime(str(value), '%Y-%m-%d')  # Validate date format
-        except ValueError:
-            raise serializers.ValidationError(
-                "Date format is invalid. Please use 'YYYY-MM-DD'."
-            )
+        """
+        Ensure `event_date` is timezone-aware and converted to UTC.
+        """
+        if value:
+            puerto_rico_tz = pytz.timezone('America/Puerto_Rico')  # Adjust as necessary
+            if value.tzinfo is None:  # If no timezone info
+                value = make_aware(value, puerto_rico_tz)  # Localize to Puerto Rico timezone
+            value = value.astimezone(pytz.UTC)  # Convert to UTC
         return value
 
     def validate_recurrence_interval(self, value):

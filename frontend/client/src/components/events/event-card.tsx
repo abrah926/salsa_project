@@ -14,7 +14,8 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
   // Format the date
   const formattedDate = event.event_date 
     ? format(
-        new Date(`${event.event_date}`), // Use the YYYY-MM-DD format from backend
+        // Set to noon UTC to avoid any timezone shifting
+        new Date(`${event.event_date}T12:00:00.000Z`),
         'MMMM d, yyyy'
       )
     : 'Date TBA';

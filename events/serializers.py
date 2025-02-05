@@ -5,7 +5,7 @@ import re
 
 
 class SalsaSerializer(serializers.ModelSerializer):
-    event_date = serializers.DateField(required=False, allow_null=True)
+    event_date = serializers.DateField(format='%Y-%m-%d')  # Force consistent date format
     time = serializers.TimeField(required=False, allow_null=True)  # Start time
     end_time = serializers.TimeField(required=False, allow_null=True)  # End time
     day = serializers.CharField(required=False, allow_null=True)

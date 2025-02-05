@@ -28,29 +28,21 @@ const CalendarPage = () => {
 
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
-
-    // Ensure we're using 2025 as the year
-    const dateIn2025 = new Date(date);
-    dateIn2025.setFullYear(2025);
     
-    // Update selected month when date changes
-    setSelectedMonth(dateIn2025);
+    // Normalize to YYYY-MM-DD format
+    const selectedDate = date.toISOString().split('T')[0];
     
-    const selectedDate = new Date(dateIn2025.setHours(12, 0, 0, 0)).toISOString().split('T')[0];
+    const eventsOnDate = events.filter(event => 
+      event.event_date === selectedDate
+    );
     
-    console.log('Selected date (2025):', selectedDate);
+    console.log('Selected date:', selectedDate);
+    console.log('Events on date:', eventsOnDate);
     
-    const eventsOnDate = events.filter(event => {
-      if (!event.event_date) return false;
-      return new Date(event.event_date).toISOString().split('T')[0] === selectedDate;
-    });
-
-    console.log('Matching events:', eventsOnDate);
-
     if (eventsOnDate.length > 0) {
       setLocation(`/events/${eventsOnDate[0].id}`);
     } else {
-      setNoEventsDate(dateIn2025);
+      setNoEventsDate(date);
     }
   };
 

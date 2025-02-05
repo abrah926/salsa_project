@@ -54,6 +54,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+TIME_ZONE = "UTC"  # Store all dates in UTC
+USE_TZ = True  # Enable timezone support in Django
+
+
 # Security Settings
 SECURE_SSL_REDIRECT = False  # Keep False during testing
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

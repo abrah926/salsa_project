@@ -5,7 +5,7 @@ from django.utils import timezone
 GOOGLE_API_KEY = 'YOUR_GOOGLE_API_KEY'
 
 class Salsa(models.Model):
-    event_date = models.DateField(null=True, blank=True)  # Optional date
+    event_date = models.DateTimeField(null=True, blank=True)  # Change to DateTimeField
     day = models.CharField(max_length=50, null=True, blank=True)  # Optional day
     time = models.TimeField(null=True, blank=True)  # Optional time
     name = models.CharField(max_length=255, null=True, blank=True)  # Event name

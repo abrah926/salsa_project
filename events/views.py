@@ -27,8 +27,7 @@ class SalsaViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if self.action == 'list':
-            # For list view, use optimized query
-            today = date.today()
+            today = timezone.now().date()  # Use timezone-aware date
             return (
                 Salsa.objects
                 .filter(event_date__gte=today)

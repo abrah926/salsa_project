@@ -13,7 +13,10 @@ interface EventCardProps {
 const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
   // Format the date
   const formattedDate = event.event_date 
-    ? format(new Date(event.event_date), 'MMMM d, yyyy')
+    ? format(
+        new Date(`${event.event_date}`), // Use the YYYY-MM-DD format from backend
+        'MMMM d, yyyy'
+      )
     : 'Date TBA';
 
   // Format time from "20:00:00" to "8:00 PM"

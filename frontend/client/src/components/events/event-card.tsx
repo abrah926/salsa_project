@@ -11,10 +11,14 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
-  // Format the date - directly use the date string from backend
+  // Format the date - add one day to compensate for the shift
   const formattedDate = event.event_date 
     ? format(
-        new Date(event.event_date), // Just use the date directly
+        (() => {
+          const date = new Date(event.event_date);
+          date.setDate(date.getDate() + 1); // Add one day
+          return date;
+        })(),
         'MMMM d, yyyy'
       )
     : 'Date TBA';

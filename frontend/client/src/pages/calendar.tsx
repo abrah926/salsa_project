@@ -30,9 +30,9 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // Subtract one day from selected date to match backend
+  
     const adjustedDate = new Date(date);
-    adjustedDate.setDate(adjustedDate.getDate() + 2);
+    adjustedDate.setDate(adjustedDate.getDate());
     const selectedDate = adjustedDate.toISOString().split('T')[0];
     
     const eventsOnDate = events.filter(event => event.event_date === selectedDate);

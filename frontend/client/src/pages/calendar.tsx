@@ -29,12 +29,11 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // Normalize to YYYY-MM-DD format
+    // Convert selected date to same format as database (YYYY-MM-DD)
     const selectedDate = date.toISOString().split('T')[0];
     
-    const eventsOnDate = events.filter(event => 
-      event.event_date === selectedDate
-    );
+    // Direct string comparison with database value
+    const eventsOnDate = events.filter(event => event.event_date === selectedDate);
     
     console.log('Selected date:', selectedDate);
     console.log('Events on date:', eventsOnDate);

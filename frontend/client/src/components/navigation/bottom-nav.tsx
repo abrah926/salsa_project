@@ -7,15 +7,17 @@ import threeLinesIcon from "@/assets/3lines.png";
 
 interface NavLink {
   href: string;
-  icon: typeof Home | (() => JSX.Element);
+  icon: typeof Home | typeof ThreeLinesIcon | (() => JSX.Element);
   label: string;
 }
 
-const ThreeLinesIcon = () => (
+const ThreeLinesIcon = ({ size = 24, className = "" }) => (
   <img 
     src={threeLinesIcon} 
     alt="Events" 
-    className="w-6 h-6"
+    width={size}
+    height={size}
+    className={className}
   />
 );
 

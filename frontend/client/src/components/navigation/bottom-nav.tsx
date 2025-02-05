@@ -52,7 +52,11 @@ const BottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md border-t border-white/10 z-50 max-w-screen-lg mx-auto safe-area-bottom rounded-t-2xl">
+    <nav className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md 
+      border-t border-red-800/30 
+      shadow-[0_-4px_6px_-1px_rgba(220,38,38,0.1)] 
+      z-50 max-w-screen-lg mx-auto safe-area-bottom rounded-t-2xl"
+    >
       <div className="flex justify-around items-center h-[4.5rem] px-2">
         {links.map(({ href, icon: Icon, label }) => {
           const isActive = location === href;

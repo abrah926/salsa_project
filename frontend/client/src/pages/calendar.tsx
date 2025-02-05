@@ -13,9 +13,10 @@ const CalendarPage = () => {
   const [, setLocation] = useLocation();
   const [noEventsDate, setNoEventsDate] = useState<Date | null>(null);
   
-  // Set default date to 2025 since all events are in 2025
-  const defaultDate = new Date('2025-02-01');
-  const [selectedMonth, setSelectedMonth] = useState<Date>(defaultDate);
+  // Set default date to current month
+  const currentDate = new Date();
+  currentDate.setFullYear(2025); // Keep the year 2025
+  const [selectedMonth, setSelectedMonth] = useState<Date>(currentDate);
 
   const { data: events = [], isError, error, isLoading } = useQuery({
     queryKey: ["events"],

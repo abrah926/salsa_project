@@ -1,15 +1,23 @@
-import { Home, Calendar, PlusCircle, MessageCircle, Search } from "lucide-react";
+import { Home, Calendar, PlusCircle, MessageCircle } from "lucide-react";
 import { useLocation, Link } from "wouter";
-import eventDetailsIcon from "@/assets/event_details.png";
 import { useQuery } from "@tanstack/react-query";
 import fetchEvents from "@/hooks/useEvents";
 import { type Event } from "@/types/event";
+import threeLinesIcon from "@/assets/3lines.png";
 
 interface NavLink {
   href: string;
   icon: typeof Home | (() => JSX.Element);
   label: string;
 }
+
+const ThreeLinesIcon = () => (
+  <img 
+    src={threeLinesIcon} 
+    alt="Events" 
+    className="w-6 h-6"
+  />
+);
 
 const BottomNav = () => {
   const [location, setLocation] = useLocation();
@@ -34,8 +42,8 @@ const BottomNav = () => {
     { href: "/calendar", icon: Calendar, label: "Calendar" },
     { 
       href: getTodayEventPath() || "#",
-      icon: Search,
-      label: "Details"
+      icon: ThreeLinesIcon,
+      label: "Events"
     },
     { href: "/create", icon: PlusCircle, label: "Create" },
     { href: "/contact", icon: MessageCircle, label: "Contact" },

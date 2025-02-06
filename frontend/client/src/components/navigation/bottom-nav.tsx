@@ -13,14 +13,18 @@ interface NavLink {
 }
 
 const ThreeLinesIcon = ({ size = 24, className = "" }) => (
-  <div className="flex items-center justify-center w-6 h-6">
-    <img 
-      src={threeLinesIcon} 
-      alt="Events" 
-      className={`w-6 h-6 ${className}`}
-      style={{ opacity: 'inherit' }}
-    />
-  </div>
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    className={className}
+  >
+    <line x1="3" y1="6" x2="21" y2="6" strokeWidth="1.5" />
+    <line x1="3" y1="12" x2="21" y2="12" strokeWidth="1.5" />
+    <line x1="3" y1="18" x2="21" y2="18" strokeWidth="1.5" />
+  </svg>
 );
 
 const BottomNav = () => {
@@ -47,8 +51,7 @@ const BottomNav = () => {
     { 
       href: getTodayEventPath() || "/events",
       icon: ThreeLinesIcon,
-      label: "Events",
-      customIcon: true
+      label: "Events"
     },
     { href: "/create", icon: PlusCircle, label: "Create" },
     { href: "/contact", icon: MessageCircle, label: "Contact" },
@@ -61,7 +64,7 @@ const BottomNav = () => {
       z-50 max-w-screen-lg mx-auto safe-area-bottom rounded-t-2xl"
     >
       <div className="flex justify-around items-center h-[4.5rem] px-2">
-        {links.map(({ href, icon: Icon, label, customIcon }) => {
+        {links.map(({ href, icon: Icon, label }) => {
           const isActive = location === href;
           return (
             <Link key={href} href={href}>

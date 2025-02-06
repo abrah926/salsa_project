@@ -18,11 +18,15 @@ export default defineConfig(({ mode }) => {
       port: parseInt(env.PORT) || 5173,
     },
     resolve: {
-      alias: [
-        { find: '@', replacement: path.resolve(__dirname, './client/src') },
-        { find: '@db', replacement: path.resolve(__dirname, './db') }
-      ],
+      alias: {
+        '@': path.resolve(__dirname, './client/src'),
+        '@db': path.resolve(__dirname, './db'),
+        "date-fns-tz": "date-fns-tz" // ✅ Fix module resolution
+      },
       extensions: ['.js', '.ts', '.jsx', '.tsx', '']
+    },
+    optimizeDeps: {
+      include: ["date-fns-tz"] // ✅ Ensure it's bundled
     },
     root: path.resolve(__dirname, "client"),
     build: {
@@ -33,7 +37,7 @@ export default defineConfig(({ mode }) => {
         input: {
           main: path.resolve(__dirname, "client/index.html")
         },
-        external: ["date-fns-tz"] // ✅ Added this line without modifying anything else
+        external: ["date-fns-tz"] // ✅ Ensure it's not bundled incorrectly
       }
     },
     base: './',

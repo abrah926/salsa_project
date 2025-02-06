@@ -10,6 +10,7 @@ interface NavLink {
   icon: typeof Home | typeof Calendar | typeof PlusCircle | typeof MessageCircle | typeof ThreeLinesIcon;
   label: string;
   customIcon?: boolean;
+  onClick?: () => void;
 }
 
 const ThreeLinesIcon = ({ size = 24, className = "" }) => (
@@ -37,21 +38,29 @@ const BottomNav = () => {
     refetchOnWindowFocus: false
   });
 
-  const getTodayEventPath = () => {
+  const handleEventsClick = () => {
     const today = new Date().toISOString().split('T')[0];
+    
     const todayEvent = events.find(event => 
-      typeof event.event_date === 'string' && event.event_date === today
+      event.event_date && new Date(event.event_date).getTime() >= new Date(today).getTime()
     );
-    return todayEvent ? `/events/${todayEvent.id}` : null;
+
+    if (todayEvent) {
+      setLocation(`/events/${todayEvent.id}`);
+    } else {
+      // Stay on current page if no events found
+      console.log('No upcoming events found');
+    }
   };
 
   const links: NavLink[] = [
     { href: "/", icon: Home, label: "Home" },
     { href: "/calendar", icon: Calendar, label: "Calendar" },
     { 
-      href: getTodayEventPath() || "/events",
+      href: "#", // Changed to # to prevent default navigation
       icon: ThreeLinesIcon,
-      label: "Events"
+      label: "Events",
+      onClick: handleEventsClick // Add onClick handler
     },
     { href: "/create", icon: PlusCircle, label: "Create" },
     { href: "/contact", icon: MessageCircle, label: "Contact" },
@@ -64,11 +73,19 @@ const BottomNav = () => {
       z-50 max-w-screen-lg mx-auto safe-area-bottom rounded-t-2xl"
     >
       <div className="flex justify-around items-center h-[4.5rem] px-2">
-        {links.map(({ href, icon: Icon, label }) => {
+        {links.map(({ href, icon: Icon, label, onClick }) => {
           const isActive = location === href;
           return (
             <Link key={href} href={href}>
-              <a className="flex flex-col items-center justify-center w-full min-w-[3rem] py-1 px-2 touch-manipulation">
+              <a 
+                className="flex flex-col items-center justify-center w-full min-w-[3rem] py-1 px-2 touch-manipulation"
+                onClick={(e) => {
+                  if (onClick) {
+                    e.preventDefault();
+                    onClick();
+                  }
+                }}
+              >
                 <div className="h-6 mb-1">
                   <Icon 
                     size={24}

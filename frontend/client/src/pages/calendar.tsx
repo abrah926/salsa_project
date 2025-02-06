@@ -30,20 +30,27 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
     
-  
-    const adjustedDate = new Date(date);
-    adjustedDate.setDate(adjustedDate.getDate());
-    const selectedDate = adjustedDate.toISOString().split('T')[0];
+    // Create date at start of day for consistent comparison
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
     
-    const eventsOnDate = events.filter(event => event.event_date === selectedDate);
+    // Format date string in YYYY-MM-DD format
+    const dateString = selectedDate.toISOString().split('T')[0];
     
-    console.log('Selected date:', selectedDate);
-    console.log('Events found:', eventsOnDate);
+    // Find events on the selected date
+    const eventsOnDate = events.filter(event => {
+      if (!event.event_date) return false;
+      
+      // Compare date strings in YYYY-MM-DD format
+      const eventDate = new Date(event.event_date);
+      const eventDateString = eventDate.toISOString().split('T')[0];
+      return eventDateString === dateString;
+    });
     
     if (eventsOnDate.length > 0) {
       setLocation(`/events/${eventsOnDate[0].id}`);
     } else {
-      setNoEventsDate(date);
+      setNoEventsDate(selectedDate);
     }
   };
 

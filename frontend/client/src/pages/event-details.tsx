@@ -100,6 +100,65 @@ const EventDetails = () => {
       })
     : "Time TBA";
 
+  const handleLocationClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (event?.location) {
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`,
+        '_blank',
+        'noopener,noreferrer'
+      );
+    }
+  };
+
+  // Add these functions for navigation
+  const navigateToEvent = (eventId: number) => {
+    setLocation(`/events/${eventId}`);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart.current || !currentEvent) return;
+
+    const touchEnd = {
+      x: e.changedTouches[0].clientX,
+      y: e.changedTouches[0].clientY,
+    };
+
+    const deltaX = touchStart.current.x - touchEnd.x;
+    const deltaY = touchStart.current.y - touchEnd.y;
+
+    // Determine if the swipe was primarily horizontal or vertical
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      // Horizontal swipe - navigate between dates
+      const currentIndex = sortedEvents.findIndex(e => e.id === currentEvent.id);
+      if (deltaX > 50 && currentIndex < sortedEvents.length - 1) {
+        // Swipe left - next date
+        navigateToEvent(sortedEvents[currentIndex + 1].id);
+      } else if (deltaX < -50 && currentIndex > 0) {
+        // Swipe right - previous date
+        navigateToEvent(sortedEvents[currentIndex - 1].id);
+      }
+    } else {
+      // Vertical swipe - navigate between events on same date
+      if (deltaY > 50 && currentDateIndex < currentDateEvents.length - 1) {
+        // Swipe up - next event on same date
+        navigateToEvent(currentDateEvents[currentDateIndex + 1].id);
+      } else if (deltaY < -50 && currentDateIndex > 0) {
+        // Swipe down - previous event on same date
+        navigateToEvent(currentDateEvents[currentDateIndex - 1].id);
+      }
+    }
+
+    touchStart.current = null;
+  };
+
   if (isLoading) {
     return (
       <motion.div
@@ -146,6 +205,8 @@ const EventDetails = () => {
       animate="animate"
       exit="exit"
       className="container mx-auto p-4 max-w-4xl relative"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <AnimatePresence mode="sync">
         {!eventLoading && event && (
@@ -197,8 +258,13 @@ const EventDetails = () => {
                 </div>
 
                 <div className="flex items-center gap-2 text-gray-600">
-                  <MapPin className="w-5 h-5" />
-                  <span>{event.location}</span>
+                  <button
+                    onClick={handleLocationClick}
+                    className="flex items-center gap-2 hover:text-white/90 transition-colors"
+                  >
+                    <MapPin className="w-5 h-5" />
+                    <span>{event.location}</span>
+                  </button>
                 </div>
               </motion.div>
             </div>

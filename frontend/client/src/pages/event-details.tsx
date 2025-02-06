@@ -288,13 +288,16 @@ const EventDetails = () => {
                 </div>
 
                 <div className="flex items-center gap-2 text-gray-600">
-                  <button
-                    onClick={handleLocationClick}
+                  <a 
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                     className="flex items-center gap-2 hover:text-white/90 transition-colors"
                   >
                     <MapPin className="w-5 h-5" />
                     <span>{event.location}</span>
-                  </button>
+                  </a>
                 </div>
               </motion.div>
             </div>

@@ -7,18 +7,20 @@ import threeLinesIcon from "@/assets/3lines.png";
 
 interface NavLink {
   href: string;
-  icon: typeof Home | typeof ThreeLinesIcon | (() => JSX.Element);
+  icon: typeof Home | typeof Calendar | typeof PlusCircle | typeof MessageCircle | typeof ThreeLinesIcon;
   label: string;
+  customIcon?: boolean;
 }
 
 const ThreeLinesIcon = ({ size = 24, className = "" }) => (
-  <img 
-    src={threeLinesIcon} 
-    alt="Events" 
-    width={size}
-    height={size}
-    className={className}
-  />
+  <div className="flex items-center justify-center w-6 h-6">
+    <img 
+      src={threeLinesIcon} 
+      alt="Events" 
+      className={`w-6 h-6 ${className}`}
+      style={{ opacity: 'inherit' }}
+    />
+  </div>
 );
 
 const BottomNav = () => {
@@ -43,9 +45,10 @@ const BottomNav = () => {
     { href: "/", icon: Home, label: "Home" },
     { href: "/calendar", icon: Calendar, label: "Calendar" },
     { 
-      href: getTodayEventPath() || "#",
+      href: getTodayEventPath() || "/events",
       icon: ThreeLinesIcon,
-      label: "Events"
+      label: "Events",
+      customIcon: true
     },
     { href: "/create", icon: PlusCircle, label: "Create" },
     { href: "/contact", icon: MessageCircle, label: "Contact" },
@@ -58,7 +61,7 @@ const BottomNav = () => {
       z-50 max-w-screen-lg mx-auto safe-area-bottom rounded-t-2xl"
     >
       <div className="flex justify-around items-center h-[4.5rem] px-2">
-        {links.map(({ href, icon: Icon, label }) => {
+        {links.map(({ href, icon: Icon, label, customIcon }) => {
           const isActive = location === href;
           return (
             <Link key={href} href={href}>

@@ -27,7 +27,7 @@ const EventDetails = () => {
   const params = useParams();
   const id = params?.id;
   const [, setLocation] = useLocation();
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const touchStart = useRef<{ x: number; y: number; timeStamp: number } | null>(null);
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ["events"],
@@ -117,13 +117,17 @@ const EventDetails = () => {
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    // Prevent default to ensure smooth touch handling
+    e.preventDefault();
     touchStart.current = {
       x: e.touches[0].clientX,
       y: e.touches[0].clientY,
+      timeStamp: e.timeStamp,
     };
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
     if (!touchStart.current || !currentEvent) return;
 
     const touchEnd = {
@@ -134,24 +138,35 @@ const EventDetails = () => {
     const deltaX = touchStart.current.x - touchEnd.x;
     const deltaY = touchStart.current.y - touchEnd.y;
 
-    // Determine if the swipe was primarily horizontal or vertical
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    // Increase threshold for more deliberate swipes
+    const SWIPE_THRESHOLD = 75;
+    
+    // Add minimum velocity check
+    const timeElapsed = e.timeStamp - touchStart.current.timeStamp;
+    const velocity = Math.abs(deltaX) / timeElapsed;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > SWIPE_THRESHOLD) {
       // Horizontal swipe - navigate between dates
       const currentIndex = sortedEvents.findIndex(e => e.id === currentEvent.id);
-      if (deltaX > 50 && currentIndex < sortedEvents.length - 1) {
+      
+      if (deltaX > 0 && currentIndex < sortedEvents.length - 1) {
         // Swipe left - next date
+        e.stopPropagation();
         navigateToEvent(sortedEvents[currentIndex + 1].id);
-      } else if (deltaX < -50 && currentIndex > 0) {
+      } else if (deltaX < 0 && currentIndex > 0) {
         // Swipe right - previous date
+        e.stopPropagation();
         navigateToEvent(sortedEvents[currentIndex - 1].id);
       }
-    } else {
+    } else if (Math.abs(deltaY) > SWIPE_THRESHOLD) {
       // Vertical swipe - navigate between events on same date
-      if (deltaY > 50 && currentDateIndex < currentDateEvents.length - 1) {
+      if (deltaY > 0 && currentDateIndex < currentDateEvents.length - 1) {
         // Swipe up - next event on same date
+        e.stopPropagation();
         navigateToEvent(currentDateEvents[currentDateIndex + 1].id);
-      } else if (deltaY < -50 && currentDateIndex > 0) {
+      } else if (deltaY < 0 && currentDateIndex > 0) {
         // Swipe down - previous event on same date
+        e.stopPropagation();
         navigateToEvent(currentDateEvents[currentDateIndex - 1].id);
       }
     }
@@ -159,20 +174,25 @@ const EventDetails = () => {
     touchStart.current = null;
   };
 
-  if (isLoading) {
+  // Add touch move handler to prevent default scrolling when swiping
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStart.current) {
+      e.preventDefault();
+    }
+  };
+
+  if (isLoading || eventLoading) {
     return (
       <motion.div
         variants={pageTransition}
         initial="initial"
         animate="animate"
         exit="exit"
-        className="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen"
+        className="fixed inset-0 bg-black/95 flex flex-col items-center justify-center"
       >
-        <div className="space-y-4 text-center">
-          <div className="h-96 bg-black/20 animate-pulse rounded-lg mb-4" />
-          <div className="h-8 bg-black/20 animate-pulse rounded mb-4 w-3/4 mx-auto" />
-          <div className="h-24 bg-black/20 animate-pulse rounded w-1/2 mx-auto" />
-          <p className="text-white/60">Loading event details...</p>
+        <div className="space-y-4 text-center p-4">
+          <div className="w-16 h-16 border-t-2 border-white/90 rounded-full animate-spin mx-auto" />
+          <p className="text-white/80">Loading event details...</p>
         </div>
       </motion.div>
     );
@@ -204,8 +224,9 @@ const EventDetails = () => {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="container mx-auto p-4 max-w-4xl relative"
+      className="fixed inset-0 bg-black/95 overflow-hidden touch-pan-y"
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       <AnimatePresence mode="sync">

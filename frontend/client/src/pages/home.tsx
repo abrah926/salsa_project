@@ -16,20 +16,17 @@ const Home = () => {
 
   const handleEventClick = () => {
     const today = new Date().toISOString().split('T')[0];
-    console.log('Today:', today);
     
     const todayEvent = events.find(event => 
       event.event_date && new Date(event.event_date).getTime() >= new Date(today).getTime()
     );
 
-    console.log('Found event:', todayEvent);
-
     if (todayEvent) {
-      console.log('Navigating to:', `/events/${todayEvent.id}`);
+      // Add loading state if needed
       setLocation(`/events/${todayEvent.id}`);
     } else {
-      console.log('No events found, going to events page');
-      setLocation("/events");
+      // If no events, stay on home page and maybe show a message
+      console.log('No upcoming events found');
     }
   };
 

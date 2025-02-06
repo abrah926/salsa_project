@@ -287,15 +287,15 @@ const EventDetails = () => {
                   <span>{formattedTime}</span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-gray-600">
                   <a 
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location || '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-2 text-white hover:text-white/90 transition-colors"
+                    className="flex items-center gap-2 hover:text-white/90 transition-colors"
                   >
-                    <MapPin className="w-5 h-5" />
+                    <MapPin className="w-5 h-5 text-white" />
                     <span>{event.location}</span>
                   </a>
                 </div>

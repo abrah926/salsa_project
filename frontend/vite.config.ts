@@ -21,12 +21,11 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, './client/src'),
         '@db': path.resolve(__dirname, './db'),
-        "date-fns-tz": "date-fns-tz" // ✅ Fix module resolution
       },
       extensions: ['.js', '.ts', '.jsx', '.tsx', '']
     },
     optimizeDeps: {
-      include: ["date-fns-tz"] // ✅ Ensure it's bundled
+      include: ["date-fns-tz"]
     },
     root: path.resolve(__dirname, "client"),
     build: {
@@ -36,8 +35,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, "client/index.html")
-        },
-        external: ["date-fns-tz"] // ✅ Ensure it's not bundled incorrectly
+        }
       }
     },
     base: './',

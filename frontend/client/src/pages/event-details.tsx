@@ -27,7 +27,7 @@ const EventDetails = () => {
   const params = useParams();
   const id = params?.id;
   const [, setLocation] = useLocation();
-  const touchStart = useRef<{ x: number; y: number; timeStamp: number } | null>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ["events"],
@@ -111,75 +111,87 @@ const EventDetails = () => {
     }
   };
 
-  // Add these functions for navigation
-  const navigateToEvent = (eventId: number) => {
-    setLocation(`/events/${eventId}`);
+  // Add these navigation functions
+  const goToNextEvent = () => {
+    if (currentDateIndex < currentDateEvents.length - 1) {
+      setLocation(`/events/${currentDateEvents[currentDateIndex + 1].id}`);
+    }
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    // Prevent default to ensure smooth touch handling
-    e.preventDefault();
-    touchStart.current = {
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY,
-      timeStamp: e.timeStamp,
-    };
+  const goToPreviousEvent = () => {
+    if (currentDateIndex > 0) {
+      setLocation(`/events/${currentDateEvents[currentDateIndex - 1].id}`);
+    }
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    e.preventDefault();
-    if (!touchStart.current || !currentEvent) return;
+  const goToNextDate = () => {
+    if (!currentEvent) return;
+    const nextEvent = sortedEvents.find(event => 
+      new Date(event.event_date) > new Date(currentEvent.event_date)
+    );
+    if (nextEvent) {
+      setLocation(`/events/${nextEvent.id}`);
+    }
+  };
 
-    const touchEnd = {
-      x: e.changedTouches[0].clientX,
-      y: e.changedTouches[0].clientY,
+  const goToPreviousDate = () => {
+    if (!currentEvent) return;
+    const previousEvent = [...sortedEvents].reverse().find(event => 
+      new Date(event.event_date) < new Date(currentEvent.event_date)
+    );
+    if (previousEvent) {
+      setLocation(`/events/${previousEvent.id}`);
+    }
+  };
+
+  // Replace the touch handlers with useEffect
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      touchStart.current = { x: touch.clientX, y: touch.clientY };
     };
 
-    const deltaX = touchStart.current.x - touchEnd.x;
-    const deltaY = touchStart.current.y - touchEnd.y;
-
-    // Increase threshold for more deliberate swipes
-    const SWIPE_THRESHOLD = 75;
-    
-    // Add minimum velocity check
-    const timeElapsed = e.timeStamp - touchStart.current.timeStamp;
-    const velocity = Math.abs(deltaX) / timeElapsed;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > SWIPE_THRESHOLD) {
-      // Horizontal swipe - navigate between dates
-      const currentIndex = sortedEvents.findIndex(e => e.id === currentEvent.id);
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!touchStart.current) return;
       
-      if (deltaX > 0 && currentIndex < sortedEvents.length - 1) {
-        // Swipe left - next date
-        e.stopPropagation();
-        navigateToEvent(sortedEvents[currentIndex + 1].id);
-      } else if (deltaX < 0 && currentIndex > 0) {
-        // Swipe right - previous date
-        e.stopPropagation();
-        navigateToEvent(sortedEvents[currentIndex - 1].id);
-      }
-    } else if (Math.abs(deltaY) > SWIPE_THRESHOLD) {
-      // Vertical swipe - navigate between events on same date
-      if (deltaY > 0 && currentDateIndex < currentDateEvents.length - 1) {
-        // Swipe up - next event on same date
-        e.stopPropagation();
-        navigateToEvent(currentDateEvents[currentDateIndex + 1].id);
-      } else if (deltaY < 0 && currentDateIndex > 0) {
-        // Swipe down - previous event on same date
-        e.stopPropagation();
-        navigateToEvent(currentDateEvents[currentDateIndex - 1].id);
-      }
-    }
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStart.current.x;
+      const deltaY = touch.clientY - touchStart.current.y;
 
-    touchStart.current = null;
-  };
+      const SWIPE_THRESHOLD = 50;
 
-  // Add touch move handler to prevent default scrolling when swiping
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (touchStart.current) {
-      e.preventDefault();
-    }
-  };
+      // Determine if horizontal or vertical swipe based on which delta is larger
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe - navigate between dates
+        if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+          if (deltaX > 0) {
+            goToPreviousDate();
+          } else {
+            goToNextDate();
+          }
+        }
+      } else {
+        // Vertical swipe - navigate between events on same date
+        if (Math.abs(deltaY) > SWIPE_THRESHOLD) {
+          if (deltaY > 0) {
+            goToPreviousEvent();
+          } else {
+            goToNextEvent();
+          }
+        }
+      }
+
+      touchStart.current = null;
+    };
+
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [currentEvent, currentDateEvents, currentDateIndex]);
 
   if (isLoading || eventLoading) {
     return (
@@ -224,10 +236,7 @@ const EventDetails = () => {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="fixed inset-0 bg-black/95 overflow-hidden touch-pan-y"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      className="fixed inset-0 bg-black/95 overflow-y-auto"
     >
       <AnimatePresence mode="sync">
         {!eventLoading && event && (
@@ -296,6 +305,20 @@ const EventDetails = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Add back the dots indicator */}
+      {currentDateEvents.length > 1 && (
+        <div className="fixed right-4 top-[65%] flex flex-col gap-2">
+          {currentDateEvents.map((_, index) => (
+            <div
+              key={index}
+              className={`w-2 h-2 rounded-full transition-opacity ${
+                currentDateIndex === index ? 'bg-white' : 'bg-white/30'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 };

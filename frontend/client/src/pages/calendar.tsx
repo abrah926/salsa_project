@@ -30,17 +30,21 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // Create date string in YYYY-MM-DD format
-    const dateString = date.toISOString().split('T')[0];
+    // Format the date consistently
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
     
-    console.log('All events:', events);
-    console.log('Selected date string:', dateString);
+    console.log('Selected date:', date);
+    console.log('Formatted date string:', dateString);
+    console.log('All events:', events.map(e => ({ id: e.id, date: e.event_date })));
     
     // Find events on the selected date
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
       
-      // Direct string comparison of dates
+      console.log(`Comparing event date: ${event.event_date} with selected date: ${dateString}`);
       return event.event_date === dateString;
     });
     
@@ -53,13 +57,21 @@ const CalendarPage = () => {
     }
   };
 
-  // Find next available event date (only when swiping from no-events message)
+  // Update findNextEvent function
   const findNextEvent = (fromDate: Date) => {
+    const dateString = fromDate.toISOString().split('T')[0];
+    console.log('Finding next event after:', dateString);
+    
     const nextEvent = events
-      .filter(event => event.event_date && new Date(event.event_date) > fromDate)
+      .filter(event => {
+        if (!event.event_date) return false;
+        return event.event_date > dateString;
+      })
       .sort((a, b) => 
-        new Date(a.event_date!).getTime() - new Date(b.event_date!).getTime()
+        a.event_date!.localeCompare(b.event_date!)
       )[0];
+
+    console.log('Next event found:', nextEvent);
 
     if (nextEvent) {
       setLocation(`/events/${nextEvent.id}`);
@@ -67,14 +79,22 @@ const CalendarPage = () => {
     }
   };
 
-  // Find previous available event date (only when swiping from no-events message)
+  // Update findPreviousEvent function
   const findPreviousEvent = (fromDate: Date) => {
-    const prevEvent = events
-      .filter(event => event.event_date && new Date(event.event_date) < fromDate)
-      .sort((a, b) => 
-        new Date(b.event_date!).getTime() - new Date(a.event_date!).getTime()
-      )[0];
+    const dateString = fromDate.toISOString().split('T')[0];
+    console.log('Finding previous event before:', dateString);
     
+    const prevEvent = events
+      .filter(event => {
+        if (!event.event_date) return false;
+        return event.event_date < dateString;
+      })
+      .sort((a, b) => 
+        b.event_date!.localeCompare(a.event_date!)
+      )[0];
+
+    console.log('Previous event found:', prevEvent);
+
     if (prevEvent) {
       setLocation(`/events/${prevEvent.id}`);
       setNoEventsDate(null);

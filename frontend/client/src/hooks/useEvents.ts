@@ -20,24 +20,25 @@ const fetchEvents = async (): Promise<Event[]> => {
     });
 
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error('API Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        data: errorData
-      });
-      return [];
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('Raw events data:', data);
+    console.log('Raw events data from API:', data);
 
-    return Array.isArray(data) ? data.map(event => {
-      return {
-        ...event,
-        event_date: event.event_date
-      };
-    }) : [];
+    if (!Array.isArray(data)) {
+      console.error('Expected array of events but got:', typeof data);
+      return [];
+    }
+
+    const events = data.map(event => ({
+      ...event,
+      // Ensure date is in YYYY-MM-DD format
+      event_date: event.event_date ? event.event_date.split('T')[0] : null
+    }));
+
+    console.log('Processed events:', events.map(e => ({ id: e.id, date: e.event_date })));
+    return events;
   } catch (error) {
     console.error('Fetch error:', error);
     return [];

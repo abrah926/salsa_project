@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, Clock, MapPin, Phone } from "lucide-react";
 import { pageTransition } from "@/components/animations";
 import { type Event } from "@/types/event";
 import { formatInTimeZone } from "date-fns-tz";
@@ -21,6 +21,7 @@ interface EventResponse {
   details: string;
   image_url: string; // Backend field
   imageUrl?: string; // Frontend field
+  phone_number?: string; // Add phone number field
 }
 
 const EventDetails = () => {
@@ -78,7 +79,8 @@ const EventDetails = () => {
 
       return {
         ...data,
-        imageUrl: data.image_url, // Map backend field to frontend field
+        imageUrl: data.image_url,
+        phone_number: data.phone_number
       };
     },
     enabled: !!id,
@@ -193,6 +195,12 @@ const EventDetails = () => {
     };
   }, [currentEvent, currentDateEvents, currentDateIndex]);
 
+  const formatDay = (dateString: string | null) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { weekday: 'long' });
+  };
+
   if (isLoading || eventLoading) {
     return (
       <motion.div
@@ -279,7 +287,14 @@ const EventDetails = () => {
               >
                 <div className="flex items-center gap-2 text-gray-600">
                   <Calendar className="w-5 h-5" />
-                  <span>{formattedDate}</span>
+                  <div className="flex flex-col">
+                    <span>{formattedDate}</span>
+                    {event.event_date && (
+                      <span className="text-sm text-gray-500">
+                        {formatDay(event.event_date)}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-gray-600">
@@ -299,6 +314,18 @@ const EventDetails = () => {
                     <span>{event.location}</span>
                   </a>
                 </div>
+
+                {event.phone_number && (
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <a 
+                      href={`tel:${event.phone_number}`}
+                      className="flex items-center gap-2 hover:text-white/90 transition-colors"
+                    >
+                      <Phone className="w-5 h-5" />
+                      <span>{event.phone_number}</span>
+                    </a>
+                  </div>
+                )}
               </motion.div>
             </div>
 

@@ -20,4 +20,5 @@ export interface Event {
   endRecurringDate?: string;
   createdAt?: string;
   updatedAt?: string;
+  phone_number?: string;
 } 

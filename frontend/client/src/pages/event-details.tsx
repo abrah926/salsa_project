@@ -197,8 +197,11 @@ const EventDetails = () => {
 
   const formatDay = (dateString: string | null) => {
     if (!dateString) return null;
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { weekday: 'long' });
+    return formatInTimeZone(
+      dateString,
+      'America/Puerto_Rico',
+      'EEEE' // 'EEEE' gives us the full day name
+    );
   };
 
   if (isLoading || eventLoading) {

@@ -30,33 +30,26 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // Create date at start of day for consistent comparison
-    const selectedDate = new Date(date);
-    selectedDate.setHours(0, 0, 0, 0);
+    // Create date string in YYYY-MM-DD format
+    const dateString = date.toISOString().split('T')[0];
     
-    // Format date string in YYYY-MM-DD format
-    const dateString = selectedDate.toISOString().split('T')[0];
-    
-    console.log('All events:', events); // Debug log
-    console.log('Selected date string:', dateString); // Debug log
+    console.log('All events:', events);
+    console.log('Selected date string:', dateString);
     
     // Find events on the selected date
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
       
-      // Compare date strings in YYYY-MM-DD format
-      const eventDate = new Date(event.event_date);
-      const eventDateString = eventDate.toISOString().split('T')[0];
-      console.log('Comparing:', eventDateString, 'with:', dateString); // Debug log
-      return eventDateString === dateString;
+      // Direct string comparison of dates
+      return event.event_date === dateString;
     });
     
-    console.log('Events found for date:', eventsOnDate); // Debug log
+    console.log('Events found for date:', eventsOnDate);
     
     if (eventsOnDate.length > 0) {
       setLocation(`/events/${eventsOnDate[0].id}`);
     } else {
-      setNoEventsDate(selectedDate);
+      setNoEventsDate(date);
     }
   };
 

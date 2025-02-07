@@ -30,9 +30,11 @@ const fetchEvents = async (): Promise<Event[]> => {
     }
 
     const data = await response.json();
+    console.log('Raw events data:', data); // Debug log
+
     return Array.isArray(data) ? data.map(event => ({
-        ...event,
-        event_date: new Date(event.event_date + 'T12:00:00Z').toISOString().split('T')[0]
+      ...event,
+      event_date: new Date(event.event_date + 'T12:00:00Z').toISOString().split('T')[0]
     })) : [];
   } catch (error) {
     console.error('Fetch error:', error);

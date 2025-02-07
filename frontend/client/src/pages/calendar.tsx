@@ -37,6 +37,9 @@ const CalendarPage = () => {
     // Format date string in YYYY-MM-DD format
     const dateString = selectedDate.toISOString().split('T')[0];
     
+    console.log('All events:', events); // Debug log
+    console.log('Selected date string:', dateString); // Debug log
+    
     // Find events on the selected date
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
@@ -44,8 +47,11 @@ const CalendarPage = () => {
       // Compare date strings in YYYY-MM-DD format
       const eventDate = new Date(event.event_date);
       const eventDateString = eventDate.toISOString().split('T')[0];
+      console.log('Comparing:', eventDateString, 'with:', dateString); // Debug log
       return eventDateString === dateString;
     });
+    
+    console.log('Events found for date:', eventsOnDate); // Debug log
     
     if (eventsOnDate.length > 0) {
       setLocation(`/events/${eventsOnDate[0].id}`);

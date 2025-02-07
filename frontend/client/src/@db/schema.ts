@@ -16,6 +16,7 @@ export interface Event {
   created_at: string;
   updated_at: string;
   end_date: string | null;
+  phone_number: string | null;
   map_location?: {
     latitude: number;
     longitude: number;

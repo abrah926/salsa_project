@@ -4,7 +4,7 @@ python3 manage.py recurrence
 
 # turns the location of events into coordinates for maps
 
-python manage.py runscript populate_geolocation
+python manage.py runscript populate_geolocation (no longer needed)
 
 # copy csv for recurring events
 

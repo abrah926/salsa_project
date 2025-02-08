@@ -52,21 +52,23 @@ const Events = () => {
 
   // Get filtered events based on selected date
   const getFilteredAndSortedEvents = () => {
-    console.log('Total events before filtering:', events.length);
-    
-    // First, sort all events by date
+    // We removed all the date filtering logic which might be needed
+    // Add back date filtering but keep pagination
     const allSortedEvents = [...events].sort((a, b) => {
       if (!a.event_date || !b.event_date) return 0;
       return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
     });
 
-    console.log('Events after sorting:', allSortedEvents.map(e => ({
-      id: e.id,
-      date: e.event_date,
-      name: e.name
-    })));
+    // First get all valid future events
+    const futureEvents = allSortedEvents.filter(event => {
+      if (!event.event_date) return false;
+      const eventDate = new Date(event.event_date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return eventDate >= today;
+    });
 
-    return allSortedEvents.slice(0, visibleCount);
+    return futureEvents.slice(0, visibleCount);
   };
 
   const sortedEvents = getFilteredAndSortedEvents();

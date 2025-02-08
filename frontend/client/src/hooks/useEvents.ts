@@ -37,7 +37,10 @@ const fetchEvents = async (): Promise<Event[]> => {
       return [];
     }
 
-    return data;
+    return data.map(event => ({
+      ...event,
+      event_date: event.event_date ? event.event_date.split('T')[0] : null
+    }));
   } catch (error) {
     console.error('Fetch error:', error);
     return [];

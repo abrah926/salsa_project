@@ -30,24 +30,13 @@ const CalendarPage = () => {
   const handleSelect = (date: Date | undefined) => {
     if (!date) return;
     
-    // Format the date consistently
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const dateString = `${year}-${month}-${day}`;
+    const dateString = date.toISOString().split('T')[0];
     
-    console.log('All available events:', events.map(e => ({
-      id: e.id,
-      date: e.event_date,
-      name: e.name
-    })));
-    
-    // Find events on the selected date
+    // Find events on the selected date without timezone issues
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
-      
-      console.log(`Comparing dates: Event(${event.id}): ${event.event_date} with Selected: ${dateString}`);
-      return event.event_date === dateString;
+      const eventDateString = new Date(event.event_date).toISOString().split('T')[0];
+      return eventDateString === dateString;
     });
     
     console.log('Found events for selected date:', eventsOnDate);

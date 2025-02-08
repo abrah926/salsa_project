@@ -8,6 +8,8 @@ import { pageTransition, staggerContainer } from "@/components/animations";
 import { type Event } from '@/types/event';
 import fetchEvents from "@/hooks/useEvents";
 
+const EVENTS_PER_PAGE = 50;
+
 const Events = () => {
   const [, setLocation] = useLocation();
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -20,7 +22,7 @@ const Events = () => {
     refetchOnWindowFocus: false
   });
 
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(EVENTS_PER_PAGE);
   
   const allEvents = events;
   const visibleEvents = allEvents.slice(0, visibleCount);
@@ -31,59 +33,40 @@ const Events = () => {
       (entries) => {
         if (entries[0].isIntersecting) {
           if (visibleCount < allEvents.length) {
-            setVisibleCount(prev => prev + 10);
-          } else if (isLoading) {
-            // Add void to handle the Promise
-            void fetchEvents();
+            setVisibleCount(prev => Math.min(prev + EVENTS_PER_PAGE, allEvents.length));
+            console.log(`Loading more events. Now showing ${visibleCount} of ${allEvents.length}`);
           }
         }
       },
       { threshold: 0.5 }
     );
 
-    // Add event-card class to fix querySelector error
-    const lastCard = document.querySelector('div[class*="flex-shrink-0"]:last-child');
-    if (lastCard) observer.observe(lastCard);
+    const lastCard = document.querySelector('.snap-center:last-child');
+    if (lastCard) {
+      observer.observe(lastCard);
+      console.log('Observing last card for infinite scroll');
+    }
 
     return () => observer.disconnect();
-  }, [visibleCount, allEvents.length, isLoading, fetchEvents]);
+  }, [visibleCount, allEvents.length]);
 
   // Get filtered events based on selected date
   const getFilteredAndSortedEvents = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
+    console.log('Total events before filtering:', events.length);
+    
     // First, sort all events by date
     const allSortedEvents = [...events].sort((a, b) => {
       if (!a.event_date || !b.event_date) return 0;
       return new Date(a.event_date).getTime() - new Date(b.event_date).getTime();
     });
 
-    if (selectedDate) {
-      // Get events for selected date
-      const selectedEvents = allSortedEvents.filter(event => 
-        event.event_date && new Date(event.event_date).toDateString() === selectedDate.toDateString()
-      );
+    console.log('Events after sorting:', allSortedEvents.map(e => ({
+      id: e.id,
+      date: e.event_date,
+      name: e.name
+    })));
 
-      // If no events on selected date, find next available event
-      if (selectedEvents.length === 0) {
-        const nextEvents = allSortedEvents.filter(event => {
-          if (!event.event_date) return false;
-          const eventDate = new Date(event.event_date);
-          return eventDate >= selectedDate;
-        });
-        return nextEvents.length > 0 ? nextEvents : allSortedEvents;
-      }
-
-      return selectedEvents;
-    }
-
-    // If no date selected, return all future events
-    return allSortedEvents.filter(event => {
-      if (!event.event_date) return false;
-      const eventDate = new Date(event.event_date);
-      return eventDate >= today;
-    });
+    return allSortedEvents.slice(0, visibleCount);
   };
 
   const sortedEvents = getFilteredAndSortedEvents();

@@ -36,19 +36,21 @@ const CalendarPage = () => {
     const day = String(date.getDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
     
-    console.log('Selected date:', date);
-    console.log('Formatted date string:', dateString);
-    console.log('All events:', events.map(e => ({ id: e.id, date: e.event_date })));
+    console.log('All available events:', events.map(e => ({
+      id: e.id,
+      date: e.event_date,
+      name: e.name
+    })));
     
     // Find events on the selected date
     const eventsOnDate = events.filter(event => {
       if (!event.event_date) return false;
       
-      console.log(`Comparing event date: ${event.event_date} with selected date: ${dateString}`);
+      console.log(`Comparing dates: Event(${event.id}): ${event.event_date} with Selected: ${dateString}`);
       return event.event_date === dateString;
     });
     
-    console.log('Events found for date:', eventsOnDate);
+    console.log('Found events for selected date:', eventsOnDate);
     
     if (eventsOnDate.length > 0) {
       setLocation(`/events/${eventsOnDate[0].id}`);

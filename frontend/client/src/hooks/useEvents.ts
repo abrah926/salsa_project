@@ -26,19 +26,18 @@ const fetchEvents = async (): Promise<Event[]> => {
     const data = await response.json();
     console.log('Raw events data from API:', data);
 
+    console.log('Events dates:', data.map((e: Event) => ({
+      id: e.id,
+      date: e.event_date,
+      name: e.name
+    })));
+
     if (!Array.isArray(data)) {
       console.error('Expected array of events but got:', typeof data);
       return [];
     }
 
-    const events = data.map(event => ({
-      ...event,
-      // Ensure date is in YYYY-MM-DD format
-      event_date: event.event_date ? event.event_date.split('T')[0] : null
-    }));
-
-    console.log('Processed events:', events.map(e => ({ id: e.id, date: e.event_date })));
-    return events;
+    return data;
   } catch (error) {
     console.error('Fetch error:', error);
     return [];

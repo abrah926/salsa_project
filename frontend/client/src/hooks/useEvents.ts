@@ -32,6 +32,10 @@ const fetchEvents = async (): Promise<Event[]> => {
       name: e.name
     })));
 
+    console.log('Total events from API:', data.length);
+    console.log('First event date:', data[0]?.event_date);
+    console.log('Last event date:', data[data.length - 1]?.event_date);
+
     if (!Array.isArray(data)) {
       console.error('Expected array of events but got:', typeof data);
       return [];

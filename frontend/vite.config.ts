@@ -22,11 +22,12 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, './client/src'),
         '@db': path.resolve(__dirname, './db'),
+        '@tanstack/react-virtual': path.resolve(__dirname, 'node_modules/@tanstack/react-virtual')
       },
       extensions: ['.js', '.ts', '.jsx', '.tsx', '']
     },
     optimizeDeps: {
-      include: ["date-fns-tz"]
+      include: ["date-fns-tz", '@tanstack/react-virtual']
     },
     root: path.resolve(__dirname, "client"),
     build: {

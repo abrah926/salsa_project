@@ -20,6 +20,9 @@ const Events = () => {
   const loadMoreRef = useRef(null);
 
   const { data: events = [], isLoading } = useEvents();
+  
+  console.log('Events:', events);
+  console.log('Is Loading:', isLoading);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

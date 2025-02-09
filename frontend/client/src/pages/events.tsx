@@ -7,7 +7,7 @@ import EventCard from "@/components/events/event-card";
 import { pageTransition, staggerContainer } from "@/components/animations";
 import { type Event } from '@/types/event';
 import { useEvents } from "@/hooks/useEvents";
-import { useWindowVirtualizer } from '@tanstack/react-virtual';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 const EVENTS_PER_PAGE = 50;
 
@@ -81,8 +81,9 @@ const Events = () => {
   const parentRef = useRef<HTMLDivElement>(null);
   const parentOffsetRef = useRef<HTMLDivElement>(null);
 
-  const rowVirtualizer = useWindowVirtualizer({
+  const rowVirtualizer = useVirtualizer({
     count: events.length,
+    getScrollElement: () => parentRef.current,
     estimateSize: useCallback(() => 500, []),
     overscan: 5
   });

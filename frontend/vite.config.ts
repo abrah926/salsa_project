@@ -36,7 +36,8 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, "client/index.html")
-        }
+        },
+        external: ['@tanstack/react-virtual'],
       }
     },
     base: './',

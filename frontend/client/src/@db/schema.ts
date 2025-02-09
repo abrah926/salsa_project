@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface Event {
   id: number;
   event_date: string | null;
@@ -21,4 +23,16 @@ export interface Event {
     latitude: number;
     longitude: number;
   } | null;
-} 
+}
+
+export const insertEventSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  date: z.date().optional(),
+  time: z.string(),
+  venue: z.string(),
+  imageUrl: z.string(),
+  price: z.string(),
+  recurring: z.string(),
+  source: z.string()
+}); 

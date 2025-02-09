@@ -42,8 +42,7 @@ const CreateEvent = () => {
       imageUrl: "",
       price: "",
       recurring: "",
-      organizerName: "",
-      organizerContact: "",
+      source: "",
     },
   });
 
@@ -227,7 +226,7 @@ const CreateEvent = () => {
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="ex. happens every friday"
+                    placeholder="ex. happens every week or month"
                     className="placeholder:text-muted-foreground/50"
                   />
                 </FormControl>
@@ -238,26 +237,16 @@ const CreateEvent = () => {
 
           <FormField
             control={form.control}
-            name="organizerName"
+            name="source"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Organizer Name</FormLabel>
+                <FormLabel>Source Link</FormLabel>
                 <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="organizerContact"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Contact Information</FormLabel>
-                <FormControl>
-                  <Input {...field} />
+                  <Input
+                    {...field}
+                    placeholder="Link to your page if available"
+                    className="placeholder:text-muted-foreground/50"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

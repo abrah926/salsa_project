@@ -1,11 +1,11 @@
 export interface EventFormData {
   title: string;
   description: string;
-  date: Date;
+  date?: Date;
   time: string;
   venue: string;
-  address: string;
+  imageUrl: string;
   price: string;
-  organizerName: string;
-  organizerContact: string;
+  recurring: string;
+  source: string;
 }

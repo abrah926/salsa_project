@@ -288,8 +288,8 @@ const EventDetails = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
               >
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Calendar className="w-5 h-5" />
+                <div className="flex items-center gap-2 text-white/80">
+                  <Calendar className="w-4 h-4 text-white/80" />
                   <div className="flex flex-col">
                     <span>{formattedDate}</span>
                     {event.event_date && (
@@ -300,12 +300,12 @@ const EventDetails = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Clock className="w-5 h-5" />
+                <div className="flex items-center gap-2 text-white/80">
+                  <Clock className="w-4 h-4 text-white/80" />
                   <span>{formattedTime}</span>
                 </div>
 
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-white/80">
                   <a 
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location || '')}`}
                     target="_blank"
@@ -313,18 +313,18 @@ const EventDetails = () => {
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center gap-2 hover:text-white/90 transition-colors"
                   >
-                    <MapPin className="w-5 h-5 text-white" />
+                    <MapPin className="w-4 h-4 text-white/80" />
                     <span>{event.location}</span>
                   </a>
                 </div>
 
                 {event.phone_number && (
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-white/80">
                     <a 
                       href={`tel:${event.phone_number}`}
                       className="flex items-center gap-2 hover:text-white/90 transition-colors"
                     >
-                      <Phone className="w-5 h-5" />
+                      <Phone className="w-4 h-4 text-white/80" />
                       <span>{event.phone_number}</span>
                     </a>
                   </div>
@@ -341,7 +341,7 @@ const EventDetails = () => {
 
       {/* Add back the dots indicator */}
       {currentDateEvents.length > 1 && (
-        <div className="fixed right-4 top-[65%] flex flex-col gap-2">
+        <div className="fixed right-4 top-[60%] flex flex-col gap-2">
           {currentDateEvents.map((_, index) => (
             <div
               key={index}

@@ -198,3 +198,14 @@ class EventSerializer(serializers.ModelSerializer):
             'title',  # And title - one of these is redundant
             # ... other fields
         ]
+
+
+class EventPreviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Salsa
+        fields = [
+            'id',
+            'name',
+            'event_date',
+            'location'
+        ]

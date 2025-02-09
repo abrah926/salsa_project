@@ -18,16 +18,8 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       port: parseInt(env.PORT) || 5173,
     },
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './client/src'),
-        '@db': path.resolve(__dirname, './db'),
-        '@tanstack/react-virtual': path.resolve(__dirname, 'node_modules/@tanstack/react-virtual')
-      },
-      extensions: ['.js', '.ts', '.jsx', '.tsx', '']
-    },
     optimizeDeps: {
-      include: ["date-fns-tz", '@tanstack/react-virtual']
+      include: ["date-fns-tz", "@tanstack/react-virtual"]
     },
     root: path.resolve(__dirname, "client"),
     build: {
@@ -38,12 +30,19 @@ export default defineConfig(({ mode }) => {
         input: {
           main: path.resolve(__dirname, "client/index.html")
         },
-        external: ['@tanstack/react-virtual'],
       }
     },
     base: './',
     define: {
       'process.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL)
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './client/src'),
+        '@db': path.resolve(__dirname, './db'),
+      },
+      dedupe: ['@tanstack/react-virtual'],
+      mainFields: ['module', 'main']
     }
   };
 });

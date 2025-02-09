@@ -17,7 +17,7 @@ const fetchEvents = async (): Promise<Event[]> => {
       },
       mode: 'cors',
       credentials: 'omit',
-      signal: AbortSignal.timeout(10000)
+      signal: AbortSignal.timeout(30000)
     });
 
     if (!response.ok) {
@@ -47,6 +47,13 @@ const fetchEvents = async (): Promise<Event[]> => {
       event_date: event.event_date ? event.event_date.split('T')[0] : null
     }));
   } catch (error) {
+    if (error instanceof Error && error.name === 'TimeoutError') {
+      console.log('Retrying fetch due to timeout...');
+      const retryResponse = await fetch(`${API_URL}/events/`, {
+        signal: AbortSignal.timeout(60000)
+      });
+      return retryResponse.json();
+    }
     console.error('Fetch error:', error);
     return [];
   }
@@ -88,6 +95,8 @@ const useEvents = () => {
     queryFn: fetchEvents,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 };
 

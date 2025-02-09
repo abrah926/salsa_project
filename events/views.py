@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from .models import Salsa
-from .serializers import SalsaSerializer
+from .serializers import SalsaSerializer, EventPreviewSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.filters import OrderingFilter
@@ -27,10 +27,10 @@ class SalsaViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if self.action == 'list':
-            today = timezone.now().date()  # Use timezone-aware date
+            today = timezone.now().date()
             logger.info(f"Fetching events from today ({today}) to 90 days later ({today + timezone.timedelta(days=90)})")
         
-            # Fetch list view query
+            # Remove the [:100] limit, keep the 90-day filter
             queryset = (
                 Salsa.objects
                 .filter(event_date__gte=today)
@@ -44,15 +44,12 @@ class SalsaViewSet(viewsets.ModelViewSet):
             logger.info(f"Queryset for list action: {queryset.query}")
             return queryset
         else:
-            # For detail view, get all fields
             logger.info(f"Fetching all fields for detail view, action: {self.action}")
-            queryset = Salsa.objects.all()
-            logger.info(f"Queryset for detail action: {queryset.query}")
-            return queryset
-
+            return Salsa.objects.all()
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()[:100]  # Limit to first 100 events
+        # Remove the [:100] limit here too
+        queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -105,5 +102,15 @@ class EventListView(APIView):
                 {"error": str(e)}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class EventPreviewViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = EventPreviewSerializer
+    
+    def get_queryset(self):
+        return (
+            Salsa.objects
+            .only('id', 'name', 'event_date', 'location')
+            .order_by('event_date')
+        )
 
     

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback, Key } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
@@ -6,7 +6,8 @@ import { CalendarDropdown } from "@/components/events/calendar-dropdown";
 import EventCard from "@/components/events/event-card";
 import { pageTransition, staggerContainer } from "@/components/animations";
 import { type Event } from '@/types/event';
-import fetchEvents from "@/hooks/useEvents";
+import { useEvents } from "@/hooks/useEvents";
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 
 const EVENTS_PER_PAGE = 50;
 
@@ -14,41 +15,35 @@ const Events = () => {
   const [, setLocation] = useLocation();
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [showCalendar, setShowCalendar] = useState(false);
+  const [displayedEvents, setDisplayedEvents] = useState<Event[]>([]);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const loadMoreRef = useRef(null);
 
-  const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ["events"],
-    queryFn: () => fetchEvents(),
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    refetchOnWindowFocus: false
-  });
+  const { data: events = [], isLoading } = useEvents();
 
-  const [visibleCount, setVisibleCount] = useState(EVENTS_PER_PAGE);
-  
-  const allEvents = events;
-  const visibleEvents = allEvents.slice(0, visibleCount);
-
-  // Load more when reaching the end
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          if (visibleCount < allEvents.length) {
-            setVisibleCount(prev => Math.min(prev + EVENTS_PER_PAGE, allEvents.length));
-            console.log(`Loading more events. Now showing ${visibleCount} of ${allEvents.length}`);
-          }
-        }
+        setIsIntersecting(entries[0]?.isIntersecting ?? false);
       },
-      { threshold: 0.5 }
+      { threshold: 0.1 }
     );
 
-    const lastCard = document.querySelector('.snap-center:last-child');
-    if (lastCard) {
-      observer.observe(lastCard);
-      console.log('Observing last card for infinite scroll');
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
     }
 
     return () => observer.disconnect();
-  }, [visibleCount, allEvents.length]);
+  }, []);
+
+  useEffect(() => {
+    if (isIntersecting && events.length > displayedEvents.length) {
+      setDisplayedEvents(prev => [
+        ...prev,
+        ...events.slice(prev.length, prev.length + EVENTS_PER_PAGE)
+      ]);
+    }
+  }, [isIntersecting, events]);
 
   // Get filtered events based on selected date
   const getFilteredAndSortedEvents = () => {
@@ -68,7 +63,7 @@ const Events = () => {
       return eventDate >= today;
     });
 
-    return futureEvents.slice(0, visibleCount);
+    return futureEvents.slice(0, EVENTS_PER_PAGE);
   };
 
   const sortedEvents = getFilteredAndSortedEvents();
@@ -82,6 +77,15 @@ const Events = () => {
       }
     }
   }, [selectedDate, sortedEvents.length]);
+
+  const parentRef = useRef<HTMLDivElement>(null);
+  const parentOffsetRef = useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer = useWindowVirtualizer({
+    count: events.length,
+    estimateSize: useCallback(() => 500, []),
+    overscan: 5
+  });
 
   return (
     <motion.div
@@ -115,27 +119,32 @@ const Events = () => {
         </div>
       ) : (
         <div className="flex-1 flex items-center">
-          <div className="snap-x snap-mandatory scroll-smooth overflow-x-auto overflow-y-hidden flex w-full">
-            {sortedEvents.length === 0 ? (
-              <div className="flex-shrink-0 w-full flex items-center justify-center py-12 text-white/60">
-                No events found for the selected date.
-              </div>
-            ) : (
-              sortedEvents.map((event) => (
-                <div 
-                  key={event.id} 
-                  className="flex-shrink-0 w-full flex items-center justify-center snap-center snap-always"
+          <div ref={parentRef} className="h-screen overflow-auto">
+            <div
+              ref={parentOffsetRef}
+              style={{ height: `${rowVirtualizer.getTotalSize()}px`, position: 'relative' }}
+            >
+              {rowVirtualizer.getVirtualItems().map((virtualItem: { key: Key | null | undefined; size: any; start: any; index: string | number; }) => (
+                <div
+                  key={virtualItem.key}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: `${virtualItem.size}px`,
+                    transform: `translateY(${virtualItem.start}px)`,
+                  }}
                 >
-                  <div className="max-w-[65%] md:mx-auto mx-auto sm:-ml-[30px] transform -translate-x-10 sm:translate-x-0">
-                    <EventCard
-                      event={event}
-                      onClick={() => setLocation(`/events/${event.id}`)}
-                    />
-                  </div>
+                  <EventCard
+                    event={events[virtualItem.index as number]}
+                    onClick={() => setLocation(`/events/${events[virtualItem.index as number].id}`)}
+                  />
                 </div>
-              ))
-            )}
+              ))}
+            </div>
           </div>
+          <div ref={loadMoreRef} />
         </div>
       )}
     </motion.div>

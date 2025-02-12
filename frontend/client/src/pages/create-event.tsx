@@ -111,34 +111,17 @@ const CreateEvent = () => {
 
   const onSubmit = (formData: EventFormData) => {
     // Debug all form fields
-    console.log('Complete form data:', {
-      title: formData.title,         // Should be name in form data
-      description: formData.description,
-      date: formData.date,
-      time: formData.time,
-      venue: formData.venue,         // Should be location in form data
-      imageUrl: formData.imageUrl,
-      price: formData.price,
-      recurring: formData.recurring,
-      source: formData.source
-    });
+    console.log('Complete form data:', formData);
 
     // Check form validity
     const isValid = form.formState.isValid;
-    const errors = form.formState.errors;
     console.log('Form validity:', isValid);
-    console.log('Form errors:', errors);
 
-    if (formData.title && formData.date && formData.time && formData.venue) {
+    // All required fields are present, proceed with submission
+    if (isValid) {
       createEvent.mutate(formData);
     } else {
-      console.log('Missing required fields:', {
-        title: !formData.title,
-        date: !formData.date,
-        time: !formData.time,
-        venue: !formData.venue
-      });
-      
+      console.log('Form validation failed:', form.formState.errors);
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields",

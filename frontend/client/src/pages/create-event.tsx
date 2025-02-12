@@ -59,9 +59,12 @@ const CreateEvent = () => {
         }
       };
 
-      // Map form fields to database fields
+      // Debug logs
+      console.log('Raw form data:', data);
+      console.log('Selected date:', data.date);
+      
       const formattedData = {
-        event_date: data.date ? format(data.date, 'yyyy-MM-dd') : null,  // Simplified date format
+        event_date: data.date ? format(data.date, 'yyyy-MM-dd HH:mm:ss') : null,  // Include time
         time: data.time ? formatTime(data.time) : null,
         name: data.title,
         location: data.venue,
@@ -69,13 +72,13 @@ const CreateEvent = () => {
         price: data.price || null,
         details: data.description || null,
         recurrence: data.recurring ? "WEEKLY" : null,
-        recurrence_interval: data.recurring ? 1 : null,  // Only set if recurring
-        image_url: data.imageUrl || null,
+        recurrence_interval: data.recurring ? 1 : null,
+        image_url: data.imageUrl || null,  // Make sure it's optional
         phone_number: null
       };
 
-      // Log the data being sent
-      console.log('Sending data:', formattedData);
+      // Debug log
+      console.log('Formatted data:', formattedData);
 
       const response = await fetch(`${API_URL}/events/`, {
         method: "POST",
@@ -85,6 +88,7 @@ const CreateEvent = () => {
 
       if (!response.ok) {
         const error = await response.json();
+        console.error('Server error:', error);  // Debug log
         throw new Error(error.message || "Failed to create event");
       }
 

@@ -106,6 +106,21 @@ const CreateEvent = () => {
     },
   });
 
+  const onSubmit = (formData: EventFormData) => {
+    console.log('Form submitted with:', formData);
+    
+    // Only mutate if we have the required fields
+    if (formData.title && formData.date && formData.time && formData.venue) {
+      createEvent.mutate(formData);
+    } else {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <motion.div
       variants={pageTransition}
@@ -118,10 +133,7 @@ const CreateEvent = () => {
 
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit((data) => {
-            console.log('Form data:', data);  // Log raw form data
-            createEvent.mutate(data);
-          })}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6"
         >
           <FormField

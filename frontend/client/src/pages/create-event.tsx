@@ -53,14 +53,13 @@ const CreateEvent = () => {
 
   const createEvent = useMutation({
     mutationFn: async (data: EventFormData) => {
-      console.log('Incoming form data:', data);
+      console.log('Mutation received data:', data);
 
-      // Format date to match Django's expected format
       const formattedData = {
         event_date: data.date && data.time ? 
-          format(data.date, 'yyyy-MM-dd') + ' ' + data.time : null,  // Changed format
-        name: data.title || null,
-        location: data.venue || null,
+          format(data.date, 'yyyy-MM-dd') + ' ' + data.time : null,
+        name: data.title,
+        location: data.venue,
         source: data.source || null,
         price: data.price || null,
         details: data.description || null,
@@ -70,7 +69,7 @@ const CreateEvent = () => {
         phone_number: null
       };
 
-      console.log('Formatted data for server:', formattedData);
+      console.log('Sending to server:', formattedData);
 
       const response = await fetch(`${API_URL}/events/`, {
         method: "POST",
@@ -103,31 +102,27 @@ const CreateEvent = () => {
   });
 
   const onSubmit = (formData: EventFormData) => {
-    // Debug all form fields
-    console.log('Complete form data:', formData);
+    // Get all form values directly from the form
+    const values = form.getValues();
+    console.log('Form values from getValues:', values);
 
     // Check form validity
     const isValid = form.formState.isValid;
     console.log('Form validity:', isValid);
 
-    // All required fields are present, proceed with submission
     if (isValid) {
-      // Pass the complete form data
-      const submissionData = {
-        title: formData.title,
-        description: formData.description,
-        date: formData.date,
-        time: formData.time,
-        venue: formData.venue,
-        imageUrl: formData.imageUrl,
-        price: formData.price,
-        recurring: formData.recurring,
-        source: formData.source
-      };
-      console.log('Submitting data:', submissionData);
-      createEvent.mutate(submissionData);
+      createEvent.mutate({
+        title: values.title,
+        description: values.description,
+        date: values.date,
+        time: values.time,
+        venue: values.venue,
+        imageUrl: values.imageUrl,
+        price: values.price,
+        recurring: values.recurring,
+        source: values.source
+      });
     } else {
-      console.log('Form validation failed:', form.formState.errors);
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields",

@@ -53,18 +53,12 @@ const CreateEvent = () => {
 
   const createEvent = useMutation({
     mutationFn: async (data: EventFormData) => {
-      // Debug the incoming form data
-      console.log('Incoming form data:', {
-        title: data.title,
-        date: data.date,
-        time: data.time,
-        venue: data.venue
-      });
+      console.log('Incoming form data:', data);
 
-      // Format the time from the time input (which is in 24h format)
+      // Format date to match Django's expected format
       const formattedData = {
         event_date: data.date && data.time ? 
-          `${format(data.date, 'yyyy-MM-dd')} ${data.time}:00` : null,
+          format(data.date, 'yyyy-MM-dd') + ' ' + data.time : null,  // Changed format
         name: data.title || null,
         location: data.venue || null,
         source: data.source || null,
@@ -76,8 +70,7 @@ const CreateEvent = () => {
         phone_number: null
       };
 
-      // Debug the outgoing data
-      console.log('Sending to server:', formattedData);
+      console.log('Formatted data for server:', formattedData);
 
       const response = await fetch(`${API_URL}/events/`, {
         method: "POST",

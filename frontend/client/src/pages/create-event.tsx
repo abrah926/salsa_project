@@ -55,9 +55,10 @@ const CreateEvent = () => {
     mutationFn: async (data: EventFormData) => {
       console.log('Mutation received data:', data);
 
+      // Format date and time separately to match Django's expectations
       const formattedData = {
-        event_date: data.date && data.time ? 
-          format(data.date, 'yyyy-MM-dd') + ' ' + data.time : null,
+        event_date: data.date ? format(data.date, 'yyyy-MM-dd') : null,  // Changed format
+        time: data.time || null,  // Send time separately
         name: data.title,
         location: data.venue,
         source: data.source || null,

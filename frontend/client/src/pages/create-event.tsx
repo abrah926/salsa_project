@@ -112,7 +112,20 @@ const CreateEvent = () => {
 
     // All required fields are present, proceed with submission
     if (isValid) {
-      createEvent.mutate(formData);
+      // Pass the complete form data
+      const submissionData = {
+        title: formData.title,
+        description: formData.description,
+        date: formData.date,
+        time: formData.time,
+        venue: formData.venue,
+        imageUrl: formData.imageUrl,
+        price: formData.price,
+        recurring: formData.recurring,
+        source: formData.source
+      };
+      console.log('Submitting data:', submissionData);
+      createEvent.mutate(submissionData);
     } else {
       console.log('Form validation failed:', form.formState.errors);
       toast({

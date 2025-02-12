@@ -128,7 +128,7 @@ def send_contact_email(request):
             subject=f"Contact Form Message from {name}",
             message=email_body,
             from_email=sender_email,
-            recipient_list=['your-email@example.com'],  # Your email address
+            recipient_list=['abrahamvidalcastillo2@gmail.com'],  # Updated recipient
             fail_silently=False,
         )
         

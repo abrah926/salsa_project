@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import SalsaViewSet, EventCalendarView, api_health_check, EventListView
+from .views import SalsaViewSet, EventCalendarView, api_health_check, EventListView, send_contact_email
 from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -29,4 +29,6 @@ urlpatterns = [
     path('calendar/', EventCalendarView.as_view(), name='event-calendar'),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path('health/', api_health_check, name='api_health_check'),
+    path('events-list/', EventListView.as_view(), name='event-list'),
+    path('contact/email/', send_contact_email, name='contact-email'),
 ]

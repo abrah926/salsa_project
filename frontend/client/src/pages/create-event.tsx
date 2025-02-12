@@ -50,43 +50,31 @@ const CreateEvent = () => {
 
   const createEvent = useMutation({
     mutationFn: async (data: EventFormData) => {
-      // Convert 12-hour time format to 24-hour format
-      const formatTime = (timeStr: string) => {
-        try {
-          const timeDate = parse(timeStr, 'h:mm a', new Date());
-          return format(timeDate, 'HH:mm:ss');
-        } catch {
-          return timeStr;
-        }
-      };
+      // Debug the incoming form data
+      console.log('Incoming form data:', {
+        title: data.title,
+        date: data.date,
+        time: data.time,
+        venue: data.venue
+      });
 
-      // Debug logs
-      console.log('Raw form data:', data);
-      console.log('Selected date:', data.date);
-      
+      // Format the time from the time input (which is in 24h format)
       const formattedData = {
         event_date: data.date && data.time ? 
-          format(
-            parse(
-              `${format(data.date, 'yyyy-MM-dd')} ${data.time}`,
-              'yyyy-MM-dd HH:mm',
-              new Date()
-            ),
-            'yyyy-MM-dd HH:mm:ss'
-          ) : null,
-        name: data.title,
-        location: data.venue,
+          `${format(data.date, 'yyyy-MM-dd')} ${data.time}:00` : null,
+        name: data.title || null,
+        location: data.venue || null,
         source: data.source || null,
         price: data.price || null,
         details: data.description || null,
-        recurrence: data.recurring === "Weekly" ? "WEEKLY" : null,
-        recurrence_interval: data.recurring === "Weekly" ? 1 : null,
+        recurrence: null,
+        recurrence_interval: null,
         image_url: data.imageUrl || null,
         phone_number: null
       };
 
-      // Debug log
-      console.log('Formatted data:', formattedData);
+      // Debug the outgoing data
+      console.log('Sending to server:', formattedData);
 
       const response = await fetch(`${API_URL}/events/`, {
         method: "POST",
@@ -96,7 +84,7 @@ const CreateEvent = () => {
 
       if (!response.ok) {
         const error = await response.json();
-        console.error('Server error:', error);  // Debug log
+        console.error('Server error:', error);
         throw new Error(error.message || "Failed to create event");
       }
 

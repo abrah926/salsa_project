@@ -22,10 +22,8 @@ const Home = () => {
     );
 
     if (todayEvent) {
-      // Add loading state if needed
       setLocation(`/events/${todayEvent.id}`);
     } else {
-      // If no events, stay on home page and maybe show a message
       console.log('No upcoming events found');
     }
   };

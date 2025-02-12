@@ -88,15 +88,15 @@ const useEventDetails = (eventId: number) => {
 };
 
 const useEvents = () => {
-  const queryClient = useQueryClient();
-
   return useQuery<Event[], Error>({
     queryKey: ["events"],
     queryFn: fetchEvents,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    staleTime: 5 * 60 * 1000,  // Data stays fresh for 5 minutes
+    gcTime: 30 * 60 * 1000,    // Keep in cache for 30 minutes
+    retry: 2,                   // Reduce retries
+    retryDelay: 1000,          // Faster retry
+    refetchOnMount: false,      // Don't refetch on every mount
+    refetchOnWindowFocus: false // Don't refetch on window focus
   });
 };
 

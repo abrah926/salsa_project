@@ -53,6 +53,10 @@ class SalsaSerializer(serializers.ModelSerializer):
             'end_date',
             'phone_number',
         ]
+        extra_kwargs = {
+            'image_url': {'required': False, 'allow_null': True},
+            'recurrence_interval': {'required': False, 'allow_null': True},
+        }
 
     def get_event_date(self, obj):
         """

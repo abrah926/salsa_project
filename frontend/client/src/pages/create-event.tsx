@@ -38,6 +38,7 @@ const CreateEvent = () => {
     defaultValues: {
       title: "",
       description: "",
+      date: undefined,
       time: "",
       venue: "",
       imageUrl: "",
@@ -73,7 +74,7 @@ const CreateEvent = () => {
         details: data.description || null,
         recurrence: data.recurring ? "WEEKLY" : null,
         recurrence_interval: data.recurring ? 1 : null,
-        image_url: data.imageUrl || null,  // Make sure it's optional
+        image_url: data.imageUrl === "" ? null : data.imageUrl || null,  // Convert empty string to null here
         phone_number: null
       };
 

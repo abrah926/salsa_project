@@ -21,12 +21,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { cn } from "@/components/utils";
 import { pageTransition } from "@/components/animations";
 import { useToast } from "@/hooks/use-toast";
 import { type EventFormData } from "@/components/types";
 import { insertEventSchema } from "@db/schema";
+import { API_URL } from "@/config";
 
 const CreateEvent = () => {
   const [, setLocation] = useLocation();
@@ -48,10 +49,32 @@ const CreateEvent = () => {
 
   const createEvent = useMutation({
     mutationFn: async (data: EventFormData) => {
-      const response = await fetch("/api/events", {
+      // Convert 12-hour time format to 24-hour format
+      const formatTime = (timeStr: string) => {
+        try {
+          // Parse time like "8:00 PM" to Date object
+          const timeDate = parse(timeStr, 'h:mm a', new Date());
+          // Format to "HH:mm:ss"
+          return format(timeDate, 'HH:mm:ss');
+        } catch {
+          return timeStr; // Return original if parsing fails
+        }
+      };
+
+      const formattedData = {
+        ...data,
+        event_date: data.date ? format(data.date, 'yyyy-MM-dd') : null,
+        time: data.time ? formatTime(data.time) : null,
+        location: data.venue,
+        name: data.title,
+        details: data.description,
+        image_url: data.imageUrl
+      };
+
+      const response = await fetch(`${API_URL}/events/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formattedData)
       });
 
       if (!response.ok) {

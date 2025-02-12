@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
+import { API_URL } from "@/config";
 import {
   Card,
   CardContent,
@@ -11,24 +13,52 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { pageTransition } from "@/components/animations";
 import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+
+interface ContactFormData {
+  name: string;
+  email: string;
+  message: string;
+}
 
 const Contact = () => {
   const { toast } = useToast();
+  const form = useForm<ContactFormData>();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const name = (form.elements.namedItem('name') as HTMLInputElement).value;
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-    const message = (form.elements.namedItem('message') as HTMLTextAreaElement).value;
-    
-    const mailtoLink = `mailto:abrahamvidalcastillo2@gmail.com?subject=Dance Events Contact Form&body=Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${message}`;
-    window.location.href = mailtoLink;
-    
-    toast({
-      title: "Opening Email Client",
-      description: "Redirecting to your email client to send the message.",
-    });
+  const sendEmail = useMutation({
+    mutationFn: async (data: ContactFormData) => {
+      const response = await fetch(`${API_URL}/contact/email/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Message Sent",
+        description: "Your message has been sent successfully.",
+      });
+      form.reset();
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const onSubmit = (data: ContactFormData) => {
+    sendEmail.mutate(data);
   };
 
   return (
@@ -47,28 +77,28 @@ const Contact = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-medium">Name</label>
-              <Input name="name" required />
+              <Input {...form.register("name")} required />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Email</label>
-              <Input name="email" type="email" required />
+              <Input {...form.register("email")} type="email" required />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Message</label>
               <Textarea
-                name="message"
+                {...form.register("message")}
                 className="min-h-[150px]"
                 required
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              Send Message
+            <Button type="submit" className="w-full" disabled={sendEmail.isPending}>
+              {sendEmail.isPending ? "Sending..." : "Send Message"}
             </Button>
           </form>
         </CardContent>

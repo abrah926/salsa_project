@@ -13,6 +13,7 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import date
 from rest_framework import status
+from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
 
@@ -112,5 +113,27 @@ class EventPreviewViewSet(viewsets.ReadOnlyModelViewSet):
             .only('id', 'name', 'event_date', 'location')
             .order_by('event_date')
         )
+
+@api_view(['POST'])
+def send_contact_email(request):
+    try:
+        sender_email = request.data.get('email')
+        message = request.data.get('message')
+        name = request.data.get('name')
+        
+        # Format the email
+        email_body = f"Message from: {name}\nEmail: {sender_email}\n\n{message}"
+        
+        send_mail(
+            subject=f"Contact Form Message from {name}",
+            message=email_body,
+            from_email=sender_email,
+            recipient_list=['your-email@example.com'],  # Your email address
+            fail_silently=False,
+        )
+        
+        return Response({"status": "success"})
+    except Exception as e:
+        return Response({"status": "error", "message": str(e)}, status=400)
 
     

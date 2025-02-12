@@ -26,13 +26,13 @@ export interface Event {
 }
 
 export const insertEventSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  date: z.date().optional(),
-  time: z.string(),
-  venue: z.string(),
-  imageUrl: z.string(),
-  price: z.string(),
-  recurring: z.string(),
-  source: z.string()
+  title: z.string().min(1, "Event name is required"),
+  description: z.string().optional(),
+  date: z.date({ required_error: "Date is required" }),
+  time: z.string().min(1, "Time is required"),
+  venue: z.string().min(1, "Location is required"),
+  imageUrl: z.string().optional().nullable(),
+  price: z.string().optional(),
+  recurring: z.string().optional(),
+  source: z.string().optional()
 }); 

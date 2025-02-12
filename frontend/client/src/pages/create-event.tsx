@@ -52,23 +52,28 @@ const CreateEvent = () => {
       // Convert 12-hour time format to 24-hour format
       const formatTime = (timeStr: string) => {
         try {
-          // Parse time like "8:00 PM" to Date object
           const timeDate = parse(timeStr, 'h:mm a', new Date());
-          // Format to "HH:mm:ss"
           return format(timeDate, 'HH:mm:ss');
         } catch {
-          return timeStr; // Return original if parsing fails
+          return timeStr;
         }
       };
 
+      // Map form fields to database fields
       const formattedData = {
-        ...data,
-        event_date: data.date ? format(data.date, 'yyyy-MM-dd') : null,
+        event_date: data.date ? format(data.date, 'yyyy-MM-dd\'T\'HH:mm:ssxxx') : null,
         time: data.time ? formatTime(data.time) : null,
-        location: data.venue,
         name: data.title,
-        details: data.description,
-        image_url: data.imageUrl
+        location: data.venue,
+        source: data.source || null,
+        price: data.price || null,
+        details: data.description || null,
+        recurrence: data.recurring ? "WEEKLY" : null,  // Match the choices in model
+        recurrence_interval: 1,  // Default value from model
+        end_recurring_date: null,  // Optional in model
+        image_url: data.imageUrl || null,
+        phone_number: null  // Optional in model
+        // created_at and updated_at are handled by Django
       };
 
       const response = await fetch(`${API_URL}/events/`, {
@@ -78,7 +83,8 @@ const CreateEvent = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create event");
+        const error = await response.json();
+        throw new Error(error.message || "Failed to create event");
       }
 
       return response.json();
@@ -90,10 +96,10 @@ const CreateEvent = () => {
       });
       setLocation("/events");
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to create event. Please try again.",
+        description: error.message || "Failed to create event. Please try again.",
         variant: "destructive",
       });
     },
@@ -119,9 +125,9 @@ const CreateEvent = () => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Event Title</FormLabel>
+                <FormLabel>Event Name *</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter event name" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -203,9 +209,9 @@ const CreateEvent = () => {
             name="venue"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Location</FormLabel>
+                <FormLabel>Location *</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter event location" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -217,9 +223,9 @@ const CreateEvent = () => {
             name="imageUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Image URL</FormLabel>
+                <FormLabel>Image URL (optional)</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Add an image URL if available" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

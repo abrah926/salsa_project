@@ -55,7 +55,7 @@ MIDDLEWARE = [
 ]
 
 TIME_ZONE = "UTC"  # Store all dates in UTC
-USE_TZ = True  # Enable timezone support in Django
+USE_TZ = False  # Change this from True to False
 
 
 # Security Settings

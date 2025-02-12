@@ -65,16 +65,23 @@ const CreateEvent = () => {
       console.log('Selected date:', data.date);
       
       const formattedData = {
-        event_date: data.date ? format(data.date, 'yyyy-MM-dd HH:mm:ss') : null,  // Include time
-        time: data.time ? formatTime(data.time) : null,
+        event_date: data.date && data.time ? 
+          format(
+            parse(
+              `${format(data.date, 'yyyy-MM-dd')} ${data.time}`,
+              'yyyy-MM-dd HH:mm',
+              new Date()
+            ),
+            'yyyy-MM-dd HH:mm:ss'
+          ) : null,
         name: data.title,
         location: data.venue,
         source: data.source || null,
         price: data.price || null,
         details: data.description || null,
-        recurrence: data.recurring ? "WEEKLY" : null,
-        recurrence_interval: data.recurring ? 1 : null,
-        image_url: data.imageUrl === "" ? null : data.imageUrl || null,  // Convert empty string to null here
+        recurrence: data.recurring === "Weekly" ? "WEEKLY" : null,
+        recurrence_interval: data.recurring === "Weekly" ? 1 : null,
+        image_url: data.imageUrl || null,
         phone_number: null
       };
 

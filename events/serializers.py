@@ -33,29 +33,11 @@ class SalsaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Salsa
-        fields = [
-            'id',
-            'event_date',
-            'name',
-            'day',
-            'time',
-            'end_time',
-            'location',
-            'source',
-            'price',
-            'details',
-            'recurrence',
-            'recurrence_interval',
-            'end_recurring_date',
-            'image_url',
-            'created_at',
-            'updated_at',
-            'end_date',
-            'phone_number',
-        ]
+        fields = '__all__'
         extra_kwargs = {
             'image_url': {'required': False, 'allow_null': True},
             'recurrence_interval': {'required': False, 'allow_null': True},
+            'event_date': {'required': True},  # Explicitly require this
         }
 
     def get_event_date(self, obj):
@@ -132,6 +114,10 @@ class SalsaSerializer(serializers.ModelSerializer):
 
         if time and end_time and time >= end_time:
             raise serializers.ValidationError("End time must be after the start time.")
+
+        # Only allow recurrence_interval for Weekly/Monthly events
+        if data.get('recurrence') not in ['WEEKLY', 'MONTHLY']:
+            data['recurrence_interval'] = None
         return data
 
     @staticmethod

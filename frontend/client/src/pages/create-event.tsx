@@ -105,23 +105,6 @@ const CreateEvent = () => {
     const values = form.getValues();
     console.log('Form values from getValues:', values);
 
-    // Detailed validation check
-    const errors = form.formState.errors;
-    const isValid = form.formState.isValid;
-    
-    console.log('Form validity:', isValid);
-    console.log('Validation errors:', {
-      title: errors.title?.message,
-      date: errors.date?.message,
-      time: errors.time?.message,
-      venue: errors.venue?.message,
-      description: errors.description?.message,
-      imageUrl: errors.imageUrl?.message,
-      price: errors.price?.message,
-      recurring: errors.recurring?.message,
-      source: errors.source?.message
-    });
-
     // Check individual required fields
     const requiredFieldsCheck = {
       title: !!values.title,
@@ -131,7 +114,8 @@ const CreateEvent = () => {
     };
     console.log('Required fields check:', requiredFieldsCheck);
 
-    if (isValid) {
+    // If all required fields are present, submit
+    if (Object.values(requiredFieldsCheck).every(Boolean)) {
       createEvent.mutate({
         title: values.title,
         description: values.description,
@@ -146,10 +130,7 @@ const CreateEvent = () => {
     } else {
       toast({
         title: "Validation Error",
-        description: `Missing required fields: ${Object.entries(errors)
-          .filter(([, error]) => error)
-          .map(([field]) => field)
-          .join(', ')}`,
+        description: "Please fill in all required fields",
         variant: "destructive",
       });
     }

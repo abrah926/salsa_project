@@ -74,7 +74,7 @@ class SalsaSerializer(serializers.ModelSerializer):
             puerto_rico_tz = pytz.timezone('America/Puerto_Rico')  # Adjust as necessary
             if value.tzinfo is None:  # If no timezone info
                 value = make_aware(value, puerto_rico_tz)  # Localize to Puerto Rico timezone
-            value = value.astimezone(pytz.UTC)  # Convert to UTC
+            value = value.astimezone(pytz.UTC)  # Converts to UTC
         return value
 
     def validate_recurrence_interval(self, value):

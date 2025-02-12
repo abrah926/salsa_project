@@ -61,20 +61,21 @@ const CreateEvent = () => {
 
       // Map form fields to database fields
       const formattedData = {
-        event_date: data.date ? format(data.date, 'yyyy-MM-dd\'T\'HH:mm:ssxxx') : null,
+        event_date: data.date ? format(data.date, 'yyyy-MM-dd') : null,  // Simplified date format
         time: data.time ? formatTime(data.time) : null,
         name: data.title,
         location: data.venue,
         source: data.source || null,
         price: data.price || null,
         details: data.description || null,
-        recurrence: data.recurring ? "WEEKLY" : null,  // Match the choices in model
-        recurrence_interval: 1,  // Default value from model
-        end_recurring_date: null,  // Optional in model
+        recurrence: data.recurring ? "WEEKLY" : null,
+        recurrence_interval: data.recurring ? 1 : null,  // Only set if recurring
         image_url: data.imageUrl || null,
-        phone_number: null  // Optional in model
-        // created_at and updated_at are handled by Django
+        phone_number: null
       };
+
+      // Log the data being sent
+      console.log('Sending data:', formattedData);
 
       const response = await fetch(`${API_URL}/events/`, {
         method: "POST",
@@ -117,7 +118,10 @@ const CreateEvent = () => {
 
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit((data) => createEvent.mutate(data))}
+          onSubmit={form.handleSubmit((data) => {
+            console.log('Form data:', data);  // Log raw form data
+            createEvent.mutate(data);
+          })}
           className="space-y-6"
         >
           <FormField

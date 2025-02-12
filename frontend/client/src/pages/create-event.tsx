@@ -48,6 +48,9 @@ const CreateEvent = () => {
     },
   });
 
+  const watchedFields = form.watch();
+  console.log('Form values:', watchedFields);
+
   const createEvent = useMutation({
     mutationFn: async (data: EventFormData) => {
       // Debug the incoming form data
@@ -107,12 +110,35 @@ const CreateEvent = () => {
   });
 
   const onSubmit = (formData: EventFormData) => {
-    console.log('Form submitted with:', formData);
-    
-    // Only mutate if we have the required fields
+    // Debug all form fields
+    console.log('Complete form data:', {
+      title: formData.title,         // Should be name in form data
+      description: formData.description,
+      date: formData.date,
+      time: formData.time,
+      venue: formData.venue,         // Should be location in form data
+      imageUrl: formData.imageUrl,
+      price: formData.price,
+      recurring: formData.recurring,
+      source: formData.source
+    });
+
+    // Check form validity
+    const isValid = form.formState.isValid;
+    const errors = form.formState.errors;
+    console.log('Form validity:', isValid);
+    console.log('Form errors:', errors);
+
     if (formData.title && formData.date && formData.time && formData.venue) {
       createEvent.mutate(formData);
     } else {
+      console.log('Missing required fields:', {
+        title: !formData.title,
+        date: !formData.date,
+        time: !formData.time,
+        venue: !formData.venue
+      });
+      
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields",

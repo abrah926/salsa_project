@@ -5,7 +5,6 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
-# Create a router instance
 router = DefaultRouter()
 router.register(r'events', SalsaViewSet, basename='event')  # Changed from 'salsas' to 'events'
 

@@ -31,8 +31,8 @@ export const insertEventSchema = z.object({
   date: z.date({ required_error: "Date is required" }),
   time: z.string().min(1, "Time is required"),
   venue: z.string().min(1, "Location is required"),
-  imageUrl: z.string().optional().nullable(),
-  price: z.string().optional(),
-  recurring: z.string().optional(),
-  source: z.string().optional()
+  imageUrl: z.string().optional().nullable().default(null),
+  price: z.string().optional().default(""),
+  recurring: z.string().optional().default(""),
+  source: z.string().optional().default("")
 }); 

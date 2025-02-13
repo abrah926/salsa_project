@@ -28,7 +28,7 @@ class SalsaSerializer(serializers.ModelSerializer):
     )
     end_date = serializers.DateField(required=False, allow_null=True)
     end_recurring_date = serializers.DateField(required=False, allow_null=True)
-    image_url = serializers.URLField(required=False, allow_null=True)
+    image_url = serializers.URLField(required=False, allow_null=True, allow_blank=True)
     phone_number = serializers.CharField(required=False, allow_null=True, max_length=20)
 
     class Meta:

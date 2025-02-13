@@ -9,7 +9,7 @@ import pytz
 
 
 class SalsaSerializer(serializers.ModelSerializer):
-    event_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    event_date = serializers.DateTimeField(format='%Y-%m-%d')
     time = serializers.TimeField(required=False, allow_null=True)
     end_time = serializers.TimeField(required=False, allow_null=True)  # End time
     day = serializers.CharField(required=False, allow_null=True)
@@ -37,7 +37,7 @@ class SalsaSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'image_url': {'required': False, 'allow_null': True},
             'recurrence_interval': {'required': False, 'allow_null': True},
-            'event_date': {'required': True},  # Explicitly require this
+            'event_date': {'required': True},
         }
 
     def get_event_date(self, obj):
@@ -74,7 +74,7 @@ class SalsaSerializer(serializers.ModelSerializer):
             puerto_rico_tz = pytz.timezone('America/Puerto_Rico')
             if value.tzinfo is None:
                 value = make_aware(value, puerto_rico_tz)
-            return value.astimezone(pytz.UTC)
+            value = value.astimezone(pytz.UTC)
         return value
 
     def validate_recurrence_interval(self, value):

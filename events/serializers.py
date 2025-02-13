@@ -9,8 +9,8 @@ import pytz
 
 
 class SalsaSerializer(serializers.ModelSerializer):
-    event_date = serializers.DateField(format='%Y-%m-%d')  # Force consistent date format
-    time = serializers.TimeField(required=False, allow_null=True)  # Start time
+    event_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    time = serializers.TimeField(required=False, allow_null=True)
     end_time = serializers.TimeField(required=False, allow_null=True)  # End time
     day = serializers.CharField(required=False, allow_null=True)
     name = serializers.CharField(required=False, allow_null=True)
@@ -71,10 +71,10 @@ class SalsaSerializer(serializers.ModelSerializer):
         Ensure `event_date` is timezone-aware and converted to UTC.
         """
         if value:
-            puerto_rico_tz = pytz.timezone('America/Puerto_Rico')  # Adjust as necessary
-            if value.tzinfo is None:  # If no timezone info
-                value = make_aware(value, puerto_rico_tz)  # Localize to Puerto Rico timezone
-            value = value.astimezone(pytz.UTC)  # Converts to UTC
+            puerto_rico_tz = pytz.timezone('America/Puerto_Rico')
+            if value.tzinfo is None:
+                value = make_aware(value, puerto_rico_tz)
+            return value.astimezone(pytz.UTC)
         return value
 
     def validate_recurrence_interval(self, value):

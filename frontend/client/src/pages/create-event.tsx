@@ -57,9 +57,8 @@ const CreateEvent = () => {
 
       // Format date to YYYY-MM-DD, stripping out day name and timezone
       const formattedData = {
-        event_date: data.date ? 
-          format(data.date, 'yyyy-MM-dd') : null,  // Just the date in YYYY-MM-DD format
-        time: data.time || null,  // Keep time separate
+        event_date: data.date && data.time ? 
+          `${format(data.date, 'yyyy-MM-dd')} ${data.time}:00` : null,  // Format: YYYY-MM-DD HH:mm:ss
         name: data.title,
         location: data.venue,
         source: data.source || null,

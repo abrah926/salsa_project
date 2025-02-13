@@ -51,6 +51,14 @@ const CreateEvent = () => {
   const watchedFields = form.watch();
   console.log('Form values:', watchedFields);
 
+  // Add logging for form errors
+  form.watch((data) => {
+    const errors = form.formState.errors;
+    if (errors.imageUrl) {
+      console.log('ImageUrl validation error:', errors.imageUrl);
+    }
+  });
+
   const createEvent = useMutation({
     mutationFn: async (data: EventFormData) => {
       console.log('Raw date from calendar:', data.date);
@@ -106,6 +114,7 @@ const CreateEvent = () => {
   const onSubmit = (formData: EventFormData) => {
     const values = form.getValues();
     console.log('Form values from getValues:', values);
+    console.log('Form errors:', form.formState.errors);
 
     // Check individual required fields
     const requiredFieldsCheck = {
@@ -115,6 +124,14 @@ const CreateEvent = () => {
       venue: !!values.venue
     };
     console.log('Required fields check:', requiredFieldsCheck);
+
+    // Log imageUrl specifically
+    console.log('ImageUrl value:', values.imageUrl);
+    console.log('ImageUrl validation:', {
+      isEmpty: values.imageUrl === '',
+      isNull: values.imageUrl === null,
+      isUndefined: values.imageUrl === undefined
+    });
 
     // If all required fields are present, submit
     if (Object.values(requiredFieldsCheck).every(Boolean)) {

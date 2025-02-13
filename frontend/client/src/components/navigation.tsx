@@ -9,7 +9,7 @@ const Navigation = () => {
   const { data, isLoading } = useEvents();
 
   const handleEventsClick = () => {
-    // Navigate immediately, no loading check
+    // Navigate to events page immediately
     setLocation('/events');
   };
 

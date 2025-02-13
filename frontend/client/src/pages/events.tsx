@@ -128,6 +128,7 @@ const Events = () => {
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-white mx-auto mb-4" />
             <p className="text-white/80">Loading events...</p>
+            <p className="text-white/60 text-sm mt-2">Please wait while we fetch the latest events</p>
           </div>
         </div>
       ) : (

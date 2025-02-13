@@ -28,7 +28,7 @@ class SalsaSerializer(serializers.ModelSerializer):
     )
     end_date = serializers.DateField(required=False, allow_null=True)
     end_recurring_date = serializers.DateField(required=False, allow_null=True)
-    image_url = serializers.URLField(required=False, allow_null=True, allow_blank=True)
+    image_url = serializers.URLField(required=False, allow_null=True)
     phone_number = serializers.CharField(required=False, allow_null=True, max_length=20)
 
     class Meta:
@@ -40,25 +40,14 @@ class SalsaSerializer(serializers.ModelSerializer):
             'event_date': {'required': True},
         }
 
-    def to_representation(self, instance):
+    def get_event_date(self, obj):
         """
-        Convert the object instance to a dict, ensuring proper date/time formatting
+        Convert event_date from UTC to America/Puerto_Rico timezone.
         """
-        data = super().to_representation(instance)
-        
-        # Handle event_date formatting
-        if instance.event_date:
-            try:
-                puerto_rico_tz = pytz.timezone('America/Puerto_Rico')
-                local_date = localtime(instance.event_date, puerto_rico_tz)
-                data['event_date'] = local_date.strftime('%Y-%m-%d')
-                data['time'] = local_date.strftime('%H:%M')
-            except Exception as e:
-                print(f"Date conversion error: {e}")
-                data['event_date'] = None
-                data['time'] = None
-
-        return data
+        puerto_rico_tz = pytz.timezone('America/Puerto_Rico')
+        if obj.event_date:
+            return localtime(obj.event_date, puerto_rico_tz).isoformat()
+        return None
 
     def validate_time(self, value):
         """

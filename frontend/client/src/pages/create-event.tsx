@@ -53,11 +53,13 @@ const CreateEvent = () => {
 
   const createEvent = useMutation({
     mutationFn: async (data: EventFormData) => {
-      console.log('Mutation received data:', data);
+      console.log('Raw date from calendar:', data.date);
 
+      // Format date to YYYY-MM-DD, stripping out day name and timezone
       const formattedData = {
-        event_date: data.date && data.time ? 
-          `${format(data.date, 'yyyy-MM-dd')}T${data.time}:00Z` : null,  // ISO format without day name
+        event_date: data.date ? 
+          format(data.date, 'yyyy-MM-dd') : null,  // Just the date in YYYY-MM-DD format
+        time: data.time || null,  // Keep time separate
         name: data.title,
         location: data.venue,
         source: data.source || null,
@@ -69,6 +71,7 @@ const CreateEvent = () => {
         phone_number: null
       };
 
+      console.log('Formatted date:', formattedData.event_date);
       console.log('Sending to server:', formattedData);
 
       const response = await fetch(`${API_URL}/events/`, {

@@ -1,6 +1,7 @@
 import { API_URL } from '@/config';
 import { Event } from '@/types/event';
-import { useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, useQueryClient, UseQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 5000;
@@ -87,17 +88,37 @@ const useEventDetails = (eventId: number) => {
   });
 };
 
-const useEvents = () => {
-  return useQuery<Event[], Error>({
-    queryKey: ["events"],
-    queryFn: fetchEvents,
-    staleTime: 5 * 60 * 1000,  // Data stays fresh for 5 minutes
-    gcTime: 30 * 60 * 1000,    // Keep in cache for 30 minutes
-    retry: 2,                   // Reduce retries
-    retryDelay: 1000,          // Faster retry
-    refetchOnMount: false,      // Don't refetch on every mount
-    refetchOnWindowFocus: false // Don't refetch on window focus
+interface PaginatedResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Event[];
+}
+
+export const useEvents = () => {
+  const result = useInfiniteQuery<PaginatedResponse>({
+    queryKey: ['events'],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await fetch(`${API_URL}/events/?page=${pageParam}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.json();
+    },
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.next) return undefined;
+      const nextPage = new URLSearchParams(new URL(lastPage.next).search).get('page');
+      return nextPage ? parseInt(nextPage) : undefined;
+    },
+    initialPageParam: 1
   });
+
+  // Auto-fetch next page when data changes
+  useEffect(() => {
+    if (result.data?.pages[result.data.pages.length - 1].next) {
+      result.fetchNextPage();
+    }
+  }, [result.data]);
+
+  return result;
 };
 
 const sortEvents = (events: Event[]) => {
@@ -106,5 +127,5 @@ const sortEvents = (events: Event[]) => {
   );
 };
 
-export { useEventPreview, useEventDetails, useEvents, sortEvents };
+export { useEventPreview, useEventDetails, sortEvents };
 export default fetchEvents; 

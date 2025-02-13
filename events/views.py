@@ -14,8 +14,13 @@ from django.utils import timezone
 from datetime import date
 from rest_framework import status
 from django.core.mail import send_mail
+from rest_framework.pagination import PageNumberPagination
 
 logger = logging.getLogger(__name__)
+
+class EventPagination(PageNumberPagination):
+    page_size = 50
+    max_page_size = 50
 
 class SalsaViewSet(viewsets.ModelViewSet):
     """
@@ -25,6 +30,7 @@ class SalsaViewSet(viewsets.ModelViewSet):
     serializer_class = SalsaSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     ordering = ['event_date']
+    pagination_class = EventPagination
     
     def get_queryset(self):
         if self.action == 'list':

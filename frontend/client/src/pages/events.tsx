@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, Key } from "react";
+import { useState, useEffect, useRef, useCallback, Key, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
@@ -19,10 +19,16 @@ const Events = () => {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const loadMoreRef = useRef(null);
 
-  const { data: events = [], isLoading } = useEvents();
+  const { data, fetchNextPage, hasNextPage } = useEvents();
   
+  // Convert paginated data to flat array of events
+  const events = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.results);
+  }, [data]);
+
   console.log('Events:', events);
-  console.log('Is Loading:', isLoading);
+  console.log('Is Loading:', !data);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -117,7 +123,7 @@ const Events = () => {
         </div>
       </div>
 
-      {isLoading ? (
+      {!data ? (
         <div className="p-6">
           <div className="w-[90%] md:w-[65%] mx-auto aspect-[4/3] bg-gray-800/50 animate-pulse rounded-3xl" />
         </div>

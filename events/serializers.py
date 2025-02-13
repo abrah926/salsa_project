@@ -110,7 +110,6 @@ class SalsaSerializer(serializers.ModelSerializer):
         Ensure end_time is later than time if both are provided.
         """
         time = data.get('time')
-        
         end_time = data.get('end_time')
 
         if time and end_time and time >= end_time:

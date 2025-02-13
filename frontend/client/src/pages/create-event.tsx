@@ -100,7 +100,17 @@ const CreateEvent = () => {
         title: "Event Created",
         description: "Your event has been successfully created.",
       });
-      setLocation("/events");
+      form.reset({
+        title: "",
+        description: "",
+        date: undefined,
+        time: "",
+        venue: "",
+        imageUrl: "https://source.unsplash.com/random",
+        price: "",
+        recurring: "",
+        source: "",
+      });
     },
     onError: (error) => {
       toast({

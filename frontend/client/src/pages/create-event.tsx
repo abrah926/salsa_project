@@ -41,7 +41,7 @@ const CreateEvent = () => {
       date: undefined,
       time: "",
       venue: "",
-      imageUrl: "",
+      imageUrl: "https://source.unsplash.com/random",
       price: "",
       recurring: "",
       source: "",
@@ -274,7 +274,7 @@ const CreateEvent = () => {
             name="imageUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Image URL (optional)</FormLabel>
+                <FormLabel>Image URL (change default image to the actual image of the event)</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Add an image URL if available" />
                 </FormControl>

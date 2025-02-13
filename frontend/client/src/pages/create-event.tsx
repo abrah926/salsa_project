@@ -271,7 +271,7 @@ const CreateEvent = () => {
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Price (optional)</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -285,7 +285,7 @@ const CreateEvent = () => {
             name="recurring"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Recurring</FormLabel>
+                <FormLabel>Recurring (optional)</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -303,7 +303,7 @@ const CreateEvent = () => {
             name="source"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Source Link</FormLabel>
+                <FormLabel>Source Link (optional)</FormLabel>
                 <FormControl>
                   <Input
                     {...field}

@@ -36,7 +36,12 @@ export const insertEventSchema = createInsertSchema(events, {
   details: z.string().optional(),
   recurrenceInterval: z.number().min(1).optional(),
   endRecurringDate: z.date().optional(),
-  imageUrl: z.string().url().optional().or(z.literal('')),
+  imageUrl: z.string()
+    .url()
+    .optional()
+    .or(z.literal(''))
+    .or(z.null())
+    .transform(val => val || null),
 });
 
 export const selectEventSchema = createSelectSchema(events);

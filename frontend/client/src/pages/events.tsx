@@ -124,8 +124,11 @@ const Events = () => {
       </div>
 
       {!data ? (
-        <div className="p-6">
-          <div className="w-[90%] md:w-[65%] mx-auto aspect-[4/3] bg-gray-800/50 animate-pulse rounded-3xl" />
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-white mx-auto mb-4" />
+            <p className="text-white/80">Loading events...</p>
+          </div>
         </div>
       ) : (
         <div className="flex-1 flex items-center">

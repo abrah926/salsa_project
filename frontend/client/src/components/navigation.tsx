@@ -9,20 +9,14 @@ const Navigation = () => {
   const { data, isLoading } = useEvents();
 
   const handleEventsClick = () => {
-    if (isLoading) {
-      toast({
-        title: "Loading Events",
-        description: "Please wait while events are loading...",
-      });
-      return;
-    }
+    // Navigate immediately, no loading check
     setLocation('/events');
   };
 
   return (
     // ... rest of navigation code
     <button onClick={handleEventsClick}>
-      {isLoading ? "Loading Events..." : "Events"}
+      Events
     </button>
   );
 };

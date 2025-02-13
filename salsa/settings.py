@@ -216,7 +216,7 @@ CACHES = {
     }
 }
 
-# Cache timeout in seconds (5 minutes)
+# Cache timeout
 CACHE_TTL = 300
 
 # Email settings

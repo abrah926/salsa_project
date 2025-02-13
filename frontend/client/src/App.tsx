@@ -7,6 +7,7 @@ import Events from "@/pages/events";  // Direct import for Events page
 import EventDetails from "@/pages/event-details";
 import Home from "@/pages/home";
 import fetchEvents from "@/hooks/useEvents";
+import { useEvents } from "@/hooks/useEvents";
 
 // Create QueryClient instance outside of component
 const queryClient = new QueryClient({
@@ -41,14 +42,9 @@ function Router() {
   );
 }
 
-function App() {
-  useEffect(() => {
-    // Prefetch events
-    queryClient.prefetchQuery({
-      queryKey: ["events"],
-      queryFn: fetchEvents
-    });
-  }, []);
+const App = () => {
+  // Start loading events as soon as app mounts
+  useEvents();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -59,6 +55,6 @@ function App() {
       <Toaster />
     </QueryClientProvider>
   );
-}
+};
 
 export default App;

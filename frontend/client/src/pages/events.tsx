@@ -6,7 +6,7 @@ import { CalendarDropdown } from "@/components/events/calendar-dropdown";
 import EventCard from "@/components/events/event-card";
 import { pageTransition, staggerContainer } from "@/components/animations";
 import { type Event } from '@/types/event';
-import { useEvents } from "@/hooks/useEvents";
+import { useEvents, type PaginatedResponse } from "@/hooks/useEvents";
 import { useVirtualizer } from '@tanstack/react-virtual';
 
 const EVENTS_PER_PAGE = 50;
@@ -23,7 +23,7 @@ const Events = () => {
   
   // Convert paginated data to flat array of events
   const events = useMemo(() => {
-    if (!data?.pages) return [];
+    if (!data) return [];
     return data.pages.flatMap(page => page.results);
   }, [data]);
 

@@ -108,10 +108,11 @@ export const useEvents = () => {
       const nextPage = new URLSearchParams(new URL(lastPage.next).search).get('page');
       return nextPage ? parseInt(nextPage) : undefined;
     },
+    retry: true,
+    retryDelay: 500, // Retry every 0.5 seconds
     initialPageParam: 1
   });
 
-  // Auto-fetch next page when data changes
   useEffect(() => {
     if (result.data?.pages[result.data.pages.length - 1].next) {
       result.fetchNextPage();

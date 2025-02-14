@@ -29,6 +29,7 @@ const NotFound = lazy(() => import("@/pages/not-found"));
 function Router() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
+      <EventPreloader />
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/events" component={Events} />
@@ -43,9 +44,6 @@ function Router() {
 }
 
 const App = () => {
-  // Start loading events as soon as app mounts
-  useEvents();
-
   return (
     <QueryClientProvider client={queryClient}>
       <main className="min-h-screen pb-16">
@@ -55,6 +53,12 @@ const App = () => {
       <Toaster />
     </QueryClientProvider>
   );
+};
+
+// Create a new component to handle event preloading
+const EventPreloader = () => {
+  useEvents();  // This will now have access to QueryClient
+  return null;
 };
 
 export default App;

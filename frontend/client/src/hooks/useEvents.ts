@@ -4,6 +4,7 @@ import { useQuery, useQueryClient, UseQueryOptions, useInfiniteQuery, InfiniteDa
 import { useEffect } from 'react';
 
 const MAX_RETRIES = 3;
+
 const RETRY_DELAY = 5000;
 
 const fetchEvents = async (): Promise<Event[]> => {

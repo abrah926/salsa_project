@@ -9,14 +9,20 @@ const Navigation = () => {
   const { data, isLoading } = useEvents();
 
   const handleEventsClick = () => {
-    // Navigate immediately to events page
+    if (isLoading) {
+      toast({
+        title: "Loading Events",
+        description: "Please wait while events are loading...",
+      });
+      return;
+    }
     setLocation('/events');
   };
 
   return (
     // ... rest of navigation code
     <button onClick={handleEventsClick}>
-      Events
+      {isLoading ? "Loading Events..." : "Events"}
     </button>
   );
 };

@@ -1,10 +1,9 @@
 import { API_URL } from '@/config';
 import { Event } from '@/types/event';
-import { useQuery, useQueryClient, UseQueryOptions, useInfiniteQuery, InfiniteData } from '@tanstack/react-query';
+import { useQuery, useQueryClient, UseQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 const MAX_RETRIES = 3;
-
 const RETRY_DELAY = 5000;
 
 const fetchEvents = async (): Promise<Event[]> => {
@@ -97,24 +96,30 @@ interface PaginatedResponse {
 }
 
 export const useEvents = () => {
-  return useInfiniteQuery({
+  const result = useInfiniteQuery<PaginatedResponse>({
     queryKey: ['events'],
-    queryFn: async ({ pageParam = 1 }): Promise<PaginatedResponse> => {
+    queryFn: async ({ pageParam = 1 }) => {
       const response = await fetch(`${API_URL}/events/?page=${pageParam}`);
       if (!response.ok) throw new Error('Network response was not ok');
       return response.json();
     },
-    getNextPageParam: (lastPage: PaginatedResponse) => {
+    getNextPageParam: (lastPage) => {
       if (!lastPage.next) return undefined;
       const nextPage = new URLSearchParams(new URL(lastPage.next).search).get('page');
       return nextPage ? parseInt(nextPage) : undefined;
     },
-    initialPageParam: 1,
-    staleTime: 1000 * 60 * 5, // Keep data fresh for 5 minutes
-    gcTime: 1000 * 60 * 30, // Cache for 30 minutes
     retry: true,
-    retryDelay: 1000, // Retry every second
+    retryDelay: 500, // Retry every 0.5 seconds
+    initialPageParam: 1
   });
+
+  useEffect(() => {
+    if (result.data?.pages[result.data.pages.length - 1].next) {
+      result.fetchNextPage();
+    }
+  }, [result.data]);
+
+  return result;
 };
 
 const sortEvents = (events: Event[]) => {
@@ -123,5 +128,5 @@ const sortEvents = (events: Event[]) => {
   );
 };
 
-export { useEventPreview, useEventDetails, sortEvents, PaginatedResponse };
+export { useEventPreview, useEventDetails, sortEvents };
 export default fetchEvents; 

@@ -6,7 +6,7 @@ import { CalendarDropdown } from "@/components/events/calendar-dropdown";
 import EventCard from "@/components/events/event-card";
 import { pageTransition, staggerContainer } from "@/components/animations";
 import { type Event } from '@/types/event';
-import { useEvents, type PaginatedResponse } from "@/hooks/useEvents";
+import { useEvents } from "@/hooks/useEvents";
 import { useVirtualizer } from '@tanstack/react-virtual';
 
 const EVENTS_PER_PAGE = 50;
@@ -23,7 +23,7 @@ const Events = () => {
   
   // Convert paginated data to flat array of events
   const events = useMemo(() => {
-    if (!data) return [];
+    if (!data?.pages) return [];
     return data.pages.flatMap(page => page.results);
   }, [data]);
 
@@ -124,12 +124,8 @@ const Events = () => {
       </div>
 
       {!data ? (
-        <div className="flex items-center justify-center h-full">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-white mx-auto mb-4" />
-            <p className="text-white/80">Loading events...</p>
-            <p className="text-white/60 text-sm mt-2">Please wait while we fetch the latest events</p>
-          </div>
+        <div className="p-6">
+          <div className="w-[90%] md:w-[65%] mx-auto aspect-[4/3] bg-gray-800/50 animate-pulse rounded-3xl" />
         </div>
       ) : (
         <div className="flex-1 flex items-center">

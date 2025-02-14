@@ -7,7 +7,6 @@ import Events from "@/pages/events";  // Direct import for Events page
 import EventDetails from "@/pages/event-details";
 import Home from "@/pages/home";
 import fetchEvents from "@/hooks/useEvents";
-import { useEvents } from "@/hooks/useEvents";
 
 // Create QueryClient instance outside of component
 const queryClient = new QueryClient({
@@ -29,7 +28,6 @@ const NotFound = lazy(() => import("@/pages/not-found"));
 function Router() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <EventPreloader />
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/events" component={Events} />
@@ -43,7 +41,15 @@ function Router() {
   );
 }
 
-const App = () => {
+function App() {
+  useEffect(() => {
+    // Prefetch events
+    queryClient.prefetchQuery({
+      queryKey: ["events"],
+      queryFn: fetchEvents
+    });
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <main className="min-h-screen pb-16">
@@ -53,12 +59,6 @@ const App = () => {
       <Toaster />
     </QueryClientProvider>
   );
-};
-
-// Create a new component to handle event preloading
-const EventPreloader = () => {
-  useEvents();  // This will now have access to QueryClient
-  return null;
-};
+}
 
 export default App;

@@ -109,7 +109,11 @@ export const useEvents = () => {
       const nextPage = new URLSearchParams(new URL(lastPage.next).search).get('page');
       return nextPage ? parseInt(nextPage) : undefined;
     },
-    initialPageParam: 1
+    initialPageParam: 1,
+    staleTime: 1000 * 60 * 5, // Keep data fresh for 5 minutes
+    gcTime: 1000 * 60 * 30, // Cache for 30 minutes
+    retry: true,
+    retryDelay: 1000, // Retry every second
   });
 };
 

@@ -2,27 +2,23 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { pageTransition } from "@/components/animations";
-import { useQuery } from "@tanstack/react-query";
-import { type Event } from "@/types/event";
-import fetchEvents from "@/hooks/useEvents";
+import { useEvents } from "@/hooks/useEvents";
+import { useMemo } from "react";
 
 const Home = () => {
   const [, setLocation] = useLocation();
+  const { data } = useEvents();
 
-  const { data: events = [] } = useQuery({
-    queryKey: ["events"],
-    queryFn: fetchEvents
-  });
+  const events = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.results);
+  }, [data]);
+
+  const upcomingEvent = events.length > 0 ? events[0] : null;
 
   const handleEventClick = () => {
-    const today = new Date().toISOString().split('T')[0];
-    
-    const todayEvent = events.find(event => 
-      event.event_date && new Date(event.event_date).getTime() >= new Date(today).getTime()
-    );
-
-    if (todayEvent) {
-      setLocation(`/events/${todayEvent.id}`);
+    if (upcomingEvent) {
+      setLocation(`/events/${upcomingEvent.id}`);
     } else {
       console.log('No upcoming events found');
     }
